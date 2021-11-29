@@ -26,10 +26,10 @@
     "notebook-bundle": "npm install --save-dev && npm run webpack-bundle"
   },
   "dependencies": {
-    "kepler-outdated-deck.gl-aggregation-layers": "7.1.1",
-    "kepler-outdated-deck.gl-core": "7.1.1",
-    "kepler-outdated-deck.gl-json": "7.1.1",
-    "kepler-outdated-deck.gl-layers": "7.1.1",
+    "kepler-outdated-deck.gl-aggregation-layers": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/aggregation-layers/dist.tgz",
+    "kepler-outdated-deck.gl-core": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/core/dist.tgz",
+    "kepler-outdated-deck.gl-json": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/json/dist.tgz",
+    "kepler-outdated-deck.gl-layers": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/layers/dist.tgz",
     "@jupyter-widgets/base": "^1.1.10",
     "@types/mapbox-gl": "^0.51.4",
     "mapbox-gl": "^0.53.1"

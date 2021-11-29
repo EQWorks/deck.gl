@@ -27,14 +27,14 @@
     "prepublishOnly": "npm run build-bundle && npm run build-bundle -- --env.dev"
   },
   "dependencies": {
-    "kepler-outdated-deck.gl-aggregation-layers": "7.1.1",
-    "kepler-outdated-deck.gl-core": "7.1.1",
-    "kepler-outdated-deck.gl-geo-layers": "7.1.1",
-    "kepler-outdated-deck.gl-google-maps": "7.1.1",
-    "kepler-outdated-deck.gl-json": "7.1.1",
-    "kepler-outdated-deck.gl-layers": "7.1.1",
-    "kepler-outdated-deck.gl-mapbox": "7.1.1",
-    "kepler-outdated-deck.gl-mesh-layers": "7.1.1",
-    "kepler-outdated-deck.gl-react": "7.1.1"
+    "kepler-outdated-deck.gl-aggregation-layers": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/aggregation-layers/dist.tgz",
+    "kepler-outdated-deck.gl-core": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/core/dist.tgz",
+    "kepler-outdated-deck.gl-geo-layers": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/geo-layers/dist.tgz",
+    "kepler-outdated-deck.gl-google-maps": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/google-maps/dist.tgz",
+    "kepler-outdated-deck.gl-json": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/json/dist.tgz",
+    "kepler-outdated-deck.gl-layers": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/layers/dist.tgz",
+    "kepler-outdated-deck.gl-mapbox": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/mapbox/dist.tgz",
+    "kepler-outdated-deck.gl-mesh-layers": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/mesh-layers/dist.tgz",
+    "kepler-outdated-deck.gl-react": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/react/dist.tgz"
   }
 }
