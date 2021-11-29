@@ -7,10 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
 var _layerManager = _interopRequireDefault(require("./layer-manager"));
 
 var _viewManager = _interopRequireDefault(require("./view-manager"));
@@ -39,8 +35,10 @@ var _constants = require("./constants");
 
 function noop() {}
 
-var getCursor = function getCursor(_ref) {
-  var isDragging = _ref.isDragging;
+const getCursor = _ref => {
+  let {
+    isDragging
+  } = _ref;
   return isDragging ? 'grabbing' : 'grab';
 };
 
@@ -72,7 +70,7 @@ function getPropTypes(PropTypes) {
   };
 }
 
-var defaultProps = {
+const defaultProps = {
   id: 'deckgl-overlay',
   width: '100%',
   height: '100%',
@@ -93,14 +91,13 @@ var defaultProps = {
   onAfterRender: noop,
   onLoad: noop,
   _onMetrics: null,
-  getCursor: getCursor,
+  getCursor,
   debug: false,
   drawPickingColors: false
 };
 
-var Deck = function () {
-  function Deck(props) {
-    (0, _classCallCheck2.default)(this, Deck);
+class Deck {
+  constructor(props) {
     props = Object.assign({}, defaultProps, props);
     this.width = 0;
     this.height = 0;
@@ -157,686 +154,668 @@ var Deck = function () {
     this.animationLoop.start();
   }
 
-  (0, _createClass2.default)(Deck, [{
-    key: "finalize",
-    value: function finalize() {
-      this.animationLoop.stop();
-      this.animationLoop = null;
-      this._lastPointerDownInfo = null;
+  finalize() {
+    this.animationLoop.stop();
+    this.animationLoop = null;
+    this._lastPointerDownInfo = null;
 
-      if (this.layerManager) {
-        this.layerManager.finalize();
-        this.layerManager = null;
-      }
-
-      if (this.viewManager) {
-        this.viewManager.finalize();
-        this.viewManager = null;
-      }
-
-      if (this.effectManager) {
-        this.effectManager.finalize();
-        this.effectManager = null;
-      }
-
-      if (this.deckRenderer) {
-        this.deckRenderer.finalize();
-        this.deckRenderer = null;
-      }
-
-      if (this.eventManager) {
-        this.eventManager.destroy();
-      }
-
-      if (!this.props.canvas && !this.props.gl && this.canvas) {
-        this.canvas.parentElement.removeChild(this.canvas);
-        this.canvas = null;
-      }
+    if (this.layerManager) {
+      this.layerManager.finalize();
+      this.layerManager = null;
     }
-  }, {
-    key: "setProps",
-    value: function setProps(props) {
-      this.stats.get('setProps Time').timeStart();
 
-      if ('onLayerHover' in props) {
-        _log.default.removed('onLayerHover', 'onHover')();
-      }
+    if (this.viewManager) {
+      this.viewManager.finalize();
+      this.viewManager = null;
+    }
 
-      if ('onLayerClick' in props) {
-        _log.default.removed('onLayerClick', 'onClick')();
-      }
+    if (this.effectManager) {
+      this.effectManager.finalize();
+      this.effectManager = null;
+    }
 
-      props = Object.assign({}, this.props, props);
-      this.props = props;
+    if (this.deckRenderer) {
+      this.deckRenderer.finalize();
+      this.deckRenderer = null;
+    }
 
-      this._setCanvasSize(props);
+    if (this.eventManager) {
+      this.eventManager.destroy();
+    }
 
-      var newProps = Object.assign({}, props, {
-        views: this._getViews(this.props),
+    if (!this.props.canvas && !this.props.gl && this.canvas) {
+      this.canvas.parentElement.removeChild(this.canvas);
+      this.canvas = null;
+    }
+  }
+
+  setProps(props) {
+    this.stats.get('setProps Time').timeStart();
+
+    if ('onLayerHover' in props) {
+      _log.default.removed('onLayerHover', 'onHover')();
+    }
+
+    if ('onLayerClick' in props) {
+      _log.default.removed('onLayerClick', 'onClick')();
+    }
+
+    props = Object.assign({}, this.props, props);
+    this.props = props;
+
+    this._setCanvasSize(props);
+
+    const newProps = Object.assign({}, props, {
+      views: this._getViews(this.props),
+      width: this.width,
+      height: this.height
+    });
+
+    const viewState = this._getViewState(props);
+
+    if (viewState) {
+      newProps.viewState = viewState;
+    }
+
+    if (this.viewManager) {
+      this.viewManager.setProps(newProps);
+    }
+
+    if (this.layerManager) {
+      this.layerManager.setProps(newProps);
+    }
+
+    if (this.effectManager) {
+      this.effectManager.setProps(newProps);
+    }
+
+    if (this.animationLoop) {
+      this.animationLoop.setProps(newProps);
+    }
+
+    if (this.deckRenderer) {
+      this.deckRenderer.setProps(newProps);
+    }
+
+    if (this.deckPicker) {
+      this.deckPicker.setProps(newProps);
+    }
+
+    this.stats.get('setProps Time').timeEnd();
+  }
+
+  needsRedraw() {
+    let opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
+      clearRedrawFlags: false
+    };
+
+    if (this.props._animate) {
+      return 'Deck._animate';
+    }
+
+    let redraw = this._needsRedraw;
+
+    if (opts.clearRedrawFlags) {
+      this._needsRedraw = false;
+    }
+
+    const viewManagerNeedsRedraw = this.viewManager.needsRedraw(opts);
+    const layerManagerNeedsRedraw = this.layerManager.needsRedraw(opts);
+    const effectManagerNeedsRedraw = this.effectManager.needsRedraw(opts);
+    const deckRendererNeedsRedraw = this.deckRenderer.needsRedraw(opts);
+    redraw = redraw || viewManagerNeedsRedraw || layerManagerNeedsRedraw || effectManagerNeedsRedraw || deckRendererNeedsRedraw;
+    return redraw;
+  }
+
+  redraw(force) {
+    if (!this.layerManager) {
+      return;
+    }
+
+    const redrawReason = force || this.needsRedraw({
+      clearRedrawFlags: true
+    });
+
+    if (!redrawReason) {
+      return;
+    }
+
+    this.stats.get('Redraw Count').incrementCount();
+
+    if (this.props._customRender) {
+      this.props._customRender(redrawReason);
+    } else {
+      this._drawLayers(redrawReason);
+    }
+  }
+
+  getViews() {
+    return this.viewManager.views;
+  }
+
+  getViewports(rect) {
+    return this.viewManager.getViewports(rect);
+  }
+
+  pickObject(_ref2) {
+    let {
+      x,
+      y,
+      radius = 0,
+      layerIds = null
+    } = _ref2;
+    this.stats.get('Pick Count').incrementCount();
+    this.stats.get('pickObject Time').timeStart();
+    const layers = this.layerManager.getLayers({
+      layerIds
+    });
+    const activateViewport = this.layerManager.activateViewport;
+    const selectedInfos = this.deckPicker.pickObject({
+      x,
+      y,
+      radius,
+      layers,
+      viewports: this.getViewports({
+        x,
+        y
+      }),
+      activateViewport,
+      mode: 'query',
+      depth: 1
+    }).result;
+    this.stats.get('pickObject Time').timeEnd();
+    return selectedInfos.length ? selectedInfos[0] : null;
+  }
+
+  pickMultipleObjects(_ref3) {
+    let {
+      x,
+      y,
+      radius = 0,
+      layerIds = null,
+      depth = 10
+    } = _ref3;
+    this.stats.get('Pick Count').incrementCount();
+    this.stats.get('pickMultipleObjects Time').timeStart();
+    const layers = this.layerManager.getLayers({
+      layerIds
+    });
+    const activateViewport = this.layerManager.activateViewport;
+    const selectedInfos = this.deckPicker.pickObject({
+      x,
+      y,
+      radius,
+      layers,
+      viewports: this.getViewports({
+        x,
+        y
+      }),
+      activateViewport,
+      mode: 'query',
+      depth
+    }).result;
+    this.stats.get('pickMultipleObjects Time').timeEnd();
+    return selectedInfos;
+  }
+
+  pickObjects(_ref4) {
+    let {
+      x,
+      y,
+      width = 1,
+      height = 1,
+      layerIds = null
+    } = _ref4;
+    this.stats.get('Pick Count').incrementCount();
+    this.stats.get('pickObjects Time').timeStart();
+    const layers = this.layerManager.getLayers({
+      layerIds
+    });
+    const activateViewport = this.layerManager.activateViewport;
+    const infos = this.deckPicker.pickObjects({
+      x,
+      y,
+      width,
+      height,
+      layers,
+      viewports: this.getViewports({
+        x,
+        y,
+        width,
+        height
+      }),
+      activateViewport
+    });
+    this.stats.get('pickObjects Time').timeEnd();
+    return infos;
+  }
+
+  _createCanvas(props) {
+    let canvas = props.canvas;
+
+    if (typeof canvas === 'string') {
+      canvas = document.getElementById(canvas);
+      (0, _assert.default)(canvas);
+    }
+
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      const parent = props.parent || document.body;
+      parent.appendChild(canvas);
+    }
+
+    const {
+      id,
+      style
+    } = props;
+    canvas.id = id;
+    Object.assign(canvas.style, style);
+    return canvas;
+  }
+
+  _setCanvasSize(props) {
+    if (!this.canvas) {
+      return;
+    }
+
+    let {
+      width,
+      height
+    } = props;
+
+    if (width || width === 0) {
+      width = Number.isFinite(width) ? "".concat(width, "px") : width;
+      this.canvas.style.width = width;
+    }
+
+    if (height || height === 0) {
+      height = Number.isFinite(height) ? "".concat(height, "px") : height;
+      this.canvas.style.position = 'absolute';
+      this.canvas.style.height = height;
+    }
+  }
+
+  _updateCanvasSize() {
+    if (this._checkForCanvasSizeChange()) {
+      const {
+        width,
+        height
+      } = this;
+      this.viewManager.setProps({
+        width,
+        height
+      });
+      this.props.onResize({
         width: this.width,
         height: this.height
       });
-
-      var viewState = this._getViewState(props);
-
-      if (viewState) {
-        newProps.viewState = viewState;
-      }
-
-      if (this.viewManager) {
-        this.viewManager.setProps(newProps);
-      }
-
-      if (this.layerManager) {
-        this.layerManager.setProps(newProps);
-      }
-
-      if (this.effectManager) {
-        this.effectManager.setProps(newProps);
-      }
-
-      if (this.animationLoop) {
-        this.animationLoop.setProps(newProps);
-      }
-
-      if (this.deckRenderer) {
-        this.deckRenderer.setProps(newProps);
-      }
-
-      if (this.deckPicker) {
-        this.deckPicker.setProps(newProps);
-      }
-
-      this.stats.get('setProps Time').timeEnd();
     }
-  }, {
-    key: "needsRedraw",
-    value: function needsRedraw() {
-      var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {
-        clearRedrawFlags: false
-      };
+  }
 
-      if (this.props._animate) {
-        return 'Deck._animate';
-      }
+  _checkForCanvasSizeChange() {
+    const {
+      canvas
+    } = this;
 
-      var redraw = this._needsRedraw;
-
-      if (opts.clearRedrawFlags) {
-        this._needsRedraw = false;
-      }
-
-      var viewManagerNeedsRedraw = this.viewManager.needsRedraw(opts);
-      var layerManagerNeedsRedraw = this.layerManager.needsRedraw(opts);
-      var effectManagerNeedsRedraw = this.effectManager.needsRedraw(opts);
-      var deckRendererNeedsRedraw = this.deckRenderer.needsRedraw(opts);
-      redraw = redraw || viewManagerNeedsRedraw || layerManagerNeedsRedraw || effectManagerNeedsRedraw || deckRendererNeedsRedraw;
-      return redraw;
-    }
-  }, {
-    key: "redraw",
-    value: function redraw(force) {
-      if (!this.layerManager) {
-        return;
-      }
-
-      var redrawReason = force || this.needsRedraw({
-        clearRedrawFlags: true
-      });
-
-      if (!redrawReason) {
-        return;
-      }
-
-      this.stats.get('Redraw Count').incrementCount();
-
-      if (this.props._customRender) {
-        this.props._customRender(redrawReason);
-      } else {
-        this._drawLayers(redrawReason);
-      }
-    }
-  }, {
-    key: "getViews",
-    value: function getViews() {
-      return this.viewManager.views;
-    }
-  }, {
-    key: "getViewports",
-    value: function getViewports(rect) {
-      return this.viewManager.getViewports(rect);
-    }
-  }, {
-    key: "pickObject",
-    value: function pickObject(_ref2) {
-      var x = _ref2.x,
-          y = _ref2.y,
-          _ref2$radius = _ref2.radius,
-          radius = _ref2$radius === void 0 ? 0 : _ref2$radius,
-          _ref2$layerIds = _ref2.layerIds,
-          layerIds = _ref2$layerIds === void 0 ? null : _ref2$layerIds;
-      this.stats.get('Pick Count').incrementCount();
-      this.stats.get('pickObject Time').timeStart();
-      var layers = this.layerManager.getLayers({
-        layerIds: layerIds
-      });
-      var activateViewport = this.layerManager.activateViewport;
-      var selectedInfos = this.deckPicker.pickObject({
-        x: x,
-        y: y,
-        radius: radius,
-        layers: layers,
-        viewports: this.getViewports({
-          x: x,
-          y: y
-        }),
-        activateViewport: activateViewport,
-        mode: 'query',
-        depth: 1
-      }).result;
-      this.stats.get('pickObject Time').timeEnd();
-      return selectedInfos.length ? selectedInfos[0] : null;
-    }
-  }, {
-    key: "pickMultipleObjects",
-    value: function pickMultipleObjects(_ref3) {
-      var x = _ref3.x,
-          y = _ref3.y,
-          _ref3$radius = _ref3.radius,
-          radius = _ref3$radius === void 0 ? 0 : _ref3$radius,
-          _ref3$layerIds = _ref3.layerIds,
-          layerIds = _ref3$layerIds === void 0 ? null : _ref3$layerIds,
-          _ref3$depth = _ref3.depth,
-          depth = _ref3$depth === void 0 ? 10 : _ref3$depth;
-      this.stats.get('Pick Count').incrementCount();
-      this.stats.get('pickMultipleObjects Time').timeStart();
-      var layers = this.layerManager.getLayers({
-        layerIds: layerIds
-      });
-      var activateViewport = this.layerManager.activateViewport;
-      var selectedInfos = this.deckPicker.pickObject({
-        x: x,
-        y: y,
-        radius: radius,
-        layers: layers,
-        viewports: this.getViewports({
-          x: x,
-          y: y
-        }),
-        activateViewport: activateViewport,
-        mode: 'query',
-        depth: depth
-      }).result;
-      this.stats.get('pickMultipleObjects Time').timeEnd();
-      return selectedInfos;
-    }
-  }, {
-    key: "pickObjects",
-    value: function pickObjects(_ref4) {
-      var x = _ref4.x,
-          y = _ref4.y,
-          _ref4$width = _ref4.width,
-          width = _ref4$width === void 0 ? 1 : _ref4$width,
-          _ref4$height = _ref4.height,
-          height = _ref4$height === void 0 ? 1 : _ref4$height,
-          _ref4$layerIds = _ref4.layerIds,
-          layerIds = _ref4$layerIds === void 0 ? null : _ref4$layerIds;
-      this.stats.get('Pick Count').incrementCount();
-      this.stats.get('pickObjects Time').timeStart();
-      var layers = this.layerManager.getLayers({
-        layerIds: layerIds
-      });
-      var activateViewport = this.layerManager.activateViewport;
-      var infos = this.deckPicker.pickObjects({
-        x: x,
-        y: y,
-        width: width,
-        height: height,
-        layers: layers,
-        viewports: this.getViewports({
-          x: x,
-          y: y,
-          width: width,
-          height: height
-        }),
-        activateViewport: activateViewport
-      });
-      this.stats.get('pickObjects Time').timeEnd();
-      return infos;
-    }
-  }, {
-    key: "_createCanvas",
-    value: function _createCanvas(props) {
-      var canvas = props.canvas;
-
-      if (typeof canvas === 'string') {
-        canvas = document.getElementById(canvas);
-        (0, _assert.default)(canvas);
-      }
-
-      if (!canvas) {
-        canvas = document.createElement('canvas');
-        var parent = props.parent || document.body;
-        parent.appendChild(canvas);
-      }
-
-      var id = props.id,
-          style = props.style;
-      canvas.id = id;
-      Object.assign(canvas.style, style);
-      return canvas;
-    }
-  }, {
-    key: "_setCanvasSize",
-    value: function _setCanvasSize(props) {
-      if (!this.canvas) {
-        return;
-      }
-
-      var width = props.width,
-          height = props.height;
-
-      if (width || width === 0) {
-        width = Number.isFinite(width) ? "".concat(width, "px") : width;
-        this.canvas.style.width = width;
-      }
-
-      if (height || height === 0) {
-        height = Number.isFinite(height) ? "".concat(height, "px") : height;
-        this.canvas.style.position = 'absolute';
-        this.canvas.style.height = height;
-      }
-    }
-  }, {
-    key: "_updateCanvasSize",
-    value: function _updateCanvasSize() {
-      if (this._checkForCanvasSizeChange()) {
-        var width = this.width,
-            height = this.height;
-        this.viewManager.setProps({
-          width: width,
-          height: height
-        });
-        this.props.onResize({
-          width: this.width,
-          height: this.height
-        });
-      }
-    }
-  }, {
-    key: "_checkForCanvasSizeChange",
-    value: function _checkForCanvasSizeChange() {
-      var canvas = this.canvas;
-
-      if (!canvas) {
-        return false;
-      }
-
-      var newWidth = canvas.clientWidth || canvas.width;
-      var newHeight = canvas.clientHeight || canvas.height;
-
-      if (newWidth !== this.width || newHeight !== this.height) {
-        this.width = newWidth;
-        this.height = newHeight;
-        return true;
-      }
-
+    if (!canvas) {
       return false;
     }
-  }, {
-    key: "_createAnimationLoop",
-    value: function _createAnimationLoop(props) {
-      var _this = this;
 
-      var width = props.width,
-          height = props.height,
-          gl = props.gl,
-          glOptions = props.glOptions,
-          debug = props.debug,
-          useDevicePixels = props.useDevicePixels,
-          autoResizeDrawingBuffer = props.autoResizeDrawingBuffer;
-      return new _core.AnimationLoop({
-        width: width,
-        height: height,
-        useDevicePixels: useDevicePixels,
-        autoResizeDrawingBuffer: autoResizeDrawingBuffer,
-        gl: gl,
-        onCreateContext: function onCreateContext(opts) {
-          return (0, _core.createGLContext)(Object.assign({}, glOptions, opts, {
-            canvas: _this.canvas,
-            debug: debug
-          }));
-        },
-        onInitialize: this._onRendererInitialized,
-        onRender: this._onRenderFrame,
-        onBeforeRender: props.onBeforeRender,
-        onAfterRender: props.onAfterRender
-      });
+    const newWidth = canvas.clientWidth || canvas.width;
+    const newHeight = canvas.clientHeight || canvas.height;
+
+    if (newWidth !== this.width || newHeight !== this.height) {
+      this.width = newWidth;
+      this.height = newHeight;
+      return true;
     }
-  }, {
-    key: "_getViewState",
-    value: function _getViewState(props) {
-      return props.viewState || this.viewState;
+
+    return false;
+  }
+
+  _createAnimationLoop(props) {
+    const {
+      width,
+      height,
+      gl,
+      glOptions,
+      debug,
+      useDevicePixels,
+      autoResizeDrawingBuffer
+    } = props;
+    return new _core.AnimationLoop({
+      width,
+      height,
+      useDevicePixels,
+      autoResizeDrawingBuffer,
+      gl,
+      onCreateContext: opts => (0, _core.createGLContext)(Object.assign({}, glOptions, opts, {
+        canvas: this.canvas,
+        debug
+      })),
+      onInitialize: this._onRendererInitialized,
+      onRender: this._onRenderFrame,
+      onBeforeRender: props.onBeforeRender,
+      onAfterRender: props.onAfterRender
+    });
+  }
+
+  _getViewState(props) {
+    return props.viewState || this.viewState;
+  }
+
+  _getViews(props) {
+    let views = props.views || [new _mapView.default({
+      id: 'default-view'
+    })];
+    views = Array.isArray(views) ? views : [views];
+
+    if (views.length && props.controller) {
+      views[0].props.controller = props.controller;
     }
-  }, {
-    key: "_getViews",
-    value: function _getViews(props) {
-      var views = props.views || [new _mapView.default({
-        id: 'default-view'
-      })];
-      views = Array.isArray(views) ? views : [views];
 
-      if (views.length && props.controller) {
-        views[0].props.controller = props.controller;
-      }
+    return views;
+  }
 
-      return views;
-    }
-  }, {
-    key: "_requestPick",
-    value: function _requestPick(_ref5) {
-      var event = _ref5.event,
-          callback = _ref5.callback,
-          mode = _ref5.mode;
-      var _pickRequest = this._pickRequest;
+  _requestPick(_ref5) {
+    let {
+      event,
+      callback,
+      mode
+    } = _ref5;
+    const {
+      _pickRequest
+    } = this;
 
-      if (event.type === 'pointerleave') {
-        _pickRequest.x = -1;
-        _pickRequest.y = -1;
-        _pickRequest.radius = 0;
-      } else {
-        var pos = event.offsetCenter;
+    if (event.type === 'pointerleave') {
+      _pickRequest.x = -1;
+      _pickRequest.y = -1;
+      _pickRequest.radius = 0;
+    } else {
+      const pos = event.offsetCenter;
 
-        if (!pos) {
-          return;
-        }
-
-        _pickRequest.x = pos.x;
-        _pickRequest.y = pos.y;
-        _pickRequest.radius = this.props.pickingRadius;
-      }
-
-      _pickRequest.callback = callback;
-      _pickRequest.event = event;
-      _pickRequest.mode = mode;
-    }
-  }, {
-    key: "_pickAndCallback",
-    value: function _pickAndCallback() {
-      var _pickRequest = this._pickRequest;
-
-      if (_pickRequest.mode) {
-        var _this$deckPicker$pick = this.deckPicker.pickObject(Object.assign({
-          layers: this.layerManager.getLayers(),
-          viewports: this.getViewports(_pickRequest),
-          activateViewport: this.layerManager.activateViewport,
-          depth: 1
-        }, _pickRequest)),
-            result = _this$deckPicker$pick.result,
-            emptyInfo = _this$deckPicker$pick.emptyInfo;
-
-        if (_pickRequest.callback) {
-          var pickedInfo = result.find(function (info) {
-            return info.index >= 0;
-          }) || emptyInfo;
-
-          _pickRequest.callback(pickedInfo, _pickRequest.event);
-        }
-
-        _pickRequest.mode = null;
-      }
-    }
-  }, {
-    key: "_updateCursor",
-    value: function _updateCursor() {
-      if (this.canvas) {
-        this.canvas.style.cursor = this.props.getCursor(this.interactiveState);
-      }
-    }
-  }, {
-    key: "_updateAnimationProps",
-    value: function _updateAnimationProps(animationProps) {
-      this.layerManager.context.animationProps = animationProps;
-    }
-  }, {
-    key: "_setGLContext",
-    value: function _setGLContext(gl) {
-      if (this.layerManager) {
+      if (!pos) {
         return;
       }
 
-      if (!this.canvas) {
-        this.canvas = gl.canvas;
-        (0, _core.trackContextState)(gl, {
-          enable: true,
-          copyState: true
-        });
-      }
-
-      (0, _core.setParameters)(gl, {
-        blend: true,
-        blendFunc: [770, 771, 1, 771],
-        polygonOffsetFill: true,
-        depthTest: true,
-        depthFunc: 515
-      });
-      this.props.onWebGLInitialized(gl);
-      this.eventManager = new _mjolnir.EventManager(gl.canvas, {
-        events: {
-          pointerdown: this._onPointerDown,
-          pointermove: this._onPointerMove,
-          pointerleave: this._onPointerLeave
-        }
-      });
-
-      for (var eventType in _constants.EVENTS) {
-        this.eventManager.on(eventType, this._onEvent);
-      }
-
-      this.viewManager = new _viewManager.default({
-        eventManager: this.eventManager,
-        onViewStateChange: this._onViewStateChange,
-        onInteractiveStateChange: this._onInteractiveStateChange,
-        views: this._getViews(this.props),
-        viewState: this._getViewState(this.props),
-        width: this.width,
-        height: this.height
-      });
-      (0, _assert.default)(this.viewManager);
-      var viewport = this.viewManager.getViewports()[0];
-      this.layerManager = new _layerManager.default(gl, {
-        deck: this,
-        stats: this.stats,
-        viewport: viewport
-      });
-      this.effectManager = new _effectManager.default();
-      this.deckRenderer = new _deckRenderer.default(gl);
-      this.deckPicker = new _deckPicker.default(gl);
-      this.setProps(this.props);
-
-      this._updateCanvasSize();
-
-      this.props.onLoad();
+      _pickRequest.x = pos.x;
+      _pickRequest.y = pos.y;
+      _pickRequest.radius = this.props.pickingRadius;
     }
-  }, {
-    key: "_drawLayers",
-    value: function _drawLayers(redrawReason, renderOptions) {
-      var gl = this.layerManager.context.gl;
-      (0, _core.setParameters)(gl, this.props.parameters);
-      this.props.onBeforeRender({
-        gl: gl
-      });
-      var layers = this.layerManager.getLayers();
-      var activateViewport = this.layerManager.activateViewport;
-      this.deckRenderer.renderLayers(Object.assign({
-        layers: layers,
-        viewports: this.viewManager.getViewports(),
-        activateViewport: activateViewport,
-        views: this.viewManager.getViews(),
-        pass: 'screen',
-        redrawReason: redrawReason,
-        effects: this.effectManager.getEffects()
-      }, renderOptions));
-      this.props.onAfterRender({
-        gl: gl
+
+    _pickRequest.callback = callback;
+    _pickRequest.event = event;
+    _pickRequest.mode = mode;
+  }
+
+  _pickAndCallback() {
+    const {
+      _pickRequest
+    } = this;
+
+    if (_pickRequest.mode) {
+      const {
+        result,
+        emptyInfo
+      } = this.deckPicker.pickObject(Object.assign({
+        layers: this.layerManager.getLayers(),
+        viewports: this.getViewports(_pickRequest),
+        activateViewport: this.layerManager.activateViewport,
+        depth: 1
+      }, _pickRequest));
+
+      if (_pickRequest.callback) {
+        const pickedInfo = result.find(info => info.index >= 0) || emptyInfo;
+
+        _pickRequest.callback(pickedInfo, _pickRequest.event);
+      }
+
+      _pickRequest.mode = null;
+    }
+  }
+
+  _updateCursor() {
+    if (this.canvas) {
+      this.canvas.style.cursor = this.props.getCursor(this.interactiveState);
+    }
+  }
+
+  _updateAnimationProps(animationProps) {
+    this.layerManager.context.animationProps = animationProps;
+  }
+
+  _setGLContext(gl) {
+    if (this.layerManager) {
+      return;
+    }
+
+    if (!this.canvas) {
+      this.canvas = gl.canvas;
+      (0, _core.trackContextState)(gl, {
+        enable: true,
+        copyState: true
       });
     }
-  }, {
-    key: "_onRendererInitialized",
-    value: function _onRendererInitialized(_ref6) {
-      var gl = _ref6.gl;
 
-      this._setGLContext(gl);
+    (0, _core.setParameters)(gl, {
+      blend: true,
+      blendFunc: [770, 771, 1, 771],
+      polygonOffsetFill: true,
+      depthTest: true,
+      depthFunc: 515
+    });
+    this.props.onWebGLInitialized(gl);
+    this.eventManager = new _mjolnir.EventManager(gl.canvas, {
+      events: {
+        pointerdown: this._onPointerDown,
+        pointermove: this._onPointerMove,
+        pointerleave: this._onPointerLeave
+      }
+    });
+
+    for (const eventType in _constants.EVENTS) {
+      this.eventManager.on(eventType, this._onEvent);
     }
-  }, {
-    key: "_onRenderFrame",
-    value: function _onRenderFrame(animationProps) {
-      this._getFrameStats();
 
-      if (this._metricsCounter++ % 60 === 0) {
-        this._getMetrics();
+    this.viewManager = new _viewManager.default({
+      eventManager: this.eventManager,
+      onViewStateChange: this._onViewStateChange,
+      onInteractiveStateChange: this._onInteractiveStateChange,
+      views: this._getViews(this.props),
+      viewState: this._getViewState(this.props),
+      width: this.width,
+      height: this.height
+    });
+    (0, _assert.default)(this.viewManager);
+    const viewport = this.viewManager.getViewports()[0];
+    this.layerManager = new _layerManager.default(gl, {
+      deck: this,
+      stats: this.stats,
+      viewport
+    });
+    this.effectManager = new _effectManager.default();
+    this.deckRenderer = new _deckRenderer.default(gl);
+    this.deckPicker = new _deckPicker.default(gl);
+    this.setProps(this.props);
 
-        this.stats.reset();
+    this._updateCanvasSize();
 
-        _log.default.table(3, this.metrics)();
+    this.props.onLoad();
+  }
 
-        if (this.props._onMetrics) {
-          this.props._onMetrics(this.metrics);
-        }
-      }
+  _drawLayers(redrawReason, renderOptions) {
+    const {
+      gl
+    } = this.layerManager.context;
+    (0, _core.setParameters)(gl, this.props.parameters);
+    this.props.onBeforeRender({
+      gl
+    });
+    const layers = this.layerManager.getLayers();
+    const activateViewport = this.layerManager.activateViewport;
+    this.deckRenderer.renderLayers(Object.assign({
+      layers,
+      viewports: this.viewManager.getViewports(),
+      activateViewport,
+      views: this.viewManager.getViews(),
+      pass: 'screen',
+      redrawReason,
+      effects: this.effectManager.getEffects()
+    }, renderOptions));
+    this.props.onAfterRender({
+      gl
+    });
+  }
 
-      this._updateCanvasSize();
+  _onRendererInitialized(_ref6) {
+    let {
+      gl
+    } = _ref6;
 
-      this._updateCursor();
+    this._setGLContext(gl);
+  }
 
-      this.layerManager.updateLayers(animationProps);
+  _onRenderFrame(animationProps) {
+    this._getFrameStats();
 
-      this._updateAnimationProps(animationProps);
+    if (this._metricsCounter++ % 60 === 0) {
+      this._getMetrics();
 
-      this._pickAndCallback();
+      this.stats.reset();
 
-      this.redraw(false);
+      _log.default.table(3, this.metrics)();
 
-      if (this.viewManager) {
-        this.viewManager.updateViewStates(animationProps);
-      }
-    }
-  }, {
-    key: "_onViewStateChange",
-    value: function _onViewStateChange(params) {
-      var viewState = this.props.onViewStateChange(params) || params.viewState;
-
-      if (this.viewState) {
-        this.viewState[params.viewId] = viewState;
-        this.viewManager.setProps({
-          viewState: viewState
-        });
-      }
-    }
-  }, {
-    key: "_onInteractiveStateChange",
-    value: function _onInteractiveStateChange(_ref7) {
-      var _ref7$isDragging = _ref7.isDragging,
-          isDragging = _ref7$isDragging === void 0 ? false : _ref7$isDragging;
-
-      if (isDragging !== this.interactiveState.isDragging) {
-        this.interactiveState.isDragging = isDragging;
-      }
-    }
-  }, {
-    key: "_onEvent",
-    value: function _onEvent(event) {
-      var eventOptions = _constants.EVENTS[event.type];
-      var pos = event.offsetCenter;
-
-      if (!eventOptions || !pos) {
-        return;
-      }
-
-      var layers = this.layerManager.getLayers();
-      var info = this.deckPicker.getLastPickedObject({
-        x: pos.x,
-        y: pos.y,
-        layers: layers,
-        viewports: this.getViewports(pos)
-      }, this._lastPointerDownInfo);
-      var layer = info.layer;
-      var layerHandler = layer && (layer[eventOptions.handler] || layer.props[eventOptions.handler]);
-      var rootHandler = this.props[eventOptions.handler];
-      var handled = false;
-
-      if (layerHandler) {
-        handled = layerHandler.call(layer, info, event);
-      }
-
-      if (!handled && rootHandler) {
-        rootHandler(info, event);
+      if (this.props._onMetrics) {
+        this.props._onMetrics(this.metrics);
       }
     }
-  }, {
-    key: "_onPointerDown",
-    value: function _onPointerDown(event) {
-      var pos = event.offsetCenter;
-      this._lastPointerDownInfo = this.pickObject({
-        x: pos.x,
-        y: pos.y
+
+    this._updateCanvasSize();
+
+    this._updateCursor();
+
+    this.layerManager.updateLayers(animationProps);
+
+    this._updateAnimationProps(animationProps);
+
+    this._pickAndCallback();
+
+    this.redraw(false);
+
+    if (this.viewManager) {
+      this.viewManager.updateViewStates(animationProps);
+    }
+  }
+
+  _onViewStateChange(params) {
+    const viewState = this.props.onViewStateChange(params) || params.viewState;
+
+    if (this.viewState) {
+      this.viewState[params.viewId] = viewState;
+      this.viewManager.setProps({
+        viewState
       });
     }
-  }, {
-    key: "_onPointerMove",
-    value: function _onPointerMove(event) {
-      if (event.leftButton || event.rightButton) {
-        return;
-      }
+  }
 
-      this._requestPick({
-        callback: this.props.onHover,
-        event: event,
-        mode: 'hover'
-      });
-    }
-  }, {
-    key: "_onPointerLeave",
-    value: function _onPointerLeave(event) {
-      this._requestPick({
-        callback: this.props.onHover,
-        event: event,
-        mode: 'hover'
-      });
-    }
-  }, {
-    key: "_getFrameStats",
-    value: function _getFrameStats() {
-      this.stats.get('frameRate').timeEnd();
-      this.stats.get('frameRate').timeStart();
-      var animationLoopStats = this.animationLoop.stats;
-      this.stats.get('GPU Time').addTime(animationLoopStats.get('GPU Time').lastTiming);
-      this.stats.get('CPU Time').addTime(animationLoopStats.get('CPU Time').lastTiming);
-    }
-  }, {
-    key: "_getMetrics",
-    value: function _getMetrics() {
-      this.metrics.fps = this.stats.get('frameRate').getHz();
-      this.metrics.setPropsTime = this.stats.get('setProps Time').time;
-      this.metrics.updateAttributesTime = this.stats.get('Update Attributes').time;
-      this.metrics.framesRedrawn = this.stats.get('Redraw Count').count;
-      this.metrics.pickTime = this.stats.get('pickObject Time').time + this.stats.get('pickMultipleObjects Time').time + this.stats.get('pickObjects Time').time;
-      this.metrics.pickCount = this.stats.get('Pick Count').count;
-      this.metrics.gpuTime = this.stats.get('GPU Time').time;
-      this.metrics.cpuTime = this.stats.get('CPU Time').time;
-      this.metrics.gpuTimePerFrame = this.stats.get('GPU Time').getAverageTime();
-      this.metrics.cpuTimePerFrame = this.stats.get('CPU Time').getAverageTime();
+  _onInteractiveStateChange(_ref7) {
+    let {
+      isDragging = false
+    } = _ref7;
 
-      var memoryStats = _core.lumaStats.get('Memory Usage');
-
-      this.metrics.bufferMemory = memoryStats.get('Buffer Memory').count;
-      this.metrics.textureMemory = memoryStats.get('Texture Memory').count;
-      this.metrics.renderbufferMemory = memoryStats.get('Renderbuffer Memory').count;
-      this.metrics.gpuMemory = memoryStats.get('GPU Memory').count;
+    if (isDragging !== this.interactiveState.isDragging) {
+      this.interactiveState.isDragging = isDragging;
     }
-  }]);
-  return Deck;
-}();
+  }
+
+  _onEvent(event) {
+    const eventOptions = _constants.EVENTS[event.type];
+    const pos = event.offsetCenter;
+
+    if (!eventOptions || !pos) {
+      return;
+    }
+
+    const layers = this.layerManager.getLayers();
+    const info = this.deckPicker.getLastPickedObject({
+      x: pos.x,
+      y: pos.y,
+      layers,
+      viewports: this.getViewports(pos)
+    }, this._lastPointerDownInfo);
+    const {
+      layer
+    } = info;
+    const layerHandler = layer && (layer[eventOptions.handler] || layer.props[eventOptions.handler]);
+    const rootHandler = this.props[eventOptions.handler];
+    let handled = false;
+
+    if (layerHandler) {
+      handled = layerHandler.call(layer, info, event);
+    }
+
+    if (!handled && rootHandler) {
+      rootHandler(info, event);
+    }
+  }
+
+  _onPointerDown(event) {
+    const pos = event.offsetCenter;
+    this._lastPointerDownInfo = this.pickObject({
+      x: pos.x,
+      y: pos.y
+    });
+  }
+
+  _onPointerMove(event) {
+    if (event.leftButton || event.rightButton) {
+      return;
+    }
+
+    this._requestPick({
+      callback: this.props.onHover,
+      event,
+      mode: 'hover'
+    });
+  }
+
+  _onPointerLeave(event) {
+    this._requestPick({
+      callback: this.props.onHover,
+      event,
+      mode: 'hover'
+    });
+  }
+
+  _getFrameStats() {
+    this.stats.get('frameRate').timeEnd();
+    this.stats.get('frameRate').timeStart();
+    const animationLoopStats = this.animationLoop.stats;
+    this.stats.get('GPU Time').addTime(animationLoopStats.get('GPU Time').lastTiming);
+    this.stats.get('CPU Time').addTime(animationLoopStats.get('CPU Time').lastTiming);
+  }
+
+  _getMetrics() {
+    this.metrics.fps = this.stats.get('frameRate').getHz();
+    this.metrics.setPropsTime = this.stats.get('setProps Time').time;
+    this.metrics.updateAttributesTime = this.stats.get('Update Attributes').time;
+    this.metrics.framesRedrawn = this.stats.get('Redraw Count').count;
+    this.metrics.pickTime = this.stats.get('pickObject Time').time + this.stats.get('pickMultipleObjects Time').time + this.stats.get('pickObjects Time').time;
+    this.metrics.pickCount = this.stats.get('Pick Count').count;
+    this.metrics.gpuTime = this.stats.get('GPU Time').time;
+    this.metrics.cpuTime = this.stats.get('CPU Time').time;
+    this.metrics.gpuTimePerFrame = this.stats.get('GPU Time').getAverageTime();
+    this.metrics.cpuTimePerFrame = this.stats.get('CPU Time').getAverageTime();
+
+    const memoryStats = _core.lumaStats.get('Memory Usage');
+
+    this.metrics.bufferMemory = memoryStats.get('Buffer Memory').count;
+    this.metrics.textureMemory = memoryStats.get('Texture Memory').count;
+    this.metrics.renderbufferMemory = memoryStats.get('Renderbuffer Memory').count;
+    this.metrics.gpuMemory = memoryStats.get('GPU Memory').count;
+  }
+
+}
 
 exports.default = Deck;
 Deck.getPropTypes = getPropTypes;

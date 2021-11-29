@@ -7,38 +7,38 @@ Object.defineProperty(exports, "__esModule", {
 });
 Object.defineProperty(exports, "GreatCircleLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _greatCircleLayer.default;
-  }
-});
-Object.defineProperty(exports, "S2Layer", {
-  enumerable: true,
-  get: function get() {
-    return _s2Layer.default;
-  }
-});
-Object.defineProperty(exports, "TileLayer", {
-  enumerable: true,
-  get: function get() {
-    return _tileLayer.default;
-  }
-});
-Object.defineProperty(exports, "TripsLayer", {
-  enumerable: true,
-  get: function get() {
-    return _tripsLayer.default;
   }
 });
 Object.defineProperty(exports, "H3ClusterLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _h3ClusterLayer.default;
   }
 });
 Object.defineProperty(exports, "H3HexagonLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _h3HexagonLayer.default;
+  }
+});
+Object.defineProperty(exports, "S2Layer", {
+  enumerable: true,
+  get: function () {
+    return _s2Layer.default;
+  }
+});
+Object.defineProperty(exports, "TileLayer", {
+  enumerable: true,
+  get: function () {
+    return _tileLayer.default;
+  }
+});
+Object.defineProperty(exports, "TripsLayer", {
+  enumerable: true,
+  get: function () {
+    return _tripsLayer.default;
   }
 });
 

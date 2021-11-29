@@ -7,20 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _get2 = _interopRequireDefault(require("@babel/runtime/helpers/get"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
 var _core = require("@luma.gl/core");
@@ -31,11 +17,16 @@ var _bitmapLayerVertex = _interopRequireDefault(require("./bitmap-layer-vertex")
 
 var _bitmapLayerFragment = _interopRequireDefault(require("./bitmap-layer-fragment"));
 
-var _DEFAULT_TEXTURE_PARA;
-
-var fp64LowPart = _core.fp64.fp64LowPart;
-var DEFAULT_TEXTURE_PARAMETERS = (_DEFAULT_TEXTURE_PARA = {}, (0, _defineProperty2.default)(_DEFAULT_TEXTURE_PARA, 10241, 9987), (0, _defineProperty2.default)(_DEFAULT_TEXTURE_PARA, 10240, 9729), (0, _defineProperty2.default)(_DEFAULT_TEXTURE_PARA, 10242, 33071), (0, _defineProperty2.default)(_DEFAULT_TEXTURE_PARA, 10243, 33071), _DEFAULT_TEXTURE_PARA);
-var defaultProps = {
+const {
+  fp64LowPart
+} = _core.fp64;
+const DEFAULT_TEXTURE_PARAMETERS = {
+  [10241]: 9987,
+  [10240]: 9729,
+  [10242]: 33071,
+  [10243]: 33071
+};
+const defaultProps = {
   image: null,
   bounds: {
     type: 'array',
@@ -59,215 +50,208 @@ var defaultProps = {
   }
 };
 
-var BitmapLayer = function (_Layer) {
-  (0, _inherits2.default)(BitmapLayer, _Layer);
-
-  function BitmapLayer() {
-    (0, _classCallCheck2.default)(this, BitmapLayer);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(BitmapLayer).apply(this, arguments));
+class BitmapLayer extends _keplerOutdatedDeck.Layer {
+  getShaders() {
+    const projectModule = this.use64bitProjection() ? 'project64' : 'project32';
+    return {
+      vs: _bitmapLayerVertex.default,
+      fs: _bitmapLayerFragment.default,
+      modules: [projectModule, 'picking']
+    };
   }
 
-  (0, _createClass2.default)(BitmapLayer, [{
-    key: "getShaders",
-    value: function getShaders() {
-      var projectModule = this.use64bitProjection() ? 'project64' : 'project32';
-      return {
-        vs: _bitmapLayerVertex.default,
-        fs: _bitmapLayerFragment.default,
-        modules: [projectModule, 'picking']
-      };
-    }
-  }, {
-    key: "initializeState",
-    value: function initializeState() {
-      var attributeManager = this.getAttributeManager();
-      attributeManager.add({
-        positions: {
-          size: 3,
-          update: this.calculatePositions,
-          value: new Float32Array(12)
-        },
-        positions64xyLow: {
-          size: 3,
-          update: this.calculatePositions64xyLow,
-          value: new Float32Array(12)
-        }
-      });
+  initializeState() {
+    const attributeManager = this.getAttributeManager();
+    attributeManager.add({
+      positions: {
+        size: 3,
+        update: this.calculatePositions,
+        value: new Float32Array(12)
+      },
+      positions64xyLow: {
+        size: 3,
+        update: this.calculatePositions64xyLow,
+        value: new Float32Array(12)
+      }
+    });
+    this.setState({
+      numInstances: 4
+    });
+  }
+
+  updateState(_ref) {
+    let {
+      props,
+      oldProps,
+      changeFlags
+    } = _ref;
+
+    if (props.fp64 !== oldProps.fp64) {
+      const {
+        gl
+      } = this.context;
+
+      if (this.state.model) {
+        this.state.model.delete();
+      }
+
       this.setState({
-        numInstances: 4
+        model: this._getModel(gl)
+      });
+      this.getAttributeManager().invalidateAll();
+    }
+
+    if (props.image !== oldProps.image) {
+      this.loadTexture(props.image);
+    }
+
+    const attributeManager = this.getAttributeManager();
+
+    if (props.bounds !== oldProps.bounds) {
+      this.setState({
+        positions: this._getPositionsFromBounds(props.bounds)
+      });
+      attributeManager.invalidate('positions');
+      attributeManager.invalidate('positions64xyLow');
+    }
+  }
+
+  finalizeState() {
+    super.finalizeState();
+
+    if (this.state.bitmapTexture) {
+      this.state.bitmapTexture.delete();
+    }
+  }
+
+  _getPositionsFromBounds(bounds) {
+    const positions = new Array(12);
+
+    if (Number.isFinite(bounds[0])) {
+      positions[0] = bounds[0];
+      positions[1] = bounds[1];
+      positions[2] = 0;
+      positions[3] = bounds[0];
+      positions[4] = bounds[3];
+      positions[5] = 0;
+      positions[6] = bounds[2];
+      positions[7] = bounds[3];
+      positions[8] = 0;
+      positions[9] = bounds[2];
+      positions[10] = bounds[1];
+      positions[11] = 0;
+    } else {
+      for (let i = 0; i < bounds.length; i++) {
+        positions[i * 3 + 0] = bounds[i][0];
+        positions[i * 3 + 1] = bounds[i][1];
+        positions[i * 3 + 2] = bounds[i][2] || 0;
+      }
+    }
+
+    return positions;
+  }
+
+  _getModel(gl) {
+    if (!gl) {
+      return null;
+    }
+
+    return new _core.Model(gl, Object.assign({}, this.getShaders(), {
+      id: this.props.id,
+      shaderCache: this.context.shaderCache,
+      geometry: new _core.Geometry({
+        drawMode: 6,
+        vertexCount: 4,
+        attributes: {
+          texCoords: new Float32Array([0, 0, 0, 1, 1, 1, 1, 0])
+        }
+      }),
+      isInstanced: false
+    }));
+  }
+
+  draw(_ref2) {
+    let {
+      uniforms
+    } = _ref2;
+    const {
+      bitmapTexture,
+      model
+    } = this.state;
+    const {
+      desaturate,
+      transparentColor,
+      tintColor
+    } = this.props;
+
+    if (bitmapTexture && model) {
+      model.setUniforms(Object.assign({}, uniforms, {
+        bitmapTexture,
+        desaturate,
+        transparentColor,
+        tintColor
+      })).draw();
+    }
+  }
+
+  loadTexture(image) {
+    if (typeof image === 'string') {
+      image = (0, _images.loadImage)(image);
+    }
+
+    if (image instanceof Promise) {
+      image.then(data => this.loadTexture(data));
+      return;
+    }
+
+    const {
+      gl
+    } = this.context;
+
+    if (this.state.bitmapTexture) {
+      this.state.bitmapTexture.delete();
+    }
+
+    if (image instanceof _core.Texture2D) {
+      this.setState({
+        bitmapTexture: image
+      });
+    } else if (image instanceof Image || image instanceof HTMLCanvasElement) {
+      this.setState({
+        bitmapTexture: new _core.Texture2D(gl, {
+          data: image,
+          parameters: DEFAULT_TEXTURE_PARAMETERS
+        })
       });
     }
-  }, {
-    key: "updateState",
-    value: function updateState(_ref) {
-      var props = _ref.props,
-          oldProps = _ref.oldProps,
-          changeFlags = _ref.changeFlags;
+  }
 
-      if (props.fp64 !== oldProps.fp64) {
-        var gl = this.context.gl;
+  calculatePositions(_ref3) {
+    let {
+      value
+    } = _ref3;
+    const {
+      positions
+    } = this.state;
+    value.set(positions);
+  }
 
-        if (this.state.model) {
-          this.state.model.delete();
-        }
+  calculatePositions64xyLow(attribute) {
+    const isFP64 = this.use64bitPositions();
+    attribute.constant = !isFP64;
 
-        this.setState({
-          model: this._getModel(gl)
-        });
-        this.getAttributeManager().invalidateAll();
-      }
-
-      if (props.image !== oldProps.image) {
-        this.loadTexture(props.image);
-      }
-
-      var attributeManager = this.getAttributeManager();
-
-      if (props.bounds !== oldProps.bounds) {
-        this.setState({
-          positions: this._getPositionsFromBounds(props.bounds)
-        });
-        attributeManager.invalidate('positions');
-        attributeManager.invalidate('positions64xyLow');
-      }
+    if (!isFP64) {
+      attribute.value = new Float32Array(4);
+      return;
     }
-  }, {
-    key: "finalizeState",
-    value: function finalizeState() {
-      (0, _get2.default)((0, _getPrototypeOf2.default)(BitmapLayer.prototype), "finalizeState", this).call(this);
 
-      if (this.state.bitmapTexture) {
-        this.state.bitmapTexture.delete();
-      }
-    }
-  }, {
-    key: "_getPositionsFromBounds",
-    value: function _getPositionsFromBounds(bounds) {
-      var positions = new Array(12);
+    const {
+      value
+    } = attribute;
+    value.set(this.state.positions.map(fp64LowPart));
+  }
 
-      if (Number.isFinite(bounds[0])) {
-        positions[0] = bounds[0];
-        positions[1] = bounds[1];
-        positions[2] = 0;
-        positions[3] = bounds[0];
-        positions[4] = bounds[3];
-        positions[5] = 0;
-        positions[6] = bounds[2];
-        positions[7] = bounds[3];
-        positions[8] = 0;
-        positions[9] = bounds[2];
-        positions[10] = bounds[1];
-        positions[11] = 0;
-      } else {
-        for (var i = 0; i < bounds.length; i++) {
-          positions[i * 3 + 0] = bounds[i][0];
-          positions[i * 3 + 1] = bounds[i][1];
-          positions[i * 3 + 2] = bounds[i][2] || 0;
-        }
-      }
-
-      return positions;
-    }
-  }, {
-    key: "_getModel",
-    value: function _getModel(gl) {
-      if (!gl) {
-        return null;
-      }
-
-      return new _core.Model(gl, Object.assign({}, this.getShaders(), {
-        id: this.props.id,
-        shaderCache: this.context.shaderCache,
-        geometry: new _core.Geometry({
-          drawMode: 6,
-          vertexCount: 4,
-          attributes: {
-            texCoords: new Float32Array([0, 0, 0, 1, 1, 1, 1, 0])
-          }
-        }),
-        isInstanced: false
-      }));
-    }
-  }, {
-    key: "draw",
-    value: function draw(_ref2) {
-      var uniforms = _ref2.uniforms;
-      var _this$state = this.state,
-          bitmapTexture = _this$state.bitmapTexture,
-          model = _this$state.model;
-      var _this$props = this.props,
-          desaturate = _this$props.desaturate,
-          transparentColor = _this$props.transparentColor,
-          tintColor = _this$props.tintColor;
-
-      if (bitmapTexture && model) {
-        model.setUniforms(Object.assign({}, uniforms, {
-          bitmapTexture: bitmapTexture,
-          desaturate: desaturate,
-          transparentColor: transparentColor,
-          tintColor: tintColor
-        })).draw();
-      }
-    }
-  }, {
-    key: "loadTexture",
-    value: function loadTexture(image) {
-      var _this = this;
-
-      if (typeof image === 'string') {
-        image = (0, _images.loadImage)(image);
-      }
-
-      if (image instanceof Promise) {
-        image.then(function (data) {
-          return _this.loadTexture(data);
-        });
-        return;
-      }
-
-      var gl = this.context.gl;
-
-      if (this.state.bitmapTexture) {
-        this.state.bitmapTexture.delete();
-      }
-
-      if (image instanceof _core.Texture2D) {
-        this.setState({
-          bitmapTexture: image
-        });
-      } else if (image instanceof Image || image instanceof HTMLCanvasElement) {
-        this.setState({
-          bitmapTexture: new _core.Texture2D(gl, {
-            data: image,
-            parameters: DEFAULT_TEXTURE_PARAMETERS
-          })
-        });
-      }
-    }
-  }, {
-    key: "calculatePositions",
-    value: function calculatePositions(_ref3) {
-      var value = _ref3.value;
-      var positions = this.state.positions;
-      value.set(positions);
-    }
-  }, {
-    key: "calculatePositions64xyLow",
-    value: function calculatePositions64xyLow(attribute) {
-      var isFP64 = this.use64bitPositions();
-      attribute.constant = !isFP64;
-
-      if (!isFP64) {
-        attribute.value = new Float32Array(4);
-        return;
-      }
-
-      var value = attribute.value;
-      value.set(this.state.positions.map(fp64LowPart));
-    }
-  }]);
-  return BitmapLayer;
-}(_keplerOutdatedDeck.Layer);
+}
 
 exports.default = BitmapLayer;
 BitmapLayer.layerName = 'BitmapLayer';

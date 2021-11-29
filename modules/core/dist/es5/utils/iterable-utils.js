@@ -4,16 +4,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.createIterable = createIterable;
-var EMPTY_ARRAY = [];
-var placeholderArray = [];
+const EMPTY_ARRAY = [];
+const placeholderArray = [];
 
 function createIterable(data) {
-  var startRow = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  var endRow = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
-  var iterable = EMPTY_ARRAY;
-  var objectInfo = {
+  let startRow = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  let endRow = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : Infinity;
+  let iterable = EMPTY_ARRAY;
+  const objectInfo = {
     index: -1,
-    data: data,
+    data,
     target: []
   };
 
@@ -32,8 +32,8 @@ function createIterable(data) {
   }
 
   return {
-    iterable: iterable,
-    objectInfo: objectInfo
+    iterable,
+    objectInfo
   };
 }
 //# sourceMappingURL=iterable-utils.js.map

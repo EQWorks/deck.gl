@@ -5,46 +5,46 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.initializeShaderModules = initializeShaderModules;
 Object.defineProperty(exports, "fp32", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _core.fp32;
   }
 });
 Object.defineProperty(exports, "fp64", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _core.fp64;
-  }
-});
-Object.defineProperty(exports, "picking", {
-  enumerable: true,
-  get: function get() {
-    return _core.picking;
   }
 });
 Object.defineProperty(exports, "gouraudlighting", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _core.gouraudlighting;
   }
 });
+exports.initializeShaderModules = initializeShaderModules;
 Object.defineProperty(exports, "phonglighting", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _core.phonglighting;
+  }
+});
+Object.defineProperty(exports, "picking", {
+  enumerable: true,
+  get: function () {
+    return _core.picking;
   }
 });
 Object.defineProperty(exports, "project", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _project.default;
   }
 });
 Object.defineProperty(exports, "project64", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _project3.default;
   }
 });

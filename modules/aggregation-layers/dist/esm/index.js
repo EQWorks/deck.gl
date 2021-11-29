@@ -9,12 +9,12 @@ export { default as _GPUGridAggregator } from './utils/gpu-grid-aggregation/gpu-
 import { default as BinSorter } from './utils/bin-sorter';
 import { linearScale, getLinearScale, quantizeScale, getQuantizeScale } from './utils/scale-utils';
 import { defaultColorRange } from './utils/color-utils';
-export var experimental = {
-  BinSorter: BinSorter,
-  linearScale: linearScale,
-  getLinearScale: getLinearScale,
-  quantizeScale: quantizeScale,
-  getQuantizeScale: getQuantizeScale,
-  defaultColorRange: defaultColorRange
+export const experimental = {
+  BinSorter,
+  linearScale,
+  getLinearScale,
+  quantizeScale,
+  getQuantizeScale,
+  defaultColorRange
 };
 //# sourceMappingURL=index.js.map

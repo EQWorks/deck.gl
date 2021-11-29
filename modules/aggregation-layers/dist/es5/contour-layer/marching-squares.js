@@ -3,20 +3,20 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.CONTOUR_TYPE = void 0;
 exports.getCode = getCode;
 exports.getVertices = getVertices;
-exports.CONTOUR_TYPE = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
 var _marchingSquaresCodes = require("./marching-squares-codes");
 
-var CONTOUR_TYPE = {
+const CONTOUR_TYPE = {
   ISO_LINES: 1,
   ISO_BANDS: 2
 };
 exports.CONTOUR_TYPE = CONTOUR_TYPE;
-var DEFAULT_THRESHOLD_DATA = {
+const DEFAULT_THRESHOLD_DATA = {
   zIndex: 0,
   zOffset: 0.005
 };
@@ -34,12 +34,14 @@ function getVertexCode(weight, threshold) {
 }
 
 function getCode(opts) {
-  var cellWeights = opts.cellWeights,
-      x = opts.x,
-      y = opts.y,
-      width = opts.width,
-      height = opts.height;
-  var threshold = opts.threshold;
+  const {
+    cellWeights,
+    x,
+    y,
+    width,
+    height
+  } = opts;
+  let threshold = opts.threshold;
 
   if (opts.thresholdValue) {
     _keplerOutdatedDeck.log.deprecated('thresholdValue', 'threshold')();
@@ -47,13 +49,13 @@ function getCode(opts) {
     threshold = opts.thresholdValue;
   }
 
-  var isLeftBoundary = x < 0;
-  var isRightBoundary = x >= width - 1;
-  var isBottomBoundary = y < 0;
-  var isTopBoundary = y >= height - 1;
-  var isBoundary = isLeftBoundary || isRightBoundary || isBottomBoundary || isTopBoundary;
-  var weights = {};
-  var codes = {};
+  const isLeftBoundary = x < 0;
+  const isRightBoundary = x >= width - 1;
+  const isBottomBoundary = y < 0;
+  const isTopBoundary = y >= height - 1;
+  const isBoundary = isLeftBoundary || isRightBoundary || isBottomBoundary || isTopBoundary;
+  const weights = {};
+  const codes = {};
 
   if (isLeftBoundary || isTopBoundary) {
     codes.top = 0;
@@ -83,11 +85,13 @@ function getCode(opts) {
     codes.current = getVertexCode(weights.current, threshold);
   }
 
-  var top = codes.top,
-      topRight = codes.topRight,
-      right = codes.right,
-      current = codes.current;
-  var code = -1;
+  const {
+    top,
+    topRight,
+    right,
+    current
+  } = codes;
+  let code = -1;
 
   if (Number.isFinite(threshold)) {
     code = top << 3 | topRight << 2 | right << 1 | current;
@@ -97,47 +101,48 @@ function getCode(opts) {
     code = top << 6 | topRight << 4 | right << 2 | current;
   }
 
-  var meanCode = 0;
+  let meanCode = 0;
 
   if (!isBoundary) {
     meanCode = getVertexCode((weights.top + weights.topRight + weights.right + weights.current) / 4, threshold);
   }
 
   return {
-    code: code,
-    meanCode: meanCode
+    code,
+    meanCode
   };
 }
 
 function getVertices(opts) {
-  var gridOrigin = opts.gridOrigin,
-      cellSize = opts.cellSize,
-      x = opts.x,
-      y = opts.y,
-      code = opts.code,
-      meanCode = opts.meanCode,
-      _opts$type = opts.type,
-      type = _opts$type === void 0 ? CONTOUR_TYPE.ISO_LINES : _opts$type;
-  var thresholdData = Object.assign({}, DEFAULT_THRESHOLD_DATA, opts.thresholdData);
-  var offsets = type === CONTOUR_TYPE.ISO_BANDS ? _marchingSquaresCodes.ISOBANDS_CODE_OFFSET_MAP[code] : _marchingSquaresCodes.ISOLINES_CODE_OFFSET_MAP[code];
+  const {
+    gridOrigin,
+    cellSize,
+    x,
+    y,
+    code,
+    meanCode,
+    type = CONTOUR_TYPE.ISO_LINES
+  } = opts;
+  const thresholdData = Object.assign({}, DEFAULT_THRESHOLD_DATA, opts.thresholdData);
+  let offsets = type === CONTOUR_TYPE.ISO_BANDS ? _marchingSquaresCodes.ISOBANDS_CODE_OFFSET_MAP[code] : _marchingSquaresCodes.ISOLINES_CODE_OFFSET_MAP[code];
 
   if (!Array.isArray(offsets)) {
     offsets = offsets[meanCode];
   }
 
-  var vZ = thresholdData.zIndex * thresholdData.zOffset;
-  var rX = (x + 1) * cellSize[0];
-  var rY = (y + 1) * cellSize[1];
-  var refVertexX = gridOrigin[0] + rX;
-  var refVertexY = gridOrigin[1] + rY;
+  const vZ = thresholdData.zIndex * thresholdData.zOffset;
+  const rX = (x + 1) * cellSize[0];
+  const rY = (y + 1) * cellSize[1];
+  const refVertexX = gridOrigin[0] + rX;
+  const refVertexY = gridOrigin[1] + rY;
 
   if (type === CONTOUR_TYPE.ISO_BANDS) {
-    var polygons = [];
-    offsets.forEach(function (polygonOffsets) {
-      var polygon = [];
-      polygonOffsets.forEach(function (xyOffset) {
-        var vX = refVertexX + xyOffset[0] * cellSize[0];
-        var vY = refVertexY + xyOffset[1] * cellSize[1];
+    const polygons = [];
+    offsets.forEach(polygonOffsets => {
+      const polygon = [];
+      polygonOffsets.forEach(xyOffset => {
+        const vX = refVertexX + xyOffset[0] * cellSize[0];
+        const vY = refVertexY + xyOffset[1] * cellSize[1];
         polygon.push([vX, vY, vZ]);
       });
       polygons.push(polygon);
@@ -145,11 +150,11 @@ function getVertices(opts) {
     return polygons;
   }
 
-  var lines = [];
-  offsets.forEach(function (xyOffsets) {
-    xyOffsets.forEach(function (offset) {
-      var vX = refVertexX + offset[0] * cellSize[0];
-      var vY = refVertexY + offset[1] * cellSize[1];
+  const lines = [];
+  offsets.forEach(xyOffsets => {
+    xyOffsets.forEach(offset => {
+      const vX = refVertexX + offset[0] * cellSize[0];
+      const vY = refVertexY + offset[1] * cellSize[1];
       lines.push([vX, vY, vZ]);
     });
   });

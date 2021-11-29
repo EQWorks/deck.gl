@@ -9,9 +9,7 @@ export default function evaluateChildren(children, childProps) {
   }
 
   if (Array.isArray(children)) {
-    return children.map(function (child) {
-      return evaluateChildren(child, childProps);
-    });
+    return children.map(child => evaluateChildren(child, childProps));
   }
 
   return cloneElement(children, childProps);

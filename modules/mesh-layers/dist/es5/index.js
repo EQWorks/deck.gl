@@ -5,16 +5,16 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "SimpleMeshLayer", {
-  enumerable: true,
-  get: function get() {
-    return _simpleMeshLayer.default;
-  }
-});
 Object.defineProperty(exports, "ScenegraphLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _scenegraphLayer.default;
+  }
+});
+Object.defineProperty(exports, "SimpleMeshLayer", {
+  enumerable: true,
+  get: function () {
+    return _simpleMeshLayer.default;
   }
 });
 

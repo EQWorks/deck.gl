@@ -8,62 +8,66 @@ exports.generateContours = generateContours;
 var _marchingSquares = require("./marching-squares");
 
 function generateContours(_ref) {
-  var thresholdData = _ref.thresholdData,
-      colors = _ref.colors,
-      cellWeights = _ref.cellWeights,
-      gridSize = _ref.gridSize,
-      gridOrigin = _ref.gridOrigin,
-      cellSize = _ref.cellSize;
-  var contourSegments = [];
-  var contourPolygons = [];
-  var width = gridSize[0];
-  var height = gridSize[1];
-  thresholdData.forEach(function (data, index) {
-    var threshold = data.threshold;
+  let {
+    thresholdData,
+    colors,
+    cellWeights,
+    gridSize,
+    gridOrigin,
+    cellSize
+  } = _ref;
+  const contourSegments = [];
+  const contourPolygons = [];
+  const width = gridSize[0];
+  const height = gridSize[1];
+  thresholdData.forEach((data, index) => {
+    const {
+      threshold
+    } = data;
 
-    for (var x = -1; x < width; x++) {
-      for (var y = -1; y < height; y++) {
-        var _getCode = (0, _marchingSquares.getCode)({
-          cellWeights: cellWeights,
-          threshold: threshold,
-          x: x,
-          y: y,
-          width: width,
-          height: height
-        }),
-            code = _getCode.code,
-            meanCode = _getCode.meanCode;
-
-        var opts = {
-          gridOrigin: gridOrigin,
-          cellSize: cellSize,
-          x: x,
-          y: y,
-          width: width,
-          height: height,
-          code: code,
-          meanCode: meanCode,
+    for (let x = -1; x < width; x++) {
+      for (let y = -1; y < height; y++) {
+        const {
+          code,
+          meanCode
+        } = (0, _marchingSquares.getCode)({
+          cellWeights,
+          threshold,
+          x,
+          y,
+          width,
+          height
+        });
+        const opts = {
+          gridOrigin,
+          cellSize,
+          x,
+          y,
+          width,
+          height,
+          code,
+          meanCode,
           thresholdData: data
         };
 
         if (Array.isArray(threshold)) {
           opts.type = _marchingSquares.CONTOUR_TYPE.ISO_BANDS;
-          var polygons = (0, _marchingSquares.getVertices)(opts);
-          polygons.forEach(function (polygon) {
+          const polygons = (0, _marchingSquares.getVertices)(opts);
+          polygons.forEach(polygon => {
             contourPolygons.push({
               vertices: polygon,
-              threshold: threshold
+              threshold
             });
           });
         } else {
           opts.type = _marchingSquares.CONTOUR_TYPE.ISO_LINES;
-          var vertices = (0, _marchingSquares.getVertices)(opts);
+          const vertices = (0, _marchingSquares.getVertices)(opts);
 
-          for (var i = 0; i < vertices.length; i += 2) {
+          for (let i = 0; i < vertices.length; i += 2) {
             contourSegments.push({
               start: vertices[i],
               end: vertices[i + 1],
-              threshold: threshold
+              threshold
             });
           }
         }
@@ -71,8 +75,8 @@ function generateContours(_ref) {
     }
   });
   return {
-    contourSegments: contourSegments,
-    contourPolygons: contourPolygons
+    contourSegments,
+    contourPolygons
   };
 }
 //# sourceMappingURL=contour-utils.js.map

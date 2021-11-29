@@ -1,6 +1,6 @@
 import { createGLContext, setContextDefaults } from '@luma.gl/core';
 
-var _global = typeof global !== 'undefined' ? global : window;
+const _global = typeof global !== 'undefined' ? global : window;
 
 setContextDefaults({
   width: 1,

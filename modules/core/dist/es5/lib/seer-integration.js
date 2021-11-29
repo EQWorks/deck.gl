@@ -5,13 +5,11 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.removeLayerInSeer = exports.updateLayerInSeer = exports.initLayerInSeer = exports.seerInitListener = exports.layerEditListener = exports.applyPropOverrides = exports.setPropOverrides = void 0;
-
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+exports.updateLayerInSeer = exports.setPropOverrides = exports.seerInitListener = exports.removeLayerInSeer = exports.layerEditListener = exports.initLayerInSeer = exports.applyPropOverrides = void 0;
 
 var _seer = _interopRequireDefault(require("seer"));
 
-var recursiveSet = function recursiveSet(obj, path, value) {
+const recursiveSet = (obj, path, value) => {
   if (!obj) {
     return;
   }
@@ -23,9 +21,9 @@ var recursiveSet = function recursiveSet(obj, path, value) {
   }
 };
 
-var overrides = new Map();
+const overrides = new Map();
 
-var setPropOverrides = function setPropOverrides(id, valuePath, value) {
+const setPropOverrides = (id, valuePath, value) => {
   if (!_seer.default.isReady()) {
     return;
   }
@@ -34,35 +32,35 @@ var setPropOverrides = function setPropOverrides(id, valuePath, value) {
     overrides.set(id, new Map());
   }
 
-  var props = overrides.get(id);
+  const props = overrides.get(id);
   props.set(valuePath, value);
 };
 
 exports.setPropOverrides = setPropOverrides;
 
-var applyPropOverrides = function applyPropOverrides(props) {
+const applyPropOverrides = props => {
   if (!_seer.default.isReady() || !props.id) {
     return;
   }
 
-  var overs = overrides.get(props.id);
+  const overs = overrides.get(props.id);
 
   if (!overs) {
     return;
   }
 
-  overs.forEach(function (value, valuePath) {
+  overs.forEach((value, valuePath) => {
     recursiveSet(props, valuePath, value);
 
     if (valuePath[0] === 'data') {
-      props.data = (0, _toConsumableArray2.default)(props.data);
+      props.data = [...props.data];
     }
   });
 };
 
 exports.applyPropOverrides = applyPropOverrides;
 
-var layerEditListener = function layerEditListener(cb) {
+const layerEditListener = cb => {
   if (!_seer.default.isReady()) {
     return;
   }
@@ -72,7 +70,7 @@ var layerEditListener = function layerEditListener(cb) {
 
 exports.layerEditListener = layerEditListener;
 
-var seerInitListener = function seerInitListener(cb) {
+const seerInitListener = cb => {
   if (!_seer.default.isReady()) {
     return;
   }
@@ -82,15 +80,15 @@ var seerInitListener = function seerInitListener(cb) {
 
 exports.seerInitListener = seerInitListener;
 
-var initLayerInSeer = function initLayerInSeer(layer) {
+const initLayerInSeer = layer => {
   if (!_seer.default.isReady() || !layer) {
     return;
   }
 
-  var badges = [layer.constructor.layerName];
+  const badges = [layer.constructor.layerName];
 
   _seer.default.listItem('deck.gl', layer.id, {
-    badges: badges,
+    badges,
     links: layer.state && layer.state.model ? ["luma.gl:".concat(layer.state.model.id)] : undefined,
     parent: layer.parent ? layer.parent.id : undefined
   });
@@ -98,19 +96,19 @@ var initLayerInSeer = function initLayerInSeer(layer) {
 
 exports.initLayerInSeer = initLayerInSeer;
 
-var updateLayerInSeer = function updateLayerInSeer(layer) {
+const updateLayerInSeer = layer => {
   if (!_seer.default.isReady() || _seer.default.throttle("deck.gl:".concat(layer.id), 1e3)) {
     return;
   }
 
-  var data = logPayload(layer);
+  const data = logPayload(layer);
 
   _seer.default.multiUpdate('deck.gl', layer.id, data);
 };
 
 exports.updateLayerInSeer = updateLayerInSeer;
 
-var removeLayerInSeer = function removeLayerInSeer(id) {
+const removeLayerInSeer = id => {
   if (!_seer.default.isReady() || !id) {
     return;
   }
@@ -121,15 +119,15 @@ var removeLayerInSeer = function removeLayerInSeer(id) {
 exports.removeLayerInSeer = removeLayerInSeer;
 
 function logPayload(layer) {
-  var data = [{
+  const data = [{
     path: 'objects.props',
     data: layer.props
   }];
-  var badges = [layer.constructor.layerName];
+  const badges = [layer.constructor.layerName];
 
   if (layer.state) {
     if (layer.getAttributeManager()) {
-      var attrs = layer.getAttributeManager().getAttributes();
+      const attrs = layer.getAttributeManager().getAttributes();
       data.push({
         path: 'objects.attributes',
         data: attrs
@@ -140,7 +138,9 @@ function logPayload(layer) {
       layer.state.model.setProps({
         timerQueryEnabled: true
       });
-      var lastFrameTime = layer.state.model.stats.lastFrameTime;
+      const {
+        lastFrameTime
+      } = layer.state.model.stats;
 
       if (lastFrameTime) {
         badges.push("".concat((lastFrameTime * 1000).toFixed(0), "\u03BCs"));

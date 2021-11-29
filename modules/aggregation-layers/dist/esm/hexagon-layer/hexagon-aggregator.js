@@ -1,63 +1,39 @@
 import { hexbin } from 'd3-hexbin';
 import { createIterable } from 'kepler-outdated-deck.gl-core';
 export function pointToHexbin(_ref, viewport) {
-  var data = _ref.data,
-      radius = _ref.radius,
-      getPosition = _ref.getPosition;
-  var radiusInPixel = getRadiusInPixel(radius, viewport);
-  var screenPoints = [];
+  let {
+    data,
+    radius,
+    getPosition
+  } = _ref;
+  const radiusInPixel = getRadiusInPixel(radius, viewport);
+  const screenPoints = [];
+  const {
+    iterable,
+    objectInfo
+  } = createIterable(data);
 
-  var _createIterable = createIterable(data),
-      iterable = _createIterable.iterable,
-      objectInfo = _createIterable.objectInfo;
-
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
-
-  try {
-    for (var _iterator = iterable[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var object = _step.value;
-      objectInfo.index++;
-      screenPoints.push(Object.assign({
-        screenCoord: viewport.projectFlat(getPosition(object, objectInfo))
-      }, object));
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
+  for (const object of iterable) {
+    objectInfo.index++;
+    screenPoints.push(Object.assign({
+      screenCoord: viewport.projectFlat(getPosition(object, objectInfo))
+    }, object));
   }
 
-  var newHexbin = hexbin().radius(radiusInPixel).x(function (d) {
-    return d.screenCoord[0];
-  }).y(function (d) {
-    return d.screenCoord[1];
-  });
-  var hexagonBins = newHexbin(screenPoints);
+  const newHexbin = hexbin().radius(radiusInPixel).x(d => d.screenCoord[0]).y(d => d.screenCoord[1]);
+  const hexagonBins = newHexbin(screenPoints);
   return {
-    hexagons: hexagonBins.map(function (hex, index) {
-      return {
-        position: viewport.unprojectFlat([hex.x, hex.y]),
-        points: hex,
-        index: index
-      };
-    })
+    hexagons: hexagonBins.map((hex, index) => ({
+      position: viewport.unprojectFlat([hex.x, hex.y]),
+      points: hex,
+      index
+    }))
   };
 }
 export function getRadiusInPixel(radius, viewport) {
-  var _viewport$getDistance = viewport.getDistanceScales(),
-      pixelsPerMeter = _viewport$getDistance.pixelsPerMeter;
-
+  const {
+    pixelsPerMeter
+  } = viewport.getDistanceScales();
   return radius * pixelsPerMeter[0];
 }
 //# sourceMappingURL=hexagon-aggregator.js.map

@@ -7,18 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _get2 = _interopRequireDefault(require("@babel/runtime/helpers/get"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
 var _core = require("@luma.gl/core");
@@ -27,9 +15,11 @@ var _scatterplotLayerVertex = _interopRequireDefault(require("./scatterplot-laye
 
 var _scatterplotLayerFragment = _interopRequireDefault(require("./scatterplot-layer-fragment.glsl"));
 
-var fp64LowPart = _core.fp64.fp64LowPart;
-var DEFAULT_COLOR = [0, 0, 0, 255];
-var defaultProps = {
+const {
+  fp64LowPart
+} = _core.fp64;
+const DEFAULT_COLOR = [0, 0, 0, 255];
+const defaultProps = {
   radiusScale: {
     type: 'number',
     min: 0,
@@ -66,9 +56,7 @@ var defaultProps = {
   filled: true,
   getPosition: {
     type: 'accessor',
-    value: function value(x) {
-      return x.position;
-    }
+    value: x => x.position
   },
   getRadius: {
     type: 'accessor',
@@ -97,192 +85,171 @@ var defaultProps = {
   }
 };
 
-var ScatterplotLayer = function (_Layer) {
-  (0, _inherits2.default)(ScatterplotLayer, _Layer);
-
-  function ScatterplotLayer() {
-    (0, _classCallCheck2.default)(this, ScatterplotLayer);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(ScatterplotLayer).apply(this, arguments));
+class ScatterplotLayer extends _keplerOutdatedDeck.Layer {
+  getShaders(id) {
+    const projectModule = this.use64bitProjection() ? 'project64' : 'project32';
+    return {
+      vs: _scatterplotLayerVertex.default,
+      fs: _scatterplotLayerFragment.default,
+      modules: [projectModule, 'picking']
+    };
   }
 
-  (0, _createClass2.default)(ScatterplotLayer, [{
-    key: "getShaders",
-    value: function getShaders(id) {
-      var projectModule = this.use64bitProjection() ? 'project64' : 'project32';
-      return {
-        vs: _scatterplotLayerVertex.default,
-        fs: _scatterplotLayerFragment.default,
-        modules: [projectModule, 'picking']
-      };
-    }
-  }, {
-    key: "initializeState",
-    value: function initializeState() {
-      this.getAttributeManager().addInstanced({
-        instancePositions: {
-          size: 3,
-          transition: true,
-          accessor: 'getPosition'
-        },
-        instancePositions64xyLow: {
-          size: 2,
-          accessor: 'getPosition',
-          update: this.calculateInstancePositions64xyLow
-        },
-        instanceRadius: {
-          size: 1,
-          transition: true,
-          accessor: 'getRadius',
-          defaultValue: 1
-        },
-        instanceFillColors: {
-          size: 4,
-          transition: true,
-          type: 5121,
-          accessor: 'getFillColor',
-          defaultValue: [0, 0, 0, 255]
-        },
-        instanceLineColors: {
-          size: 4,
-          transition: true,
-          type: 5121,
-          accessor: 'getLineColor',
-          defaultValue: [0, 0, 0, 255]
-        },
-        instanceLineWidths: {
-          size: 1,
-          transition: true,
-          accessor: 'getLineWidth',
-          defaultValue: 1
-        }
+  initializeState() {
+    this.getAttributeManager().addInstanced({
+      instancePositions: {
+        size: 3,
+        transition: true,
+        accessor: 'getPosition'
+      },
+      instancePositions64xyLow: {
+        size: 2,
+        accessor: 'getPosition',
+        update: this.calculateInstancePositions64xyLow
+      },
+      instanceRadius: {
+        size: 1,
+        transition: true,
+        accessor: 'getRadius',
+        defaultValue: 1
+      },
+      instanceFillColors: {
+        size: 4,
+        transition: true,
+        type: 5121,
+        accessor: 'getFillColor',
+        defaultValue: [0, 0, 0, 255]
+      },
+      instanceLineColors: {
+        size: 4,
+        transition: true,
+        type: 5121,
+        accessor: 'getLineColor',
+        defaultValue: [0, 0, 0, 255]
+      },
+      instanceLineWidths: {
+        size: 1,
+        transition: true,
+        accessor: 'getLineWidth',
+        defaultValue: 1
+      }
+    });
+  }
+
+  updateState(_ref) {
+    let {
+      props,
+      oldProps,
+      changeFlags
+    } = _ref;
+    super.updateState({
+      props,
+      oldProps,
+      changeFlags
+    });
+
+    if (props.fp64 !== oldProps.fp64) {
+      const {
+        gl
+      } = this.context;
+
+      if (this.state.model) {
+        this.state.model.delete();
+      }
+
+      this.setState({
+        model: this._getModel(gl)
       });
+      this.getAttributeManager().invalidateAll();
     }
-  }, {
-    key: "updateState",
-    value: function updateState(_ref) {
-      var props = _ref.props,
-          oldProps = _ref.oldProps,
-          changeFlags = _ref.changeFlags;
-      (0, _get2.default)((0, _getPrototypeOf2.default)(ScatterplotLayer.prototype), "updateState", this).call(this, {
-        props: props,
-        oldProps: oldProps,
-        changeFlags: changeFlags
-      });
+  }
 
-      if (props.fp64 !== oldProps.fp64) {
-        var gl = this.context.gl;
+  draw(_ref2) {
+    let {
+      uniforms
+    } = _ref2;
+    const {
+      viewport
+    } = this.context;
+    const {
+      radiusScale,
+      radiusMinPixels,
+      radiusMaxPixels,
+      stroked,
+      filled,
+      lineWidthUnits,
+      lineWidthScale,
+      lineWidthMinPixels,
+      lineWidthMaxPixels
+    } = this.props;
+    const widthMultiplier = lineWidthUnits === 'pixels' ? viewport.distanceScales.metersPerPixel[2] : 1;
+    this.state.model.setUniforms(Object.assign({}, uniforms, {
+      stroked: stroked ? 1 : 0,
+      filled,
+      radiusScale,
+      radiusMinPixels,
+      radiusMaxPixels,
+      lineWidthScale: lineWidthScale * widthMultiplier,
+      lineWidthMinPixels,
+      lineWidthMaxPixels
+    })).draw();
+  }
 
-        if (this.state.model) {
-          this.state.model.delete();
-        }
-
-        this.setState({
-          model: this._getModel(gl)
-        });
-        this.getAttributeManager().invalidateAll();
-      }
-    }
-  }, {
-    key: "draw",
-    value: function draw(_ref2) {
-      var uniforms = _ref2.uniforms;
-      var viewport = this.context.viewport;
-      var _this$props = this.props,
-          radiusScale = _this$props.radiusScale,
-          radiusMinPixels = _this$props.radiusMinPixels,
-          radiusMaxPixels = _this$props.radiusMaxPixels,
-          stroked = _this$props.stroked,
-          filled = _this$props.filled,
-          lineWidthUnits = _this$props.lineWidthUnits,
-          lineWidthScale = _this$props.lineWidthScale,
-          lineWidthMinPixels = _this$props.lineWidthMinPixels,
-          lineWidthMaxPixels = _this$props.lineWidthMaxPixels;
-      var widthMultiplier = lineWidthUnits === 'pixels' ? viewport.distanceScales.metersPerPixel[2] : 1;
-      this.state.model.setUniforms(Object.assign({}, uniforms, {
-        stroked: stroked ? 1 : 0,
-        filled: filled,
-        radiusScale: radiusScale,
-        radiusMinPixels: radiusMinPixels,
-        radiusMaxPixels: radiusMaxPixels,
-        lineWidthScale: lineWidthScale * widthMultiplier,
-        lineWidthMinPixels: lineWidthMinPixels,
-        lineWidthMaxPixels: lineWidthMaxPixels
-      })).draw();
-    }
-  }, {
-    key: "_getModel",
-    value: function _getModel(gl) {
-      var positions = [-1, -1, 0, -1, 1, 0, 1, 1, 0, 1, -1, 0];
-      return new _core.Model(gl, Object.assign(this.getShaders(), {
-        id: this.props.id,
-        geometry: new _core.Geometry({
-          drawMode: 6,
-          vertexCount: 4,
-          attributes: {
-            positions: {
-              size: 3,
-              value: new Float32Array(positions)
-            }
-          }
-        }),
-        isInstanced: true,
-        shaderCache: this.context.shaderCache
-      }));
-    }
-  }, {
-    key: "calculateInstancePositions64xyLow",
-    value: function calculateInstancePositions64xyLow(attribute, _ref3) {
-      var startRow = _ref3.startRow,
-          endRow = _ref3.endRow;
-      var isFP64 = this.use64bitPositions();
-      attribute.constant = !isFP64;
-
-      if (!isFP64) {
-        attribute.value = new Float32Array(2);
-        return;
-      }
-
-      var _this$props2 = this.props,
-          data = _this$props2.data,
-          getPosition = _this$props2.getPosition;
-      var value = attribute.value,
-          size = attribute.size;
-      var i = startRow * size;
-
-      var _createIterable = (0, _keplerOutdatedDeck.createIterable)(data, startRow, endRow),
-          iterable = _createIterable.iterable,
-          objectInfo = _createIterable.objectInfo;
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = iterable[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var object = _step.value;
-          objectInfo.index++;
-          var position = getPosition(object, objectInfo);
-          value[i++] = fp64LowPart(position[0]);
-          value[i++] = fp64LowPart(position[1]);
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
+  _getModel(gl) {
+    const positions = [-1, -1, 0, -1, 1, 0, 1, 1, 0, 1, -1, 0];
+    return new _core.Model(gl, Object.assign(this.getShaders(), {
+      id: this.props.id,
+      geometry: new _core.Geometry({
+        drawMode: 6,
+        vertexCount: 4,
+        attributes: {
+          positions: {
+            size: 3,
+            value: new Float32Array(positions)
           }
         }
-      }
+      }),
+      isInstanced: true,
+      shaderCache: this.context.shaderCache
+    }));
+  }
+
+  calculateInstancePositions64xyLow(attribute, _ref3) {
+    let {
+      startRow,
+      endRow
+    } = _ref3;
+    const isFP64 = this.use64bitPositions();
+    attribute.constant = !isFP64;
+
+    if (!isFP64) {
+      attribute.value = new Float32Array(2);
+      return;
     }
-  }]);
-  return ScatterplotLayer;
-}(_keplerOutdatedDeck.Layer);
+
+    const {
+      data,
+      getPosition
+    } = this.props;
+    const {
+      value,
+      size
+    } = attribute;
+    let i = startRow * size;
+    const {
+      iterable,
+      objectInfo
+    } = (0, _keplerOutdatedDeck.createIterable)(data, startRow, endRow);
+
+    for (const object of iterable) {
+      objectInfo.index++;
+      const position = getPosition(object, objectInfo);
+      value[i++] = fp64LowPart(position[0]);
+      value[i++] = fp64LowPart(position[1]);
+    }
+  }
+
+}
 
 exports.default = ScatterplotLayer;
 ScatterplotLayer.layerName = 'ScatterplotLayer';

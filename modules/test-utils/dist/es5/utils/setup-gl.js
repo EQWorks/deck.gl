@@ -7,7 +7,7 @@ exports.default = void 0;
 
 var _core = require("@luma.gl/core");
 
-var _global = typeof global !== 'undefined' ? global : window;
+const _global = typeof global !== 'undefined' ? global : window;
 
 (0, _core.setContextDefaults)({
   width: 1,

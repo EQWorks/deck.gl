@@ -1,6 +1,4 @@
-import _classCallCheck from "@babel/runtime/helpers/esm/classCallCheck";
-import _createClass from "@babel/runtime/helpers/esm/createClass";
-export var TRANSITION_STATE = {
+export const TRANSITION_STATE = {
   NONE: 'none',
   PENDING: 'pending',
   IN_PROGRESS: 'in_progress',
@@ -9,17 +7,13 @@ export var TRANSITION_STATE = {
 
 function noop() {}
 
-var Transition = function () {
-  function Transition(props) {
-    _classCallCheck(this, Transition);
-
+export default class Transition {
+  constructor(props) {
     this._startTime = null;
     this._state = TRANSITION_STATE.NONE;
     this.duration = 1;
 
-    this.easing = function (t) {
-      return t;
-    };
+    this.easing = t => t;
 
     this.onStart = noop;
     this.onUpdate = noop;
@@ -28,91 +22,80 @@ var Transition = function () {
     Object.assign(this, props);
   }
 
-  _createClass(Transition, [{
-    key: "start",
-    value: function start(props) {
-      if (this.inProgress) {
-        this.onInterrupt(this);
+  get state() {
+    return this._state;
+  }
+
+  get inProgress() {
+    return this._state === TRANSITION_STATE.PENDING || this._state === TRANSITION_STATE.IN_PROGRESS;
+  }
+
+  start(props) {
+    if (this.inProgress) {
+      this.onInterrupt(this);
+    }
+
+    Object.assign(this, props);
+
+    this._setState(TRANSITION_STATE.PENDING);
+  }
+
+  cancel() {
+    if (this.inProgress) {
+      this.onInterrupt(this);
+
+      this._setState(TRANSITION_STATE.NONE);
+    }
+  }
+
+  update(currentTime) {
+    if (this.state === TRANSITION_STATE.PENDING) {
+      this._startTime = currentTime;
+
+      this._setState(TRANSITION_STATE.IN_PROGRESS);
+    }
+
+    if (this.state === TRANSITION_STATE.IN_PROGRESS) {
+      let shouldEnd = false;
+      let time = (currentTime - this._startTime) / this.duration;
+
+      if (time >= 1) {
+        time = 1;
+        shouldEnd = true;
       }
 
-      Object.assign(this, props);
+      this.time = this.easing(time);
+      this.onUpdate(this);
 
-      this._setState(TRANSITION_STATE.PENDING);
-    }
-  }, {
-    key: "cancel",
-    value: function cancel() {
-      if (this.inProgress) {
-        this.onInterrupt(this);
-
-        this._setState(TRANSITION_STATE.NONE);
-      }
-    }
-  }, {
-    key: "update",
-    value: function update(currentTime) {
-      if (this.state === TRANSITION_STATE.PENDING) {
-        this._startTime = currentTime;
-
-        this._setState(TRANSITION_STATE.IN_PROGRESS);
+      if (shouldEnd) {
+        this._setState(TRANSITION_STATE.ENDED);
       }
 
-      if (this.state === TRANSITION_STATE.IN_PROGRESS) {
-        var shouldEnd = false;
-        var time = (currentTime - this._startTime) / this.duration;
-
-        if (time >= 1) {
-          time = 1;
-          shouldEnd = true;
-        }
-
-        this.time = this.easing(time);
-        this.onUpdate(this);
-
-        if (shouldEnd) {
-          this._setState(TRANSITION_STATE.ENDED);
-        }
-
-        return true;
-      }
-
-      return false;
+      return true;
     }
-  }, {
-    key: "_setState",
-    value: function _setState(newState) {
-      if (this._state === newState) {
-        return;
-      }
 
-      this._state = newState;
+    return false;
+  }
 
-      switch (newState) {
-        case TRANSITION_STATE.PENDING:
-          this.onStart(this);
-          break;
-
-        case TRANSITION_STATE.ENDED:
-          this.onEnd(this);
-          break;
-
-        default:
-      }
+  _setState(newState) {
+    if (this._state === newState) {
+      return;
     }
-  }, {
-    key: "state",
-    get: function get() {
-      return this._state;
-    }
-  }, {
-    key: "inProgress",
-    get: function get() {
-      return this._state === TRANSITION_STATE.PENDING || this._state === TRANSITION_STATE.IN_PROGRESS;
-    }
-  }]);
 
-  return Transition;
-}();
+    this._state = newState;
 
-export { Transition as default };
+    switch (newState) {
+      case TRANSITION_STATE.PENDING:
+        this.onStart(this);
+        break;
+
+      case TRANSITION_STATE.ENDED:
+        this.onEnd(this);
+        break;
+
+      default:
+    }
+  }
+
+}
 //# sourceMappingURL=transition.js.map

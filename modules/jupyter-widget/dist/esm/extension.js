@@ -9,7 +9,7 @@ define(function () {
     }
   });
   return {
-    load_ipython_extension: function load_ipython_extension() {}
+    load_ipython_extension: function () {}
   };
 });
 //# sourceMappingURL=extension.js.map

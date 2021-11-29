@@ -1,7 +1,6 @@
-import _toConsumableArray from "@babel/runtime/helpers/esm/toConsumableArray";
 import seer from 'seer';
 
-var recursiveSet = function recursiveSet(obj, path, value) {
+const recursiveSet = (obj, path, value) => {
   if (!obj) {
     return;
   }
@@ -13,8 +12,8 @@ var recursiveSet = function recursiveSet(obj, path, value) {
   }
 };
 
-var overrides = new Map();
-export var setPropOverrides = function setPropOverrides(id, valuePath, value) {
+const overrides = new Map();
+export const setPropOverrides = (id, valuePath, value) => {
   if (!seer.isReady()) {
     return;
   }
@@ -23,63 +22,63 @@ export var setPropOverrides = function setPropOverrides(id, valuePath, value) {
     overrides.set(id, new Map());
   }
 
-  var props = overrides.get(id);
+  const props = overrides.get(id);
   props.set(valuePath, value);
 };
-export var applyPropOverrides = function applyPropOverrides(props) {
+export const applyPropOverrides = props => {
   if (!seer.isReady() || !props.id) {
     return;
   }
 
-  var overs = overrides.get(props.id);
+  const overs = overrides.get(props.id);
 
   if (!overs) {
     return;
   }
 
-  overs.forEach(function (value, valuePath) {
+  overs.forEach((value, valuePath) => {
     recursiveSet(props, valuePath, value);
 
     if (valuePath[0] === 'data') {
-      props.data = _toConsumableArray(props.data);
+      props.data = [...props.data];
     }
   });
 };
-export var layerEditListener = function layerEditListener(cb) {
+export const layerEditListener = cb => {
   if (!seer.isReady()) {
     return;
   }
 
   seer.listenFor('deck.gl', cb);
 };
-export var seerInitListener = function seerInitListener(cb) {
+export const seerInitListener = cb => {
   if (!seer.isReady()) {
     return;
   }
 
   seer.listenFor('init', cb);
 };
-export var initLayerInSeer = function initLayerInSeer(layer) {
+export const initLayerInSeer = layer => {
   if (!seer.isReady() || !layer) {
     return;
   }
 
-  var badges = [layer.constructor.layerName];
+  const badges = [layer.constructor.layerName];
   seer.listItem('deck.gl', layer.id, {
-    badges: badges,
+    badges,
     links: layer.state && layer.state.model ? ["luma.gl:".concat(layer.state.model.id)] : undefined,
     parent: layer.parent ? layer.parent.id : undefined
   });
 };
-export var updateLayerInSeer = function updateLayerInSeer(layer) {
+export const updateLayerInSeer = layer => {
   if (!seer.isReady() || seer.throttle("deck.gl:".concat(layer.id), 1e3)) {
     return;
   }
 
-  var data = logPayload(layer);
+  const data = logPayload(layer);
   seer.multiUpdate('deck.gl', layer.id, data);
 };
-export var removeLayerInSeer = function removeLayerInSeer(id) {
+export const removeLayerInSeer = id => {
   if (!seer.isReady() || !id) {
     return;
   }
@@ -88,15 +87,15 @@ export var removeLayerInSeer = function removeLayerInSeer(id) {
 };
 
 function logPayload(layer) {
-  var data = [{
+  const data = [{
     path: 'objects.props',
     data: layer.props
   }];
-  var badges = [layer.constructor.layerName];
+  const badges = [layer.constructor.layerName];
 
   if (layer.state) {
     if (layer.getAttributeManager()) {
-      var attrs = layer.getAttributeManager().getAttributes();
+      const attrs = layer.getAttributeManager().getAttributes();
       data.push({
         path: 'objects.attributes',
         data: attrs
@@ -107,7 +106,9 @@ function logPayload(layer) {
       layer.state.model.setProps({
         timerQueryEnabled: true
       });
-      var lastFrameTime = layer.state.model.stats.lastFrameTime;
+      const {
+        lastFrameTime
+      } = layer.state.model.stats;
 
       if (lastFrameTime) {
         badges.push("".concat((lastFrameTime * 1000).toFixed(0), "\u03BCs"));

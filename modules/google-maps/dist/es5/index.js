@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 Object.defineProperty(exports, "GoogleMapsOverlay", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _googleMapsOverlay.default;
   }
 });

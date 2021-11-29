@@ -1,7 +1,6 @@
-import _typeof from "@babel/runtime/helpers/esm/typeof";
-var PERCENT_OR_PIXELS_REGEX = /([0-9]+\.?[0-9]*)(%|px)/;
+const PERCENT_OR_PIXELS_REGEX = /([0-9]+\.?[0-9]*)(%|px)/;
 export function parsePosition(value) {
-  switch (_typeof(value)) {
+  switch (typeof value) {
     case 'number':
       return {
         position: value,
@@ -9,14 +8,14 @@ export function parsePosition(value) {
       };
 
     case 'string':
-      var match = value.match(PERCENT_OR_PIXELS_REGEX);
+      const match = value.match(PERCENT_OR_PIXELS_REGEX);
 
       if (match && match.length >= 3) {
-        var relative = match[2] === '%';
-        var position = parseFloat(match[1]);
+        const relative = match[2] === '%';
+        const position = parseFloat(match[1]);
         return {
           position: relative ? position / 100 : position,
-          relative: relative
+          relative
         };
       }
 

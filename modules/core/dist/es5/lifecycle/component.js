@@ -7,22 +7,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
 var _constants = require("../lifecycle/constants");
 
 var _createProps = require("../lifecycle/create-props");
 
 var _componentState = _interopRequireDefault(require("./component-state"));
 
-var defaultProps = {};
-var counter = 0;
+const defaultProps = {};
+let counter = 0;
 
-var Component = function () {
-  function Component() {
-    (0, _classCallCheck2.default)(this, Component);
+class Component {
+  constructor() {
     this.props = _createProps.createProps.apply(this, arguments);
     this.id = this.props.id;
     this.count = counter++;
@@ -34,35 +29,32 @@ var Component = function () {
     Object.seal(this);
   }
 
-  (0, _createClass2.default)(Component, [{
-    key: "clone",
-    value: function clone(newProps) {
-      var props = this.props;
-      var asyncProps = {};
+  clone(newProps) {
+    const {
+      props
+    } = this;
+    const asyncProps = {};
 
-      for (var key in props._asyncPropDefaultValues) {
-        if (key in props._asyncPropResolvedValues) {
-          asyncProps[key] = props._asyncPropResolvedValues[key];
-        } else if (key in props._asyncPropOriginalValues) {
-          asyncProps[key] = props._asyncPropOriginalValues[key];
-        }
+    for (const key in props._asyncPropDefaultValues) {
+      if (key in props._asyncPropResolvedValues) {
+        asyncProps[key] = props._asyncPropResolvedValues[key];
+      } else if (key in props._asyncPropOriginalValues) {
+        asyncProps[key] = props._asyncPropOriginalValues[key];
       }
+    }
 
-      return new this.constructor(Object.assign({}, props, asyncProps, newProps));
-    }
-  }, {
-    key: "_initState",
-    value: function _initState() {
-      this.internalState = new _componentState.default({});
-    }
-  }, {
-    key: "stats",
-    get: function get() {
-      return this.internalState.stats;
-    }
-  }]);
-  return Component;
-}();
+    return new this.constructor(Object.assign({}, props, asyncProps, newProps));
+  }
+
+  get stats() {
+    return this.internalState.stats;
+  }
+
+  _initState() {
+    this.internalState = new _componentState.default({});
+  }
+
+}
 
 exports.default = Component;
 Component.componentName = 'Component';

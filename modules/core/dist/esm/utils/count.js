@@ -1,6 +1,5 @@
-import _typeof from "@babel/runtime/helpers/esm/typeof";
-var ERR_NOT_OBJECT = 'count(): argument not an object';
-var ERR_NOT_CONTAINER = 'count(): argument not a container';
+const ERR_NOT_OBJECT = 'count(): argument not an object';
+const ERR_NOT_CONTAINER = 'count(): argument not a container';
 export function count(container) {
   if (!isObject(container)) {
     throw new Error(ERR_NOT_OBJECT);
@@ -26,10 +25,10 @@ export function count(container) {
 }
 
 function isPlainObject(value) {
-  return value !== null && _typeof(value) === 'object' && value.constructor === Object;
+  return value !== null && typeof value === 'object' && value.constructor === Object;
 }
 
 function isObject(value) {
-  return value !== null && _typeof(value) === 'object';
+  return value !== null && typeof value === 'object';
 }
 //# sourceMappingURL=count.js.map

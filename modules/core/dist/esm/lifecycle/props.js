@@ -1,11 +1,12 @@
-import _typeof from "@babel/runtime/helpers/esm/typeof";
 import assert from '../utils/assert';
 export function validateProps(props) {
-  var propTypes = getPropTypes(props);
+  const propTypes = getPropTypes(props);
 
-  for (var propName in propTypes) {
-    var propType = propTypes[propName];
-    var validate = propType.validate;
+  for (const propName in propTypes) {
+    const propType = propTypes[propName];
+    const {
+      validate
+    } = propType;
 
     if (validate && !validate(props[propName], propType)) {
       throw new Error("Invalid prop ".concat(propName, ": ").concat(props[propName]));
@@ -13,17 +14,17 @@ export function validateProps(props) {
   }
 }
 export function diffProps(props, oldProps) {
-  var propsChangedReason = compareProps({
+  const propsChangedReason = compareProps({
     newProps: props,
-    oldProps: oldProps,
+    oldProps,
     propTypes: getPropTypes(props),
     ignoreProps: {
       data: null,
       updateTriggers: null
     }
   });
-  var dataChangedReason = diffDataProps(props, oldProps);
-  var updateTriggersChangedReason = false;
+  const dataChangedReason = diffDataProps(props, oldProps);
+  let updateTriggersChangedReason = false;
 
   if (!dataChangedReason) {
     updateTriggersChangedReason = diffUpdateTriggers(props, oldProps);
@@ -36,40 +37,37 @@ export function diffProps(props, oldProps) {
   };
 }
 export function compareProps() {
-  var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-      newProps = _ref.newProps,
-      oldProps = _ref.oldProps,
-      _ref$ignoreProps = _ref.ignoreProps,
-      ignoreProps = _ref$ignoreProps === void 0 ? {} : _ref$ignoreProps,
-      _ref$propTypes = _ref.propTypes,
-      propTypes = _ref$propTypes === void 0 ? {} : _ref$propTypes,
-      _ref$triggerName = _ref.triggerName,
-      triggerName = _ref$triggerName === void 0 ? 'props' : _ref$triggerName;
-
+  let {
+    newProps,
+    oldProps,
+    ignoreProps = {},
+    propTypes = {},
+    triggerName = 'props'
+  } = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   assert(oldProps !== undefined && newProps !== undefined, 'compareProps args');
 
   if (oldProps === newProps) {
     return null;
   }
 
-  if (_typeof(newProps) !== 'object' || newProps === null) {
+  if (typeof newProps !== 'object' || newProps === null) {
     return "".concat(triggerName, " changed shallowly");
   }
 
-  if (_typeof(oldProps) !== 'object' || oldProps === null) {
+  if (typeof oldProps !== 'object' || oldProps === null) {
     return "".concat(triggerName, " changed shallowly");
   }
 
-  for (var key in oldProps) {
+  for (const key in oldProps) {
     if (!(key in ignoreProps)) {
       if (!(key in newProps)) {
         return "".concat(triggerName, ".").concat(key, " dropped");
       }
 
-      var newProp = newProps[key];
-      var oldProp = oldProps[key];
-      var propType = propTypes[key];
-      var equal = propType && propType.equal;
+      const newProp = newProps[key];
+      const oldProp = oldProps[key];
+      const propType = propTypes[key];
+      let equal = propType && propType.equal;
 
       if (equal && !equal(newProp, oldProp, propType)) {
         return "".concat(triggerName, ".").concat(key, " changed deeply");
@@ -89,10 +87,10 @@ export function compareProps() {
     }
   }
 
-  for (var _key in newProps) {
-    if (!(_key in ignoreProps)) {
-      if (!(_key in oldProps)) {
-        return "".concat(triggerName, ".").concat(_key, " added: undefined -> ").concat(newProps[_key]);
+  for (const key in newProps) {
+    if (!(key in ignoreProps)) {
+      if (!(key in oldProps)) {
+        return "".concat(triggerName, ".").concat(key, " added: undefined -> ").concat(newProps[key]);
       }
     }
   }
@@ -105,7 +103,9 @@ function diffDataProps(props, oldProps) {
     return 'oldProps is null, initial diff';
   }
 
-  var dataComparator = props.dataComparator;
+  const {
+    dataComparator
+  } = props;
 
   if (dataComparator) {
     if (!dataComparator(props.data, oldProps.data)) {
@@ -124,7 +124,7 @@ function diffUpdateTriggers(props, oldProps) {
   }
 
   if ('all' in props.updateTriggers) {
-    var diffReason = diffUpdateTrigger(props, oldProps, 'all');
+    const diffReason = diffUpdateTrigger(props, oldProps, 'all');
 
     if (diffReason) {
       return {
@@ -133,14 +133,14 @@ function diffUpdateTriggers(props, oldProps) {
     }
   }
 
-  var triggerChanged = {};
-  var reason = false;
+  const triggerChanged = {};
+  let reason = false;
 
-  for (var triggerName in props.updateTriggers) {
+  for (const triggerName in props.updateTriggers) {
     if (triggerName !== 'all') {
-      var _diffReason = diffUpdateTrigger(props, oldProps, triggerName);
+      const diffReason = diffUpdateTrigger(props, oldProps, triggerName);
 
-      if (_diffReason) {
+      if (diffReason) {
         triggerChanged[triggerName] = true;
         reason = triggerChanged;
       }
@@ -151,21 +151,21 @@ function diffUpdateTriggers(props, oldProps) {
 }
 
 function diffUpdateTrigger(props, oldProps, triggerName) {
-  var newTriggers = props.updateTriggers[triggerName];
+  let newTriggers = props.updateTriggers[triggerName];
   newTriggers = newTriggers === undefined || newTriggers === null ? {} : newTriggers;
-  var oldTriggers = oldProps.updateTriggers[triggerName];
+  let oldTriggers = oldProps.updateTriggers[triggerName];
   oldTriggers = oldTriggers === undefined || oldTriggers === null ? {} : oldTriggers;
-  var diffReason = compareProps({
+  const diffReason = compareProps({
     oldProps: oldTriggers,
     newProps: newTriggers,
-    triggerName: triggerName
+    triggerName
   });
   return diffReason;
 }
 
 function getPropTypes(props) {
-  var layer = props._component;
-  var LayerType = layer && layer.constructor;
+  const layer = props._component;
+  const LayerType = layer && layer.constructor;
   return LayerType ? LayerType._propTypes : {};
 }
 //# sourceMappingURL=props.js.map

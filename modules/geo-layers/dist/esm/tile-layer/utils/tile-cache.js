@@ -1,18 +1,14 @@
-import _classCallCheck from "@babel/runtime/helpers/esm/classCallCheck";
-import _createClass from "@babel/runtime/helpers/esm/createClass";
 import Tile from './tile';
 import { getTileIndices } from './viewport-util';
-
-var TileCache = function () {
-  function TileCache(_ref) {
-    var getTileData = _ref.getTileData,
-        maxSize = _ref.maxSize,
-        maxZoom = _ref.maxZoom,
-        minZoom = _ref.minZoom,
-        onTileError = _ref.onTileError;
-
-    _classCallCheck(this, TileCache);
-
+export default class TileCache {
+  constructor(_ref) {
+    let {
+      getTileData,
+      maxSize,
+      maxZoom,
+      minZoom,
+      onTileError
+    } = _ref;
     this._getTileData = getTileData;
     this._maxSize = maxSize;
     this.onTileError = onTileError;
@@ -27,140 +23,110 @@ var TileCache = function () {
     }
   }
 
-  _createClass(TileCache, [{
-    key: "finalize",
-    value: function finalize() {
-      this._cache.clear();
+  finalize() {
+    this._cache.clear();
+  }
+
+  update(viewport, onUpdate) {
+    const {
+      _cache,
+      _getTileData,
+      _maxSize,
+      _maxZoom,
+      _minZoom
+    } = this;
+
+    this._markOldTiles();
+
+    const tileIndices = getTileIndices(viewport, _maxZoom, _minZoom);
+
+    if (!tileIndices || tileIndices.length === 0) {
+      onUpdate(tileIndices);
+      return;
     }
-  }, {
-    key: "update",
-    value: function update(viewport, onUpdate) {
-      var _cache = this._cache,
-          _getTileData = this._getTileData,
-          _maxSize = this._maxSize,
-          _maxZoom = this._maxZoom,
-          _minZoom = this._minZoom;
 
-      this._markOldTiles();
+    const viewportTiles = new Set();
 
-      var tileIndices = getTileIndices(viewport, _maxZoom, _minZoom);
+    _cache.forEach(cachedTile => {
+      if (tileIndices.some(tile => cachedTile.isOverlapped(tile))) {
+        cachedTile.isVisible = true;
+        viewportTiles.add(cachedTile);
+      }
+    });
 
-      if (!tileIndices || tileIndices.length === 0) {
-        onUpdate(tileIndices);
-        return;
+    for (let i = 0; i < tileIndices.length; i++) {
+      const tileIndex = tileIndices[i];
+      const {
+        x,
+        y,
+        z
+      } = tileIndex;
+
+      let tile = this._getTile(x, y, z);
+
+      if (!tile) {
+        tile = new Tile({
+          getTileData: _getTileData,
+          x,
+          y,
+          z,
+          onTileError: this.onTileError
+        });
       }
 
-      var viewportTiles = new Set();
+      const tileId = this._getTileId(x, y, z);
 
-      _cache.forEach(function (cachedTile) {
-        if (tileIndices.some(function (tile) {
-          return cachedTile.isOverlapped(tile);
-        })) {
-          cachedTile.isVisible = true;
-          viewportTiles.add(cachedTile);
-        }
-      });
+      _cache.set(tileId, tile);
 
-      for (var i = 0; i < tileIndices.length; i++) {
-        var tileIndex = tileIndices[i];
-        var x = tileIndex.x,
-            y = tileIndex.y,
-            z = tileIndex.z;
-
-        var tile = this._getTile(x, y, z);
-
-        if (!tile) {
-          tile = new Tile({
-            getTileData: _getTileData,
-            x: x,
-            y: y,
-            z: z,
-            onTileError: this.onTileError
-          });
-        }
-
-        var tileId = this._getTileId(x, y, z);
-
-        _cache.set(tileId, tile);
-
-        viewportTiles.add(tile);
-      }
-
-      var commonZoomRange = 5;
-
-      this._resizeCache(_maxSize || commonZoomRange * tileIndices.length);
-
-      var viewportTilesArray = Array.from(viewportTiles).sort(function (t1, t2) {
-        return t1.z - t2.z;
-      });
-      onUpdate(viewportTilesArray);
+      viewportTiles.add(tile);
     }
-  }, {
-    key: "_resizeCache",
-    value: function _resizeCache(maxSize) {
-      var _cache = this._cache;
 
-      if (_cache.size > maxSize) {
-        var iterator = _cache[Symbol.iterator]();
+    const commonZoomRange = 5;
 
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+    this._resizeCache(_maxSize || commonZoomRange * tileIndices.length);
 
-        try {
-          for (var _iterator = iterator[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var cachedTile = _step.value;
+    const viewportTilesArray = Array.from(viewportTiles).sort((t1, t2) => t1.z - t2.z);
+    onUpdate(viewportTilesArray);
+  }
 
-            if (_cache.size <= maxSize) {
-              break;
-            }
+  _resizeCache(maxSize) {
+    const {
+      _cache
+    } = this;
 
-            var tileId = cachedTile[0];
-            var tile = cachedTile[1];
+    if (_cache.size > maxSize) {
+      const iterator = _cache[Symbol.iterator]();
 
-            if (!tile.isVisible) {
-              _cache.delete(tileId);
-            }
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
+      for (const cachedTile of iterator) {
+        if (_cache.size <= maxSize) {
+          break;
+        }
+
+        const tileId = cachedTile[0];
+        const tile = cachedTile[1];
+
+        if (!tile.isVisible) {
+          _cache.delete(tileId);
         }
       }
     }
-  }, {
-    key: "_markOldTiles",
-    value: function _markOldTiles() {
-      this._cache.forEach(function (cachedTile) {
-        cachedTile.isVisible = false;
-      });
-    }
-  }, {
-    key: "_getTile",
-    value: function _getTile(x, y, z) {
-      var tileId = this._getTileId(x, y, z);
+  }
 
-      return this._cache.get(tileId);
-    }
-  }, {
-    key: "_getTileId",
-    value: function _getTileId(x, y, z) {
-      return "".concat(z, "-").concat(x, "-").concat(y);
-    }
-  }]);
+  _markOldTiles() {
+    this._cache.forEach(cachedTile => {
+      cachedTile.isVisible = false;
+    });
+  }
 
-  return TileCache;
-}();
+  _getTile(x, y, z) {
+    const tileId = this._getTileId(x, y, z);
 
-export { TileCache as default };
+    return this._cache.get(tileId);
+  }
+
+  _getTileId(x, y, z) {
+    return "".concat(z, "-").concat(x, "-").concat(y);
+  }
+
+}
 //# sourceMappingURL=tile-cache.js.map

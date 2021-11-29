@@ -15,13 +15,15 @@ var _memoize = _interopRequireDefault(require("../../utils/memoize"));
 
 var _project2 = _interopRequireDefault(require("./project64.glsl"));
 
-var fp64ify = _core.fp64.fp64ify,
-    fp64ifyMatrix4 = _core.fp64.fp64ifyMatrix4;
+const {
+  fp64ify,
+  fp64ifyMatrix4
+} = _core.fp64;
 var _default = {
   name: 'project64',
   dependencies: [_project.default, _core.fp64],
   vs: _project2.default,
-  getUniforms: getUniforms,
+  getUniforms,
   deprecations: [{
     type: 'function',
     old: 'project_to_clipspace_fp64',
@@ -29,19 +31,21 @@ var _default = {
   }]
 };
 exports.default = _default;
-var DEFAULT_MODULE_OPTIONS = {};
-var getMemoizedUniforms = (0, _memoize.default)(calculateUniforms);
+const DEFAULT_MODULE_OPTIONS = {};
+const getMemoizedUniforms = (0, _memoize.default)(calculateUniforms);
 
 function getUniforms() {
-  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_MODULE_OPTIONS;
-  var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-  var project_uViewProjectionMatrix = context.project_uViewProjectionMatrix,
-      project_uScale = context.project_uScale;
+  let opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_MODULE_OPTIONS;
+  let context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  const {
+    project_uViewProjectionMatrix,
+    project_uScale
+  } = context;
 
   if (project_uViewProjectionMatrix && project_uScale) {
     return getMemoizedUniforms({
-      project_uViewProjectionMatrix: project_uViewProjectionMatrix,
-      project_uScale: project_uScale
+      project_uViewProjectionMatrix,
+      project_uScale
     });
   }
 
@@ -49,10 +53,12 @@ function getUniforms() {
 }
 
 function calculateUniforms(_ref) {
-  var project_uViewProjectionMatrix = _ref.project_uViewProjectionMatrix,
-      project_uScale = _ref.project_uScale;
-  var glViewProjectionMatrixFP64 = fp64ifyMatrix4(project_uViewProjectionMatrix);
-  var scaleFP64 = fp64ify(project_uScale);
+  let {
+    project_uViewProjectionMatrix,
+    project_uScale
+  } = _ref;
+  const glViewProjectionMatrixFP64 = fp64ifyMatrix4(project_uViewProjectionMatrix);
+  const scaleFP64 = fp64ify(project_uScale);
   return {
     project_uViewProjectionMatrixFP64: glViewProjectionMatrixFP64,
     project64_uViewProjectionMatrix: glViewProjectionMatrixFP64,

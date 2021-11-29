@@ -7,13 +7,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 Object.defineProperty(exports, "_JSONConverter", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _jsonConverter.default;
   }
 });
 Object.defineProperty(exports, "_JSONLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _jsonLayer.default;
   }
 });

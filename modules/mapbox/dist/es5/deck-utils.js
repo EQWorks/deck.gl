@@ -3,27 +3,29 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getDeckInstance = getDeckInstance;
 exports.addLayer = addLayer;
+exports.drawLayer = drawLayer;
+exports.getDeckInstance = getDeckInstance;
 exports.removeLayer = removeLayer;
 exports.updateLayer = updateLayer;
-exports.drawLayer = drawLayer;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
 function getDeckInstance(_ref) {
-  var map = _ref.map,
-      gl = _ref.gl,
-      deck = _ref.deck;
+  let {
+    map,
+    gl,
+    deck
+  } = _ref;
 
   if (map.__deck) {
     return map.__deck;
   }
 
-  var customRender = deck && deck.props._customRender;
-  var deckProps = {
+  const customRender = deck && deck.props._customRender;
+  const deckProps = {
     useDevicePixels: true,
-    _customRender: function _customRender() {
+    _customRender: () => {
       map.triggerRepaint();
 
       if (customRender) {
@@ -47,25 +49,21 @@ function getDeckInstance(_ref) {
     deck.props.userData.isExternal = true;
   } else {
     Object.assign(deckProps, {
-      gl: gl,
+      gl,
       width: false,
       height: false,
       viewState: getViewState(map)
     });
     deck = new _keplerOutdatedDeck.Deck(deckProps);
-    map.on('move', function () {
-      return onMapMove(deck, map);
-    });
-    map.on('remove', function () {
+    map.on('move', () => onMapMove(deck, map));
+    map.on('remove', () => {
       deck.finalize();
       map.__deck = null;
     });
   }
 
   map.__deck = deck;
-  map.on('render', function () {
-    return afterRender(deck, map);
-  });
+  map.on('render', () => afterRender(deck, map));
   return deck;
 }
 
@@ -84,7 +82,9 @@ function updateLayer(deck, layer) {
 }
 
 function drawLayer(deck, map, layer) {
-  var currentViewport = deck.props.userData.currentViewport;
+  let {
+    currentViewport
+  } = deck.props.userData;
 
   if (!currentViewport) {
     currentViewport = getViewport(deck, map, true);
@@ -93,18 +93,16 @@ function drawLayer(deck, map, layer) {
 
   deck._drawLayers('mapbox-repaint', {
     viewports: [currentViewport],
-    layers: getLayers(deck, function (deckLayer) {
-      return shouldDrawLayer(layer.id, deckLayer);
-    }),
+    layers: getLayers(deck, deckLayer => shouldDrawLayer(layer.id, deckLayer)),
     clearCanvas: false
   });
 }
 
 function getViewState(map) {
-  var _map$getCenter = map.getCenter(),
-      lng = _map$getCenter.lng,
-      lat = _map$getCenter.lat;
-
+  const {
+    lng,
+    lat
+  } = map.getCenter();
   return {
     longitude: lng,
     latitude: lat,
@@ -115,7 +113,7 @@ function getViewState(map) {
 }
 
 function getViewport(deck, map) {
-  var useMapboxProjection = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+  let useMapboxProjection = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
   return new _keplerOutdatedDeck.WebMercatorViewport(Object.assign({
     x: 0,
     y: 0,
@@ -131,18 +129,15 @@ function getViewport(deck, map) {
 }
 
 function afterRender(deck, map) {
-  var _deck$props$userData = deck.props.userData,
-      mapboxLayers = _deck$props$userData.mapboxLayers,
-      isExternal = _deck$props$userData.isExternal;
+  const {
+    mapboxLayers,
+    isExternal
+  } = deck.props.userData;
 
   if (isExternal) {
-    var mapboxLayerIds = Array.from(mapboxLayers, function (layer) {
-      return layer.id;
-    });
-    var layers = getLayers(deck, function (deckLayer) {
-      for (var _i = 0; _i < mapboxLayerIds.length; _i++) {
-        var id = mapboxLayerIds[_i];
-
+    const mapboxLayerIds = Array.from(mapboxLayers, layer => layer.id);
+    const layers = getLayers(deck, deckLayer => {
+      for (const id of mapboxLayerIds) {
         if (shouldDrawLayer(id, deckLayer)) {
           return false;
         }
@@ -154,7 +149,7 @@ function afterRender(deck, map) {
     if (layers.length > 0) {
       deck._drawLayers('mapbox-repaint', {
         viewports: [getViewport(deck, map, false)],
-        layers: layers,
+        layers,
         clearCanvas: false
       });
     }
@@ -173,12 +168,12 @@ function onMapMove(deck, map) {
 }
 
 function getLayers(deck, layerFilter) {
-  var layers = deck.layerManager.getLayers();
+  const layers = deck.layerManager.getLayers();
   return layers.filter(layerFilter);
 }
 
 function shouldDrawLayer(id, layer) {
-  var layerInstance = layer;
+  let layerInstance = layer;
 
   while (layerInstance) {
     if (layerInstance.id === id) {
@@ -196,14 +191,14 @@ function updateLayers(deck) {
     return;
   }
 
-  var layers = [];
-  deck.props.userData.mapboxLayers.forEach(function (deckLayer) {
-    var LayerType = deckLayer.props.type;
-    var layer = new LayerType(deckLayer.props);
+  const layers = [];
+  deck.props.userData.mapboxLayers.forEach(deckLayer => {
+    const LayerType = deckLayer.props.type;
+    const layer = new LayerType(deckLayer.props);
     layers.push(layer);
   });
   deck.setProps({
-    layers: layers
+    layers
   });
 }
 //# sourceMappingURL=deck-utils.js.map

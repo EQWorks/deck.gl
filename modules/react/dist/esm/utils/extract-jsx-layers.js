@@ -1,4 +1,3 @@
-import _toConsumableArray from "@babel/runtime/helpers/esm/toConsumableArray";
 import React, { createElement } from 'react';
 import { inheritsFrom } from './inherits-from';
 import { Layer, View } from 'kepler-outdated-deck.gl-core';
@@ -24,25 +23,27 @@ function wrapInView(node) {
 }
 
 export default function extractJSXLayers(_ref) {
-  var children = _ref.children,
-      layers = _ref.layers,
-      views = _ref.views;
-  var reactChildren = [];
-  var jsxLayers = [];
-  var jsxViews = {};
-  React.Children.forEach(wrapInView(children), function (reactElement) {
+  let {
+    children,
+    layers,
+    views
+  } = _ref;
+  const reactChildren = [];
+  const jsxLayers = [];
+  const jsxViews = {};
+  React.Children.forEach(wrapInView(children), reactElement => {
     if (reactElement) {
-      var ElementType = reactElement.type;
+      const ElementType = reactElement.type;
 
       if (inheritsFrom(ElementType, Layer)) {
-        var layer = createLayer(ElementType, reactElement.props);
+        const layer = createLayer(ElementType, reactElement.props);
         jsxLayers.push(layer);
       } else {
         reactChildren.push(reactElement);
       }
 
       if (ElementType !== View && inheritsFrom(ElementType, View) && reactElement.props.id) {
-        var view = new ElementType(reactElement.props);
+        const view = new ElementType(reactElement.props);
         jsxViews[view.id] = view;
       }
     }
@@ -50,7 +51,7 @@ export default function extractJSXLayers(_ref) {
 
   if (Object.keys(jsxViews).length > 0) {
     if (Array.isArray(views)) {
-      views.forEach(function (view) {
+      views.forEach(view => {
         jsxViews[view.id] = view;
       });
     } else if (views) {
@@ -60,19 +61,19 @@ export default function extractJSXLayers(_ref) {
     views = Object.values(jsxViews);
   }
 
-  layers = jsxLayers.length > 0 ? [].concat(jsxLayers, _toConsumableArray(layers)) : layers;
+  layers = jsxLayers.length > 0 ? [...jsxLayers, ...layers] : layers;
   return {
-    layers: layers,
+    layers,
     children: reactChildren,
-    views: views
+    views
   };
 }
 
 function createLayer(LayerType, reactProps) {
-  var props = {};
-  var defaultProps = LayerType.defaultProps || {};
+  const props = {};
+  const defaultProps = LayerType.defaultProps || {};
 
-  for (var key in reactProps) {
+  for (const key in reactProps) {
     if (defaultProps[key] !== reactProps[key]) {
       props[key] = reactProps[key];
     }

@@ -1,8 +1,3 @@
-import _classCallCheck from "@babel/runtime/helpers/esm/classCallCheck";
-import _createClass from "@babel/runtime/helpers/esm/createClass";
-import _possibleConstructorReturn from "@babel/runtime/helpers/esm/possibleConstructorReturn";
-import _getPrototypeOf from "@babel/runtime/helpers/esm/getPrototypeOf";
-import _inherits from "@babel/runtime/helpers/esm/inherits";
 import { PhongMaterial } from '@luma.gl/core';
 import { CompositeLayer, log } from 'kepler-outdated-deck.gl-core';
 import { ColumnLayer } from 'kepler-outdated-deck.gl-layers';
@@ -14,8 +9,8 @@ import { pointToHexbin } from './hexagon-aggregator';
 
 function nop() {}
 
-var defaultMaterial = new PhongMaterial();
-var defaultProps = {
+const defaultMaterial = new PhongMaterial();
+const defaultProps = {
   colorDomain: null,
   colorRange: defaultColorRange,
   getColorValue: {
@@ -24,9 +19,7 @@ var defaultProps = {
   },
   getColorWeight: {
     type: 'accessor',
-    value: function value(x) {
-      return 1;
-    }
+    value: x => 1
   },
   colorAggregation: 'SUM',
   lowerPercentile: {
@@ -50,9 +43,7 @@ var defaultProps = {
   },
   getElevationWeight: {
     type: 'accessor',
-    value: function value(x) {
-      return 1;
-    }
+    value: x => 1
   },
   elevationAggregation: 'SUM',
   elevationLowerPercentile: {
@@ -88,442 +79,399 @@ var defaultProps = {
   hexagonAggregator: pointToHexbin,
   getPosition: {
     type: 'accessor',
-    value: function value(x) {
-      return x.position;
-    }
+    value: x => x.position
   },
   fp64: false,
   material: defaultMaterial
 };
-var COLOR_PROPS = ['getColorValue', 'colorAggregation', 'getColorWeight'];
-var ELEVATION_PROPS = ['getElevationValue', 'elevationAggregation', 'getElevationWeight'];
-
-var HexagonLayer = function (_CompositeLayer) {
-  _inherits(HexagonLayer, _CompositeLayer);
-
-  function HexagonLayer() {
-    _classCallCheck(this, HexagonLayer);
-
-    return _possibleConstructorReturn(this, _getPrototypeOf(HexagonLayer).apply(this, arguments));
+const COLOR_PROPS = ['getColorValue', 'colorAggregation', 'getColorWeight'];
+const ELEVATION_PROPS = ['getElevationValue', 'elevationAggregation', 'getElevationWeight'];
+export default class HexagonLayer extends CompositeLayer {
+  initializeState() {
+    this.state = {
+      hexagons: [],
+      sortedColorBins: null,
+      sortedElevationBins: null,
+      colorValueDomain: null,
+      elevationValueDomain: null,
+      colorScaleFunc: nop,
+      elevationScaleFunc: nop,
+      dimensionUpdaters: this.getDimensionUpdaters()
+    };
   }
 
-  _createClass(HexagonLayer, [{
-    key: "initializeState",
-    value: function initializeState() {
-      this.state = {
-        hexagons: [],
-        sortedColorBins: null,
-        sortedElevationBins: null,
-        colorValueDomain: null,
-        elevationValueDomain: null,
-        colorScaleFunc: nop,
-        elevationScaleFunc: nop,
-        dimensionUpdaters: this.getDimensionUpdaters()
-      };
+  updateState(_ref) {
+    let {
+      oldProps,
+      props,
+      changeFlags
+    } = _ref;
+    this.updateGetValueFuncs(oldProps, props);
+    const dimensionChanges = this.getDimensionChanges(oldProps, props);
+
+    if (changeFlags.dataChanged || this.needsReProjectPoints(oldProps, props)) {
+      this.getHexagons();
+    } else if (dimensionChanges) {
+      dimensionChanges.forEach(f => typeof f === 'function' && f.apply(this));
     }
-  }, {
-    key: "updateState",
-    value: function updateState(_ref) {
-      var _this = this;
+  }
 
-      var oldProps = _ref.oldProps,
-          props = _ref.props,
-          changeFlags = _ref.changeFlags;
-      this.updateGetValueFuncs(oldProps, props);
-      var dimensionChanges = this.getDimensionChanges(oldProps, props);
+  colorElevationPropsChanged(oldProps, props) {
+    let colorChanged = false;
+    let elevationChanged = false;
 
-      if (changeFlags.dataChanged || this.needsReProjectPoints(oldProps, props)) {
-        this.getHexagons();
-      } else if (dimensionChanges) {
-        dimensionChanges.forEach(function (f) {
-          return typeof f === 'function' && f.apply(_this);
+    for (const p of COLOR_PROPS) {
+      if (oldProps[p] !== props[p]) {
+        colorChanged = true;
+      }
+    }
+
+    for (const p of ELEVATION_PROPS) {
+      if (oldProps[p] !== props[p]) {
+        elevationChanged = true;
+      }
+    }
+
+    return {
+      colorChanged,
+      elevationChanged
+    };
+  }
+
+  updateGetValueFuncs(oldProps, props) {
+    let {
+      getColorValue,
+      getElevationValue
+    } = props;
+    const {
+      colorAggregation,
+      getColorWeight,
+      elevationAggregation,
+      getElevationWeight
+    } = this.props;
+    const {
+      colorChanged,
+      elevationChanged
+    } = this.colorElevationPropsChanged(oldProps, props);
+
+    if (colorChanged && getColorValue === null) {
+      getColorValue = getValueFunc(colorAggregation, getColorWeight);
+    }
+
+    if (elevationChanged && getElevationValue === null) {
+      getElevationValue = getValueFunc(elevationAggregation, getElevationWeight);
+    }
+
+    if (getColorValue) {
+      this.setState({
+        getColorValue
+      });
+    }
+
+    if (getElevationValue) {
+      this.setState({
+        getElevationValue
+      });
+    }
+  }
+
+  needsReProjectPoints(oldProps, props) {
+    return oldProps.radius !== props.radius || oldProps.hexagonAggregator !== props.hexagonAggregator;
+  }
+
+  getDimensionUpdaters() {
+    return {
+      getFillColor: [{
+        id: 'value',
+        triggers: ['getColorValue', 'getColorWeight', 'colorAggregation'],
+        updater: this.getSortedColorBins
+      }, {
+        id: 'domain',
+        triggers: ['lowerPercentile', 'upperPercentile'],
+        updater: this.getColorValueDomain
+      }, {
+        id: 'scaleFunc',
+        triggers: ['colorDomain', 'colorRange'],
+        updater: this.getColorScale
+      }],
+      getElevation: [{
+        id: 'value',
+        triggers: ['getElevationValue', 'getElevationWeight', 'elevationAggregation'],
+        updater: this.getSortedElevationBins
+      }, {
+        id: 'domain',
+        triggers: ['elevationLowerPercentile', 'elevationUpperPercentile'],
+        updater: this.getElevationValueDomain
+      }, {
+        id: 'scaleFunc',
+        triggers: ['elevationDomain', 'elevationRange'],
+        updater: this.getElevationScale
+      }]
+    };
+  }
+
+  getDimensionChanges(oldProps, props) {
+    const {
+      dimensionUpdaters
+    } = this.state;
+    const updaters = [];
+
+    for (const dimensionKey in dimensionUpdaters) {
+      const needUpdate = dimensionUpdaters[dimensionKey].find(item => item.triggers.some(t => oldProps[t] !== props[t]));
+
+      if (needUpdate) {
+        updaters.push(needUpdate.updater);
+      }
+    }
+
+    return updaters.length ? updaters : null;
+  }
+
+  getHexagons() {
+    const {
+      hexagonAggregator
+    } = this.props;
+    const {
+      viewport
+    } = this.context;
+    const {
+      hexagons,
+      hexagonVertices
+    } = hexagonAggregator(this.props, viewport);
+    this.updateRadiusAngle(hexagonVertices);
+    this.setState({
+      hexagons
+    });
+    this.getSortedBins();
+  }
+
+  getPickingInfo(_ref2) {
+    let {
+      info
+    } = _ref2;
+    const {
+      sortedColorBins,
+      sortedElevationBins
+    } = this.state;
+    const isPicked = info.picked && info.index > -1;
+    let object = null;
+
+    if (isPicked) {
+      const cell = this.state.hexagons[info.index];
+      const colorValue = sortedColorBins.binMap[cell.index] && sortedColorBins.binMap[cell.index].value;
+      const elevationValue = sortedElevationBins.binMap[cell.index] && sortedElevationBins.binMap[cell.index].value;
+      object = Object.assign({
+        colorValue,
+        elevationValue
+      }, cell);
+    }
+
+    return Object.assign(info, {
+      picked: Boolean(object),
+      object
+    });
+  }
+
+  getUpdateTriggers() {
+    const {
+      dimensionUpdaters
+    } = this.state;
+    const updateTriggers = {};
+
+    for (const dimensionKey in dimensionUpdaters) {
+      updateTriggers[dimensionKey] = {};
+
+      for (const step of dimensionUpdaters[dimensionKey]) {
+        step.triggers.forEach(prop => {
+          updateTriggers[dimensionKey][prop] = this.props[prop];
         });
       }
     }
-  }, {
-    key: "colorElevationPropsChanged",
-    value: function colorElevationPropsChanged(oldProps, props) {
-      var colorChanged = false;
-      var elevationChanged = false;
 
-      for (var _i = 0; _i < COLOR_PROPS.length; _i++) {
-        var p = COLOR_PROPS[_i];
+    return updateTriggers;
+  }
 
-        if (oldProps[p] !== props[p]) {
-          colorChanged = true;
-        }
+  updateRadiusAngle(vertices) {
+    let {
+      radius
+    } = this.props;
+    let angle = 90;
+
+    if (Array.isArray(vertices)) {
+      if (vertices.length < 6) {
+        log.error('HexagonCellLayer: hexagonVertices needs to be an array of 6 points')();
       }
 
-      for (var _i2 = 0; _i2 < ELEVATION_PROPS.length; _i2++) {
-        var _p = ELEVATION_PROPS[_i2];
+      const vertex0 = vertices[0];
+      const vertex3 = vertices[3];
+      const {
+        viewport
+      } = this.context;
+      const {
+        pixelsPerMeter
+      } = viewport.getDistanceScales();
+      const spaceCoord0 = this.projectFlat(vertex0);
+      const spaceCoord3 = this.projectFlat(vertex3);
+      const dx = spaceCoord0[0] - spaceCoord3[0];
+      const dy = spaceCoord0[1] - spaceCoord3[1];
+      const dxy = Math.sqrt(dx * dx + dy * dy);
+      angle = Math.acos(dx / dxy) * -Math.sign(dy) / Math.PI * 180 + 90;
+      radius = dxy / 2 / pixelsPerMeter[0];
+    }
 
-        if (oldProps[_p] !== props[_p]) {
-          elevationChanged = true;
-        }
+    this.setState({
+      angle,
+      radius
+    });
+  }
+
+  getValueDomain() {
+    this.getColorValueDomain();
+    this.getElevationValueDomain();
+  }
+
+  getSortedBins() {
+    this.getSortedColorBins();
+    this.getSortedElevationBins();
+  }
+
+  getSortedColorBins() {
+    const {
+      getColorValue
+    } = this.state;
+    const sortedColorBins = new BinSorter(this.state.hexagons || [], getColorValue);
+    this.setState({
+      sortedColorBins
+    });
+    this.getColorValueDomain();
+  }
+
+  getSortedElevationBins() {
+    const {
+      getElevationValue
+    } = this.state;
+    const sortedElevationBins = new BinSorter(this.state.hexagons || [], getElevationValue);
+    this.setState({
+      sortedElevationBins
+    });
+    this.getElevationValueDomain();
+  }
+
+  getColorValueDomain() {
+    const {
+      lowerPercentile,
+      upperPercentile,
+      onSetColorDomain
+    } = this.props;
+
+    if (lowerPercentile > upperPercentile) {
+      log.warn('HexagonLayer: lowerPercentile is bigger than upperPercentile')();
+    }
+
+    this.state.colorValueDomain = this.state.sortedColorBins.getValueRange([lowerPercentile, upperPercentile]);
+
+    if (typeof onSetColorDomain === 'function') {
+      onSetColorDomain(this.state.colorValueDomain);
+    }
+
+    this.getColorScale();
+  }
+
+  getElevationValueDomain() {
+    const {
+      elevationLowerPercentile,
+      elevationUpperPercentile,
+      onSetElevationDomain
+    } = this.props;
+    this.state.elevationValueDomain = this.state.sortedElevationBins.getValueRange([elevationLowerPercentile, elevationUpperPercentile]);
+
+    if (typeof onSetElevationDomain === 'function') {
+      onSetElevationDomain(this.state.elevationValueDomain);
+    }
+
+    this.getElevationScale();
+  }
+
+  getColorScale() {
+    const {
+      colorRange
+    } = this.props;
+    const colorDomain = this.props.colorDomain || this.state.colorValueDomain;
+    this.state.colorScaleFunc = getQuantizeScale(colorDomain, colorRange);
+  }
+
+  getElevationScale() {
+    const {
+      elevationRange
+    } = this.props;
+    const elevationDomain = this.props.elevationDomain || this.state.elevationValueDomain;
+    this.state.elevationScaleFunc = getLinearScale(elevationDomain, elevationRange);
+  }
+
+  _onGetSublayerColor(cell) {
+    const {
+      sortedColorBins,
+      colorScaleFunc,
+      colorValueDomain
+    } = this.state;
+    const cv = sortedColorBins.binMap[cell.index] && sortedColorBins.binMap[cell.index].value;
+    const colorDomain = this.props.colorDomain || colorValueDomain;
+    const isColorValueInDomain = cv >= colorDomain[0] && cv <= colorDomain[colorDomain.length - 1];
+    const color = isColorValueInDomain ? colorScaleFunc(cv) : [0, 0, 0, 0];
+    color[3] = Number.isFinite(color[3]) ? color[3] : 255;
+    return color;
+  }
+
+  _onGetSublayerElevation(cell) {
+    const {
+      sortedElevationBins,
+      elevationScaleFunc,
+      elevationValueDomain
+    } = this.state;
+    const ev = sortedElevationBins.binMap[cell.index] && sortedElevationBins.binMap[cell.index].value;
+    const elevationDomain = this.props.elevationDomain || elevationValueDomain;
+    const isElevationValueInDomain = ev >= elevationDomain[0] && ev <= elevationDomain[elevationDomain.length - 1];
+    return isElevationValueInDomain ? elevationScaleFunc(ev) : -1;
+  }
+
+  renderLayers() {
+    const {
+      elevationScale,
+      extruded,
+      coverage,
+      material,
+      fp64,
+      transitions
+    } = this.props;
+    const {
+      angle,
+      radius
+    } = this.state;
+    const SubLayerClass = this.getSubLayerClass('hexagon-cell', ColumnLayer);
+    return new SubLayerClass({
+      fp64,
+      radius,
+      diskResolution: 6,
+      elevationScale,
+      angle,
+      extruded,
+      coverage,
+      material,
+      getFillColor: this._onGetSublayerColor.bind(this),
+      getElevation: this._onGetSublayerElevation.bind(this),
+      transitions: transitions && {
+        getFillColor: transitions.getColorValue || transitions.getColorWeight,
+        getElevation: transitions.getElevationValue || transitions.getElevationWeight
       }
+    }, this.getSubLayerProps({
+      id: 'hexagon-cell',
+      updateTriggers: this.getUpdateTriggers()
+    }), {
+      data: this.state.hexagons
+    });
+  }
 
-      return {
-        colorChanged: colorChanged,
-        elevationChanged: elevationChanged
-      };
-    }
-  }, {
-    key: "updateGetValueFuncs",
-    value: function updateGetValueFuncs(oldProps, props) {
-      var getColorValue = props.getColorValue,
-          getElevationValue = props.getElevationValue;
-      var _this$props = this.props,
-          colorAggregation = _this$props.colorAggregation,
-          getColorWeight = _this$props.getColorWeight,
-          elevationAggregation = _this$props.elevationAggregation,
-          getElevationWeight = _this$props.getElevationWeight;
-
-      var _this$colorElevationP = this.colorElevationPropsChanged(oldProps, props),
-          colorChanged = _this$colorElevationP.colorChanged,
-          elevationChanged = _this$colorElevationP.elevationChanged;
-
-      if (colorChanged && getColorValue === null) {
-        getColorValue = getValueFunc(colorAggregation, getColorWeight);
-      }
-
-      if (elevationChanged && getElevationValue === null) {
-        getElevationValue = getValueFunc(elevationAggregation, getElevationWeight);
-      }
-
-      if (getColorValue) {
-        this.setState({
-          getColorValue: getColorValue
-        });
-      }
-
-      if (getElevationValue) {
-        this.setState({
-          getElevationValue: getElevationValue
-        });
-      }
-    }
-  }, {
-    key: "needsReProjectPoints",
-    value: function needsReProjectPoints(oldProps, props) {
-      return oldProps.radius !== props.radius || oldProps.hexagonAggregator !== props.hexagonAggregator;
-    }
-  }, {
-    key: "getDimensionUpdaters",
-    value: function getDimensionUpdaters() {
-      return {
-        getFillColor: [{
-          id: 'value',
-          triggers: ['getColorValue', 'getColorWeight', 'colorAggregation'],
-          updater: this.getSortedColorBins
-        }, {
-          id: 'domain',
-          triggers: ['lowerPercentile', 'upperPercentile'],
-          updater: this.getColorValueDomain
-        }, {
-          id: 'scaleFunc',
-          triggers: ['colorDomain', 'colorRange'],
-          updater: this.getColorScale
-        }],
-        getElevation: [{
-          id: 'value',
-          triggers: ['getElevationValue', 'getElevationWeight', 'elevationAggregation'],
-          updater: this.getSortedElevationBins
-        }, {
-          id: 'domain',
-          triggers: ['elevationLowerPercentile', 'elevationUpperPercentile'],
-          updater: this.getElevationValueDomain
-        }, {
-          id: 'scaleFunc',
-          triggers: ['elevationDomain', 'elevationRange'],
-          updater: this.getElevationScale
-        }]
-      };
-    }
-  }, {
-    key: "getDimensionChanges",
-    value: function getDimensionChanges(oldProps, props) {
-      var dimensionUpdaters = this.state.dimensionUpdaters;
-      var updaters = [];
-
-      for (var dimensionKey in dimensionUpdaters) {
-        var needUpdate = dimensionUpdaters[dimensionKey].find(function (item) {
-          return item.triggers.some(function (t) {
-            return oldProps[t] !== props[t];
-          });
-        });
-
-        if (needUpdate) {
-          updaters.push(needUpdate.updater);
-        }
-      }
-
-      return updaters.length ? updaters : null;
-    }
-  }, {
-    key: "getHexagons",
-    value: function getHexagons() {
-      var hexagonAggregator = this.props.hexagonAggregator;
-      var viewport = this.context.viewport;
-
-      var _hexagonAggregator = hexagonAggregator(this.props, viewport),
-          hexagons = _hexagonAggregator.hexagons,
-          hexagonVertices = _hexagonAggregator.hexagonVertices;
-
-      this.updateRadiusAngle(hexagonVertices);
-      this.setState({
-        hexagons: hexagons
-      });
-      this.getSortedBins();
-    }
-  }, {
-    key: "getPickingInfo",
-    value: function getPickingInfo(_ref2) {
-      var info = _ref2.info;
-      var _this$state = this.state,
-          sortedColorBins = _this$state.sortedColorBins,
-          sortedElevationBins = _this$state.sortedElevationBins;
-      var isPicked = info.picked && info.index > -1;
-      var object = null;
-
-      if (isPicked) {
-        var cell = this.state.hexagons[info.index];
-        var colorValue = sortedColorBins.binMap[cell.index] && sortedColorBins.binMap[cell.index].value;
-        var elevationValue = sortedElevationBins.binMap[cell.index] && sortedElevationBins.binMap[cell.index].value;
-        object = Object.assign({
-          colorValue: colorValue,
-          elevationValue: elevationValue
-        }, cell);
-      }
-
-      return Object.assign(info, {
-        picked: Boolean(object),
-        object: object
-      });
-    }
-  }, {
-    key: "getUpdateTriggers",
-    value: function getUpdateTriggers() {
-      var _this2 = this;
-
-      var dimensionUpdaters = this.state.dimensionUpdaters;
-      var updateTriggers = {};
-
-      var _loop = function _loop(dimensionKey) {
-        updateTriggers[dimensionKey] = {};
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = dimensionUpdaters[dimensionKey][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var step = _step.value;
-            step.triggers.forEach(function (prop) {
-              updateTriggers[dimensionKey][prop] = _this2.props[prop];
-            });
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-      };
-
-      for (var dimensionKey in dimensionUpdaters) {
-        _loop(dimensionKey);
-      }
-
-      return updateTriggers;
-    }
-  }, {
-    key: "updateRadiusAngle",
-    value: function updateRadiusAngle(vertices) {
-      var radius = this.props.radius;
-      var angle = 90;
-
-      if (Array.isArray(vertices)) {
-        if (vertices.length < 6) {
-          log.error('HexagonCellLayer: hexagonVertices needs to be an array of 6 points')();
-        }
-
-        var vertex0 = vertices[0];
-        var vertex3 = vertices[3];
-        var viewport = this.context.viewport;
-
-        var _viewport$getDistance = viewport.getDistanceScales(),
-            pixelsPerMeter = _viewport$getDistance.pixelsPerMeter;
-
-        var spaceCoord0 = this.projectFlat(vertex0);
-        var spaceCoord3 = this.projectFlat(vertex3);
-        var dx = spaceCoord0[0] - spaceCoord3[0];
-        var dy = spaceCoord0[1] - spaceCoord3[1];
-        var dxy = Math.sqrt(dx * dx + dy * dy);
-        angle = Math.acos(dx / dxy) * -Math.sign(dy) / Math.PI * 180 + 90;
-        radius = dxy / 2 / pixelsPerMeter[0];
-      }
-
-      this.setState({
-        angle: angle,
-        radius: radius
-      });
-    }
-  }, {
-    key: "getValueDomain",
-    value: function getValueDomain() {
-      this.getColorValueDomain();
-      this.getElevationValueDomain();
-    }
-  }, {
-    key: "getSortedBins",
-    value: function getSortedBins() {
-      this.getSortedColorBins();
-      this.getSortedElevationBins();
-    }
-  }, {
-    key: "getSortedColorBins",
-    value: function getSortedColorBins() {
-      var getColorValue = this.state.getColorValue;
-      var sortedColorBins = new BinSorter(this.state.hexagons || [], getColorValue);
-      this.setState({
-        sortedColorBins: sortedColorBins
-      });
-      this.getColorValueDomain();
-    }
-  }, {
-    key: "getSortedElevationBins",
-    value: function getSortedElevationBins() {
-      var getElevationValue = this.state.getElevationValue;
-      var sortedElevationBins = new BinSorter(this.state.hexagons || [], getElevationValue);
-      this.setState({
-        sortedElevationBins: sortedElevationBins
-      });
-      this.getElevationValueDomain();
-    }
-  }, {
-    key: "getColorValueDomain",
-    value: function getColorValueDomain() {
-      var _this$props2 = this.props,
-          lowerPercentile = _this$props2.lowerPercentile,
-          upperPercentile = _this$props2.upperPercentile,
-          onSetColorDomain = _this$props2.onSetColorDomain;
-
-      if (lowerPercentile > upperPercentile) {
-        log.warn('HexagonLayer: lowerPercentile is bigger than upperPercentile')();
-      }
-
-      this.state.colorValueDomain = this.state.sortedColorBins.getValueRange([lowerPercentile, upperPercentile]);
-
-      if (typeof onSetColorDomain === 'function') {
-        onSetColorDomain(this.state.colorValueDomain);
-      }
-
-      this.getColorScale();
-    }
-  }, {
-    key: "getElevationValueDomain",
-    value: function getElevationValueDomain() {
-      var _this$props3 = this.props,
-          elevationLowerPercentile = _this$props3.elevationLowerPercentile,
-          elevationUpperPercentile = _this$props3.elevationUpperPercentile,
-          onSetElevationDomain = _this$props3.onSetElevationDomain;
-      this.state.elevationValueDomain = this.state.sortedElevationBins.getValueRange([elevationLowerPercentile, elevationUpperPercentile]);
-
-      if (typeof onSetElevationDomain === 'function') {
-        onSetElevationDomain(this.state.elevationValueDomain);
-      }
-
-      this.getElevationScale();
-    }
-  }, {
-    key: "getColorScale",
-    value: function getColorScale() {
-      var colorRange = this.props.colorRange;
-      var colorDomain = this.props.colorDomain || this.state.colorValueDomain;
-      this.state.colorScaleFunc = getQuantizeScale(colorDomain, colorRange);
-    }
-  }, {
-    key: "getElevationScale",
-    value: function getElevationScale() {
-      var elevationRange = this.props.elevationRange;
-      var elevationDomain = this.props.elevationDomain || this.state.elevationValueDomain;
-      this.state.elevationScaleFunc = getLinearScale(elevationDomain, elevationRange);
-    }
-  }, {
-    key: "_onGetSublayerColor",
-    value: function _onGetSublayerColor(cell) {
-      var _this$state2 = this.state,
-          sortedColorBins = _this$state2.sortedColorBins,
-          colorScaleFunc = _this$state2.colorScaleFunc,
-          colorValueDomain = _this$state2.colorValueDomain;
-      var cv = sortedColorBins.binMap[cell.index] && sortedColorBins.binMap[cell.index].value;
-      var colorDomain = this.props.colorDomain || colorValueDomain;
-      var isColorValueInDomain = cv >= colorDomain[0] && cv <= colorDomain[colorDomain.length - 1];
-      var color = isColorValueInDomain ? colorScaleFunc(cv) : [0, 0, 0, 0];
-      color[3] = Number.isFinite(color[3]) ? color[3] : 255;
-      return color;
-    }
-  }, {
-    key: "_onGetSublayerElevation",
-    value: function _onGetSublayerElevation(cell) {
-      var _this$state3 = this.state,
-          sortedElevationBins = _this$state3.sortedElevationBins,
-          elevationScaleFunc = _this$state3.elevationScaleFunc,
-          elevationValueDomain = _this$state3.elevationValueDomain;
-      var ev = sortedElevationBins.binMap[cell.index] && sortedElevationBins.binMap[cell.index].value;
-      var elevationDomain = this.props.elevationDomain || elevationValueDomain;
-      var isElevationValueInDomain = ev >= elevationDomain[0] && ev <= elevationDomain[elevationDomain.length - 1];
-      return isElevationValueInDomain ? elevationScaleFunc(ev) : -1;
-    }
-  }, {
-    key: "renderLayers",
-    value: function renderLayers() {
-      var _this$props4 = this.props,
-          elevationScale = _this$props4.elevationScale,
-          extruded = _this$props4.extruded,
-          coverage = _this$props4.coverage,
-          material = _this$props4.material,
-          fp64 = _this$props4.fp64,
-          transitions = _this$props4.transitions;
-      var _this$state4 = this.state,
-          angle = _this$state4.angle,
-          radius = _this$state4.radius;
-      var SubLayerClass = this.getSubLayerClass('hexagon-cell', ColumnLayer);
-      return new SubLayerClass({
-        fp64: fp64,
-        radius: radius,
-        diskResolution: 6,
-        elevationScale: elevationScale,
-        angle: angle,
-        extruded: extruded,
-        coverage: coverage,
-        material: material,
-        getFillColor: this._onGetSublayerColor.bind(this),
-        getElevation: this._onGetSublayerElevation.bind(this),
-        transitions: transitions && {
-          getFillColor: transitions.getColorValue || transitions.getColorWeight,
-          getElevation: transitions.getElevationValue || transitions.getElevationWeight
-        }
-      }, this.getSubLayerProps({
-        id: 'hexagon-cell',
-        updateTriggers: this.getUpdateTriggers()
-      }), {
-        data: this.state.hexagons
-      });
-    }
-  }]);
-
-  return HexagonLayer;
-}(CompositeLayer);
-
-export { HexagonLayer as default };
+}
 HexagonLayer.layerName = 'HexagonLayer';
 HexagonLayer.defaultProps = defaultProps;
 //# sourceMappingURL=hexagon-layer.js.map

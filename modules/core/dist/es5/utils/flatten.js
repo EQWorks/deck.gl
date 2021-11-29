@@ -3,23 +3,17 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.flatten = flatten;
 exports.countVertices = countVertices;
-exports.flattenVertices = flattenVertices;
 exports.fillArray = fillArray;
+exports.flatten = flatten;
+exports.flattenVertices = flattenVertices;
 
 function flatten(array) {
-  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-      _ref$filter = _ref.filter,
-      filter = _ref$filter === void 0 ? function () {
-    return true;
-  } : _ref$filter,
-      _ref$map = _ref.map,
-      map = _ref$map === void 0 ? function (x) {
-    return x;
-  } : _ref$map,
-      _ref$result = _ref.result,
-      result = _ref$result === void 0 ? [] : _ref$result;
+  let {
+    filter = () => true,
+    map = x => x,
+    result = []
+  } = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
   if (!Array.isArray(array)) {
     return filter(array) ? [map(array)] : [];
@@ -29,10 +23,10 @@ function flatten(array) {
 }
 
 function flattenArray(array, filter, map, result) {
-  var index = -1;
+  let index = -1;
 
   while (++index < array.length) {
-    var value = array[index];
+    const value = array[index];
 
     if (Array.isArray(value)) {
       flattenArray(value, filter, map, result);
@@ -45,11 +39,11 @@ function flattenArray(array, filter, map, result) {
 }
 
 function countVertices(nestedArray) {
-  var count = 0;
-  var index = -1;
+  let count = 0;
+  let index = -1;
 
   while (++index < nestedArray.length) {
-    var value = nestedArray[index];
+    const value = nestedArray[index];
 
     if (Array.isArray(value) || ArrayBuffer.isView(value)) {
       count += countVertices(value);
@@ -62,22 +56,20 @@ function countVertices(nestedArray) {
 }
 
 function flattenVertices(nestedArray) {
-  var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
-      _ref2$result = _ref2.result,
-      result = _ref2$result === void 0 ? [] : _ref2$result,
-      _ref2$dimensions = _ref2.dimensions,
-      dimensions = _ref2$dimensions === void 0 ? 3 : _ref2$dimensions;
-
-  var index = -1;
-  var vertexLength = 0;
+  let {
+    result = [],
+    dimensions = 3
+  } = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+  let index = -1;
+  let vertexLength = 0;
 
   while (++index < nestedArray.length) {
-    var value = nestedArray[index];
+    const value = nestedArray[index];
 
     if (Array.isArray(value) || ArrayBuffer.isView(value)) {
       flattenVertices(value, {
-        result: result,
-        dimensions: dimensions
+        result,
+        dimensions
       });
     } else {
       if (vertexLength < dimensions) {
@@ -94,18 +86,18 @@ function flattenVertices(nestedArray) {
   return result;
 }
 
-function fillArray(_ref3) {
-  var target = _ref3.target,
-      source = _ref3.source,
-      _ref3$start = _ref3.start,
-      start = _ref3$start === void 0 ? 0 : _ref3$start,
-      _ref3$count = _ref3.count,
-      count = _ref3$count === void 0 ? 1 : _ref3$count;
-  var length = source.length;
-  var total = count * length;
-  var copied = 0;
+function fillArray(_ref) {
+  let {
+    target,
+    source,
+    start = 0,
+    count = 1
+  } = _ref;
+  const length = source.length;
+  const total = count * length;
+  let copied = 0;
 
-  for (var i = start; copied < length; copied++) {
+  for (let i = start; copied < length; copied++) {
     target[i++] = source[copied];
   }
 

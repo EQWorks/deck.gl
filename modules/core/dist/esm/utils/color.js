@@ -1,5 +1,5 @@
 function parseColor(color, target) {
-  var index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  let index = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
   if (Array.isArray(color) || ArrayBuffer.isView(color)) {
     if (!target && color.length === 4) {
@@ -25,36 +25,35 @@ function parseColor(color, target) {
 
 function parseHexColor(color, target, index) {
   if (color.length === 7) {
-    var value = parseInt(color.substring(1), 16);
+    const value = parseInt(color.substring(1), 16);
     target[index + 0] = Math.floor(value / 65536);
     target[index + 1] = Math.floor(value / 256 % 256);
     target[index + 2] = value % 256;
     target[index + 3] = 255;
   } else if (color.length === 9) {
-    var _value = parseInt(color.substring(1), 16);
-
-    target[index + 0] = Math.floor(_value / 16777216);
-    target[index + 1] = Math.floor(_value / 65536 % 256);
-    target[index + 2] = Math.floor(_value / 256 % 256);
-    target[index + 3] = _value % 256;
+    const value = parseInt(color.substring(1), 16);
+    target[index + 0] = Math.floor(value / 16777216);
+    target[index + 1] = Math.floor(value / 65536 % 256);
+    target[index + 2] = Math.floor(value / 256 % 256);
+    target[index + 3] = value % 256;
   }
 
   return index + 4;
 }
 
 function setOpacity(color) {
-  var opacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 127;
+  let opacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 127;
   return [color[0], color[1], color[2], opacity];
 }
 
 function applyOpacity(color) {
-  var opacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 127;
+  let opacity = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 127;
   return [color[0], color[1], color[2], opacity];
 }
 
 export default {
-  parseColor: parseColor,
-  setOpacity: setOpacity,
-  applyOpacity: applyOpacity
+  parseColor,
+  setOpacity,
+  applyOpacity
 };
 //# sourceMappingURL=color.js.map

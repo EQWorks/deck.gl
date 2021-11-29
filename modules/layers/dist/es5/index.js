@@ -7,85 +7,85 @@ Object.defineProperty(exports, "__esModule", {
 });
 Object.defineProperty(exports, "ArcLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _arcLayer.default;
   }
 });
 Object.defineProperty(exports, "BitmapLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _bitmapLayer.default;
+  }
+});
+Object.defineProperty(exports, "ColumnLayer", {
+  enumerable: true,
+  get: function () {
+    return _columnLayer.default;
+  }
+});
+Object.defineProperty(exports, "GeoJsonLayer", {
+  enumerable: true,
+  get: function () {
+    return _geojsonLayer.default;
+  }
+});
+Object.defineProperty(exports, "GridCellLayer", {
+  enumerable: true,
+  get: function () {
+    return _gridCellLayer.default;
   }
 });
 Object.defineProperty(exports, "IconLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _iconLayer.default;
   }
 });
 Object.defineProperty(exports, "LineLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _lineLayer.default;
-  }
-});
-Object.defineProperty(exports, "PointCloudLayer", {
-  enumerable: true,
-  get: function get() {
-    return _pointCloudLayer.default;
-  }
-});
-Object.defineProperty(exports, "ScatterplotLayer", {
-  enumerable: true,
-  get: function get() {
-    return _scatterplotLayer.default;
-  }
-});
-Object.defineProperty(exports, "ColumnLayer", {
-  enumerable: true,
-  get: function get() {
-    return _columnLayer.default;
-  }
-});
-Object.defineProperty(exports, "GridCellLayer", {
-  enumerable: true,
-  get: function get() {
-    return _gridCellLayer.default;
   }
 });
 Object.defineProperty(exports, "PathLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _pathLayer.default;
+  }
+});
+Object.defineProperty(exports, "PointCloudLayer", {
+  enumerable: true,
+  get: function () {
+    return _pointCloudLayer.default;
   }
 });
 Object.defineProperty(exports, "PolygonLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _polygonLayer.default;
   }
 });
-Object.defineProperty(exports, "GeoJsonLayer", {
+Object.defineProperty(exports, "ScatterplotLayer", {
   enumerable: true,
-  get: function get() {
-    return _geojsonLayer.default;
-  }
-});
-Object.defineProperty(exports, "TextLayer", {
-  enumerable: true,
-  get: function get() {
-    return _textLayer.default;
+  get: function () {
+    return _scatterplotLayer.default;
   }
 });
 Object.defineProperty(exports, "SolidPolygonLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _solidPolygonLayer.default;
+  }
+});
+Object.defineProperty(exports, "TextLayer", {
+  enumerable: true,
+  get: function () {
+    return _textLayer.default;
   }
 });
 Object.defineProperty(exports, "_MultiIconLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _multiIconLayer.default;
   }
 });

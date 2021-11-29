@@ -16,18 +16,18 @@ var _get = require("../utils/get");
 
 var _d3Dsv = require("d3-dsv");
 
-var DEFAULT_VIEW_CATALOG = {
+const DEFAULT_VIEW_CATALOG = {
   MapView: _keplerOutdatedDeck.MapView,
   FirstPersonView: _keplerOutdatedDeck.FirstPersonView,
   OrbitView: _keplerOutdatedDeck.OrbitView,
   OrthographicView: _keplerOutdatedDeck.OrthographicView
 };
-var DEFAULT_MAP_PROPS = {
+const DEFAULT_MAP_PROPS = {
   style: 'mapbox://styles/mapbox/light-v9'
 };
 
 function convertTopLevelJSON(json, configuration) {
-  var jsonProps = json;
+  const jsonProps = json;
 
   if (jsonProps.layers) {
     jsonProps.layers = convertJSONLayers(json.layers, configuration);
@@ -68,7 +68,7 @@ function convertJSONMapProps(jsonProps, configuration) {
 function convertJSONLayers(jsonLayers, configuration) {
   return [new _jsonLayer.default({
     data: jsonLayers,
-    configuration: configuration
+    configuration
   })];
 }
 
@@ -77,13 +77,13 @@ function convertJSONViews(jsonViews, configuration) {
     return jsonViews;
   }
 
-  var viewCatalog = configuration.views || {};
+  const viewCatalog = configuration.views || {};
   jsonViews = Array.isArray(jsonViews) ? jsonViews : [jsonViews];
-  return jsonViews.map(function (jsonView) {
-    var View = viewCatalog[jsonView.type] || DEFAULT_VIEW_CATALOG[jsonView.type];
+  return jsonViews.map(jsonView => {
+    const View = viewCatalog[jsonView.type] || DEFAULT_VIEW_CATALOG[jsonView.type];
 
     if (View) {
-      var viewProps = Object.assign({}, jsonView);
+      const viewProps = Object.assign({}, jsonView);
       delete viewProps.type;
       return new View(viewProps);
     }
@@ -93,22 +93,22 @@ function convertJSONViews(jsonViews, configuration) {
 }
 
 function getJSONLayers() {
-  var jsonLayers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  var configuration = arguments.length > 1 ? arguments[1] : undefined;
-  var layerCatalog = configuration.layers || {};
-  return jsonLayers.map(function (jsonLayer) {
-    var Layer = layerCatalog[jsonLayer.type];
-    var props = getJSONLayerProps(jsonLayer, configuration);
+  let jsonLayers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  let configuration = arguments.length > 1 ? arguments[1] : undefined;
+  const layerCatalog = configuration.layers || {};
+  return jsonLayers.map(jsonLayer => {
+    const Layer = layerCatalog[jsonLayer.type];
+    const props = getJSONLayerProps(jsonLayer, configuration);
     props.fetch = enhancedFetch;
     return Layer && new Layer(props);
   });
 }
 
 function getJSONLayerProps(jsonProps, configuration) {
-  var replacedProps = {};
+  const replacedProps = {};
 
-  for (var propName in jsonProps) {
-    var propValue = jsonProps[propName];
+  for (const propName in jsonProps) {
+    const propValue = jsonProps[propName];
 
     if (propName.startsWith('get')) {
       replacedProps[propName] = getJSONAccessor(propValue, configuration);
@@ -122,13 +122,11 @@ function getJSONLayerProps(jsonProps, configuration) {
 
 function getJSONAccessor(propValue, configuration) {
   if (propValue === '-') {
-    return function (object) {
-      return object;
-    };
+    return object => object;
   }
 
   if (typeof propValue === 'string') {
-    return function (object) {
+    return object => {
       return (0, _get.get)(object, propValue);
     };
   }
@@ -137,9 +135,7 @@ function getJSONAccessor(propValue, configuration) {
 }
 
 function enhancedFetch(url) {
-  return fetch(url).then(function (response) {
-    return response.text();
-  }).then(function (text) {
+  return fetch(url).then(response => response.text()).then(text => {
     try {
       return JSON.parse(text);
     } catch (error) {
@@ -149,39 +145,18 @@ function enhancedFetch(url) {
 }
 
 function parseCSV(text) {
-  var csv = (0, _d3Dsv.csvParseRows)(text);
+  const csv = (0, _d3Dsv.csvParseRows)(text);
 
   if (csv.length > 0) {
     csv.shift();
   }
 
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+  for (const row of csv) {
+    for (const key in row) {
+      const number = parseFloat(row[key]) || 0;
 
-  try {
-    for (var _iterator = csv[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var row = _step.value;
-
-      for (var key in row) {
-        var number = parseFloat(row[key]) || 0;
-
-        if (!Number.isNaN(number)) {
-          row[key] = number;
-        }
-      }
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
+      if (!Number.isNaN(number)) {
+        row[key] = number;
       }
     }
   }

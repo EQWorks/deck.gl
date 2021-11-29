@@ -1,17 +1,15 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.generateLayerTests = generateLayerTests;
 
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var count = _keplerOutdatedDeck.experimental.count;
+const {
+  count
+} = _keplerOutdatedDeck.experimental;
 
 function defaultAssert(condition, comment) {
   if (!condition) {
@@ -20,23 +18,21 @@ function defaultAssert(condition, comment) {
 }
 
 function generateLayerTests(_ref) {
-  var Layer = _ref.Layer,
-      _ref$sampleProps = _ref.sampleProps,
-      sampleProps = _ref$sampleProps === void 0 ? {} : _ref$sampleProps,
-      _ref$assert = _ref.assert,
-      assert = _ref$assert === void 0 ? defaultAssert : _ref$assert,
-      onBeforeUpdate = _ref.onBeforeUpdate,
-      _ref$onAfterUpdate = _ref.onAfterUpdate,
-      onAfterUpdate = _ref$onAfterUpdate === void 0 ? function () {} : _ref$onAfterUpdate,
-      _ref$runDefaultAssert = _ref.runDefaultAsserts,
-      runDefaultAsserts = _ref$runDefaultAssert === void 0 ? true : _ref$runDefaultAssert;
+  let {
+    Layer,
+    sampleProps = {},
+    assert = defaultAssert,
+    onBeforeUpdate,
+    onAfterUpdate = () => {},
+    runDefaultAsserts = true
+  } = _ref;
   assert(Layer.layerName, 'Layer should have display name');
 
   function wrapTestCaseTitle(title) {
     return "".concat(Layer.layerName, "#").concat(title);
   }
 
-  var testCases = [{
+  const testCases = [{
     title: 'Empty props',
     props: {}
   }, {
@@ -55,40 +51,24 @@ function generateLayerTests(_ref) {
     assert(false, "Construct ".concat(Layer.layerName, " throws: ").concat(error.message));
   }
 
-  var propTypes = Layer._propTypes,
-      defaultProps = Layer._mergedDefaultProps;
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+  const {
+    _propTypes: propTypes,
+    _mergedDefaultProps: defaultProps
+  } = Layer;
 
-  try {
-    for (var _iterator = makeAltDataTestCases(sampleProps, propTypes)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var _step$value = _step.value,
-          title = _step$value.title,
-          props = _step$value.props;
-      testCases.push({
-        title: title,
-        updateProps: props
-      });
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
+  for (const {
+    title,
+    props
+  } of makeAltDataTestCases(sampleProps, propTypes)) {
+    testCases.push({
+      title,
+      updateProps: props
+    });
   }
 
-  for (var propName in Layer.defaultProps) {
+  for (const propName in Layer.defaultProps) {
     if (!(propName in sampleProps)) {
-      var newTestCase = makeAltPropTestCase(propName, propTypes, defaultProps);
+      const newTestCase = makeAltPropTestCase(propName, propTypes, defaultProps);
 
       if (newTestCase) {
         testCases.push({
@@ -99,7 +79,7 @@ function generateLayerTests(_ref) {
     }
   }
 
-  var _onAfterUpdate = function _onAfterUpdate(params) {
+  const _onAfterUpdate = params => {
     onAfterUpdate(params);
 
     if (runDefaultAsserts) {
@@ -113,7 +93,7 @@ function generateLayerTests(_ref) {
     }
   };
 
-  testCases.forEach(function (testCase) {
+  testCases.forEach(testCase => {
     testCase.title = wrapTestCaseTitle(testCase.title);
     testCase.onBeforeUpdate = onBeforeUpdate;
     testCase.onAfterUpdate = _onAfterUpdate;
@@ -122,9 +102,9 @@ function generateLayerTests(_ref) {
 }
 
 function makeAltPropTestCase(propName, propTypes, defaultProps) {
-  var newProps = {};
-  var propDef = propTypes[propName];
-  var title;
+  const newProps = {};
+  const propDef = propTypes[propName];
+  let title;
 
   if (!propDef) {
     return null;
@@ -153,11 +133,11 @@ function makeAltPropTestCase(propName, propTypes, defaultProps) {
         return null;
       }
 
-      newProps[propName] = function () {
-        return defaultProps[propName];
-      };
+      newProps[propName] = () => defaultProps[propName];
 
-      newProps.updateTriggers = (0, _defineProperty2.default)({}, propName, propName);
+      newProps.updateTriggers = {
+        [propName]: propName
+      };
       title = "() => ".concat(defaultProps[propName]);
       break;
 
@@ -172,31 +152,25 @@ function makeAltPropTestCase(propName, propTypes, defaultProps) {
 }
 
 function makeAltDataTestCases(props, propTypes) {
-  var originalData = props.data;
+  const originalData = props.data;
 
   if (!Array.isArray(originalData)) {
     return [];
   }
 
-  var genIterableProps = {
+  const genIterableProps = {
     data: new Set(originalData)
   };
-  var nonIterableProps = {
+  const nonIterableProps = {
     data: {
       length: originalData.length
     }
   };
 
-  var _loop = function _loop(propName) {
+  for (const propName in props) {
     if (propTypes[propName].type === 'accessor') {
-      nonIterableProps[propName] = function (_, info) {
-        return props[propName](originalData[info.index], info);
-      };
+      nonIterableProps[propName] = (_, info) => props[propName](originalData[info.index], info);
     }
-  };
-
-  for (var propName in props) {
-    _loop(propName);
   }
 
   return [{

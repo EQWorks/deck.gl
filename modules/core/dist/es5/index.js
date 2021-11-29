@@ -5,229 +5,229 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "COORDINATE_SYSTEM", {
+Object.defineProperty(exports, "AmbientLight", {
   enumerable: true,
-  get: function get() {
-    return _constants.COORDINATE_SYSTEM;
-  }
-});
-Object.defineProperty(exports, "LightingEffect", {
-  enumerable: true,
-  get: function get() {
-    return _lightingEffect.default;
-  }
-});
-Object.defineProperty(exports, "PointLight", {
-  enumerable: true,
-  get: function get() {
-    return _pointLight.default;
-  }
-});
-Object.defineProperty(exports, "DirectionalLight", {
-  enumerable: true,
-  get: function get() {
-    return _directionalLight.default;
-  }
-});
-Object.defineProperty(exports, "_CameraLight", {
-  enumerable: true,
-  get: function get() {
-    return _cameraLight.default;
-  }
-});
-Object.defineProperty(exports, "_SunLight", {
-  enumerable: true,
-  get: function get() {
-    return _sunLight.default;
-  }
-});
-Object.defineProperty(exports, "PostProcessEffect", {
-  enumerable: true,
-  get: function get() {
-    return _postProcessEffect.default;
-  }
-});
-Object.defineProperty(exports, "_LayersPass", {
-  enumerable: true,
-  get: function get() {
-    return _layersPass.default;
-  }
-});
-Object.defineProperty(exports, "Deck", {
-  enumerable: true,
-  get: function get() {
-    return _deck.default;
-  }
-});
-Object.defineProperty(exports, "LayerManager", {
-  enumerable: true,
-  get: function get() {
-    return _layerManager.default;
+  get: function () {
+    return _core.AmbientLight;
   }
 });
 Object.defineProperty(exports, "AttributeManager", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _attributeManager.default;
   }
 });
-Object.defineProperty(exports, "Layer", {
+Object.defineProperty(exports, "COORDINATE_SYSTEM", {
   enumerable: true,
-  get: function get() {
-    return _layer.default;
+  get: function () {
+    return _constants.COORDINATE_SYSTEM;
   }
 });
 Object.defineProperty(exports, "CompositeLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _compositeLayer.default;
+  }
+});
+Object.defineProperty(exports, "Controller", {
+  enumerable: true,
+  get: function () {
+    return _controller.default;
+  }
+});
+Object.defineProperty(exports, "Deck", {
+  enumerable: true,
+  get: function () {
+    return _deck.default;
   }
 });
 Object.defineProperty(exports, "DeckRenderer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _deckRenderer.default;
+  }
+});
+Object.defineProperty(exports, "DirectionalLight", {
+  enumerable: true,
+  get: function () {
+    return _directionalLight.default;
+  }
+});
+Object.defineProperty(exports, "Effect", {
+  enumerable: true,
+  get: function () {
+    return _effect.default;
+  }
+});
+Object.defineProperty(exports, "FirstPersonView", {
+  enumerable: true,
+  get: function () {
+    return _firstPersonView.default;
+  }
+});
+Object.defineProperty(exports, "FlyToInterpolator", {
+  enumerable: true,
+  get: function () {
+    return _viewportFlyToInterpolator.default;
+  }
+});
+Object.defineProperty(exports, "Layer", {
+  enumerable: true,
+  get: function () {
+    return _layer.default;
+  }
+});
+Object.defineProperty(exports, "LayerManager", {
+  enumerable: true,
+  get: function () {
+    return _layerManager.default;
+  }
+});
+Object.defineProperty(exports, "LightingEffect", {
+  enumerable: true,
+  get: function () {
+    return _lightingEffect.default;
+  }
+});
+Object.defineProperty(exports, "LinearInterpolator", {
+  enumerable: true,
+  get: function () {
+    return _linearInterpolator.default;
+  }
+});
+Object.defineProperty(exports, "MapController", {
+  enumerable: true,
+  get: function () {
+    return _mapController.default;
+  }
+});
+Object.defineProperty(exports, "MapView", {
+  enumerable: true,
+  get: function () {
+    return _mapView.default;
+  }
+});
+Object.defineProperty(exports, "OrbitView", {
+  enumerable: true,
+  get: function () {
+    return _orbitView.default;
+  }
+});
+Object.defineProperty(exports, "OrthographicView", {
+  enumerable: true,
+  get: function () {
+    return _orthographicView.default;
+  }
+});
+Object.defineProperty(exports, "PerspectiveView", {
+  enumerable: true,
+  get: function () {
+    return _perspectiveView.default;
+  }
+});
+Object.defineProperty(exports, "PointLight", {
+  enumerable: true,
+  get: function () {
+    return _pointLight.default;
+  }
+});
+Object.defineProperty(exports, "PostProcessEffect", {
+  enumerable: true,
+  get: function () {
+    return _postProcessEffect.default;
+  }
+});
+Object.defineProperty(exports, "TRANSITION_EVENTS", {
+  enumerable: true,
+  get: function () {
+    return _transitionManager.TRANSITION_EVENTS;
+  }
+});
+Object.defineProperty(exports, "ThirdPersonView", {
+  enumerable: true,
+  get: function () {
+    return _thirdPersonView.default;
+  }
+});
+Object.defineProperty(exports, "View", {
+  enumerable: true,
+  get: function () {
+    return _view.default;
   }
 });
 Object.defineProperty(exports, "Viewport", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _viewport.default;
   }
 });
 Object.defineProperty(exports, "WebMercatorViewport", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _webMercatorViewport.default;
   }
 });
-Object.defineProperty(exports, "project", {
+Object.defineProperty(exports, "_CameraLight", {
   enumerable: true,
-  get: function get() {
-    return _project.default;
-  }
-});
-Object.defineProperty(exports, "project64", {
-  enumerable: true,
-  get: function get() {
-    return _project2.default;
-  }
-});
-Object.defineProperty(exports, "View", {
-  enumerable: true,
-  get: function get() {
-    return _view.default;
-  }
-});
-Object.defineProperty(exports, "MapView", {
-  enumerable: true,
-  get: function get() {
-    return _mapView.default;
-  }
-});
-Object.defineProperty(exports, "FirstPersonView", {
-  enumerable: true,
-  get: function get() {
-    return _firstPersonView.default;
-  }
-});
-Object.defineProperty(exports, "ThirdPersonView", {
-  enumerable: true,
-  get: function get() {
-    return _thirdPersonView.default;
-  }
-});
-Object.defineProperty(exports, "OrbitView", {
-  enumerable: true,
-  get: function get() {
-    return _orbitView.default;
-  }
-});
-Object.defineProperty(exports, "PerspectiveView", {
-  enumerable: true,
-  get: function get() {
-    return _perspectiveView.default;
-  }
-});
-Object.defineProperty(exports, "OrthographicView", {
-  enumerable: true,
-  get: function get() {
-    return _orthographicView.default;
-  }
-});
-Object.defineProperty(exports, "Controller", {
-  enumerable: true,
-  get: function get() {
-    return _controller.default;
-  }
-});
-Object.defineProperty(exports, "MapController", {
-  enumerable: true,
-  get: function get() {
-    return _mapController.default;
+  get: function () {
+    return _cameraLight.default;
   }
 });
 Object.defineProperty(exports, "_FirstPersonController", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _firstPersonController.default;
+  }
+});
+Object.defineProperty(exports, "_LayersPass", {
+  enumerable: true,
+  get: function () {
+    return _layersPass.default;
   }
 });
 Object.defineProperty(exports, "_OrbitController", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _orbitController.default;
   }
 });
 Object.defineProperty(exports, "_OrthographicController", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _orthographicController.default;
   }
 });
-Object.defineProperty(exports, "Effect", {
+Object.defineProperty(exports, "_SunLight", {
   enumerable: true,
-  get: function get() {
-    return _effect.default;
-  }
-});
-Object.defineProperty(exports, "TRANSITION_EVENTS", {
-  enumerable: true,
-  get: function get() {
-    return _transitionManager.TRANSITION_EVENTS;
-  }
-});
-Object.defineProperty(exports, "LinearInterpolator", {
-  enumerable: true,
-  get: function get() {
-    return _linearInterpolator.default;
-  }
-});
-Object.defineProperty(exports, "FlyToInterpolator", {
-  enumerable: true,
-  get: function get() {
-    return _viewportFlyToInterpolator.default;
-  }
-});
-Object.defineProperty(exports, "log", {
-  enumerable: true,
-  get: function get() {
-    return _log.default;
+  get: function () {
+    return _sunLight.default;
   }
 });
 Object.defineProperty(exports, "createIterable", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _iterableUtils.createIterable;
   }
 });
-Object.defineProperty(exports, "AmbientLight", {
+exports.experimental = void 0;
+Object.defineProperty(exports, "log", {
   enumerable: true,
-  get: function get() {
-    return _core.AmbientLight;
+  get: function () {
+    return _log.default;
   }
 });
-exports.experimental = void 0;
+Object.defineProperty(exports, "project", {
+  enumerable: true,
+  get: function () {
+    return _project.default;
+  }
+});
+Object.defineProperty(exports, "project64", {
+  enumerable: true,
+  get: function () {
+    return _project2.default;
+  }
+});
 
 require("./lib/init");
 
@@ -315,7 +315,7 @@ var _memoize = _interopRequireDefault(require("./utils/memoize"));
 
 var _core = require("@luma.gl/core");
 
-var experimental = {
+const experimental = {
   Tesselator: _tesselator.default,
   flattenVertices: _flatten.flattenVertices,
   fillArray: _flatten.fillArray,

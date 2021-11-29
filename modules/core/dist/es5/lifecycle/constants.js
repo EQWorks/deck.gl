@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.LIFECYCLE = void 0;
-var LIFECYCLE = {
+const LIFECYCLE = {
   NO_STATE: 'Awaiting state',
   MATCHED: 'Matched. State transferred from previous layer',
   INITIALIZED: 'Initialized',

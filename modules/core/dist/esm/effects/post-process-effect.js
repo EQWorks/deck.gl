@@ -1,146 +1,100 @@
-import _classCallCheck from "@babel/runtime/helpers/esm/classCallCheck";
-import _createClass from "@babel/runtime/helpers/esm/createClass";
-import _possibleConstructorReturn from "@babel/runtime/helpers/esm/possibleConstructorReturn";
-import _getPrototypeOf from "@babel/runtime/helpers/esm/getPrototypeOf";
-import _inherits from "@babel/runtime/helpers/esm/inherits";
 import Effect from '../lib/effect';
 import ScreenPass from '../passes/screen-pass';
 import { normalizeShaderModule } from '@luma.gl/shadertools';
-
-var PostProcessEffect = function (_Effect) {
-  _inherits(PostProcessEffect, _Effect);
-
-  function PostProcessEffect(module) {
-    var _this;
-
-    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-    _classCallCheck(this, PostProcessEffect);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(PostProcessEffect).call(this, props));
-    _this.id = "".concat(module.name, "-pass");
+export default class PostProcessEffect extends Effect {
+  constructor(module) {
+    let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    super(props);
+    this.id = "".concat(module.name, "-pass");
     normalizeShaderModule(module);
-    _this.module = module;
-    return _this;
+    this.module = module;
   }
 
-  _createClass(PostProcessEffect, [{
-    key: "prepare",
-    value: function prepare(gl) {
-      if (!this.passes) {
-        this.passes = createPasses(gl, this.module, this.id, this.props);
-      }
+  prepare(gl) {
+    if (!this.passes) {
+      this.passes = createPasses(gl, this.module, this.id, this.props);
     }
-  }, {
-    key: "render",
-    value: function render(params) {
-      var _params$target = params.target,
-          target = _params$target === void 0 ? null : _params$target;
-      var switchBuffer = false;
+  }
 
-      for (var index = 0; index < this.passes.length; index++) {
-        var inputBuffer = switchBuffer ? params.outputBuffer : params.inputBuffer;
-        var outputBuffer = switchBuffer ? params.inputBuffer : params.outputBuffer;
+  render(params) {
+    const {
+      target = null
+    } = params;
+    let switchBuffer = false;
 
-        if (target && index === this.passes.length - 1) {
-          outputBuffer = target;
-        }
+    for (let index = 0; index < this.passes.length; index++) {
+      const inputBuffer = switchBuffer ? params.outputBuffer : params.inputBuffer;
+      let outputBuffer = switchBuffer ? params.inputBuffer : params.outputBuffer;
 
-        this.passes[index].render({
-          inputBuffer: inputBuffer,
-          outputBuffer: outputBuffer
-        });
-        switchBuffer = !switchBuffer;
+      if (target && index === this.passes.length - 1) {
+        outputBuffer = target;
       }
 
-      return {
-        inputBuffer: switchBuffer ? params.outputBuffer : params.inputBuffer,
-        outputBuffer: switchBuffer ? params.inputBuffer : params.outputBuffer
-      };
+      this.passes[index].render({
+        inputBuffer,
+        outputBuffer
+      });
+      switchBuffer = !switchBuffer;
     }
-  }, {
-    key: "cleanup",
-    value: function cleanup() {
-      if (this.passes) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
 
-        try {
-          for (var _iterator = this.passes[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var pass = _step.value;
-            pass.delete();
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
+    return {
+      inputBuffer: switchBuffer ? params.outputBuffer : params.inputBuffer,
+      outputBuffer: switchBuffer ? params.inputBuffer : params.outputBuffer
+    };
+  }
 
-        this.passes = null;
+  cleanup() {
+    if (this.passes) {
+      for (const pass of this.passes) {
+        pass.delete();
       }
+
+      this.passes = null;
     }
-  }]);
+  }
 
-  return PostProcessEffect;
-}(Effect);
-
-export { PostProcessEffect as default };
+}
 
 function createPasses(gl, module, id, moduleProps) {
   if (module.filter || module.sampler) {
-    var fs = getFragmentShaderForRenderPass(module);
-    var pass = new ScreenPass(gl, {
-      id: id,
-      module: module,
-      fs: fs,
-      moduleProps: moduleProps
+    const fs = getFragmentShaderForRenderPass(module);
+    const pass = new ScreenPass(gl, {
+      id,
+      module,
+      fs,
+      moduleProps
     });
     return [pass];
   }
 
-  var passes = module.passes || [];
-  return passes.map(function (pass, index) {
-    var fs = getFragmentShaderForRenderPass(module, pass);
-    var idn = "".concat(id, "-").concat(index);
+  const passes = module.passes || [];
+  return passes.map((pass, index) => {
+    const fs = getFragmentShaderForRenderPass(module, pass);
+    const idn = "".concat(id, "-").concat(index);
     return new ScreenPass(gl, {
       id: idn,
-      module: module,
-      fs: fs,
-      moduleProps: moduleProps
+      module,
+      fs,
+      moduleProps
     });
   });
 }
 
-var FILTER_FS_TEMPLATE = function FILTER_FS_TEMPLATE(func) {
-  return "uniform sampler2D texture;\nuniform vec2 texSize;\n\nvarying vec2 position;\nvarying vec2 coordinate;\nvarying vec2 uv;\n\nvoid main() {\n  vec2 texCoord = coordinate;\n\n  gl_FragColor = texture2D(texture, texCoord);\n  gl_FragColor = ".concat(func, "(gl_FragColor, texSize, texCoord);\n}\n");
-};
+const FILTER_FS_TEMPLATE = func => "uniform sampler2D texture;\nuniform vec2 texSize;\n\nvarying vec2 position;\nvarying vec2 coordinate;\nvarying vec2 uv;\n\nvoid main() {\n  vec2 texCoord = coordinate;\n\n  gl_FragColor = texture2D(texture, texCoord);\n  gl_FragColor = ".concat(func, "(gl_FragColor, texSize, texCoord);\n}\n");
 
-var SAMPLER_FS_TEMPLATE = function SAMPLER_FS_TEMPLATE(func) {
-  return "uniform sampler2D texture;\nuniform vec2 texSize;\n\nvarying vec2 position;\nvarying vec2 coordinate;\nvarying vec2 uv;\n\nvoid main() {\n  vec2 texCoord = coordinate;\n\n  gl_FragColor = ".concat(func, "(texture, texSize, texCoord);\n}\n");
-};
+const SAMPLER_FS_TEMPLATE = func => "uniform sampler2D texture;\nuniform vec2 texSize;\n\nvarying vec2 position;\nvarying vec2 coordinate;\nvarying vec2 uv;\n\nvoid main() {\n  vec2 texCoord = coordinate;\n\n  gl_FragColor = ".concat(func, "(texture, texSize, texCoord);\n}\n");
 
 function getFragmentShaderForRenderPass(module) {
-  var pass = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : module;
+  let pass = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : module;
 
   if (pass.filter) {
-    var func = typeof pass.filter === 'string' ? pass.filter : "".concat(module.name, "_filterColor");
+    const func = typeof pass.filter === 'string' ? pass.filter : "".concat(module.name, "_filterColor");
     return FILTER_FS_TEMPLATE(func);
   }
 
   if (pass.sampler) {
-    var _func = typeof pass.sampler === 'string' ? pass.sampler : "".concat(module.name, "_sampleColor");
-
-    return SAMPLER_FS_TEMPLATE(_func);
+    const func = typeof pass.sampler === 'string' ? pass.sampler : "".concat(module.name, "_sampleColor");
+    return SAMPLER_FS_TEMPLATE(func);
   }
 
   return null;

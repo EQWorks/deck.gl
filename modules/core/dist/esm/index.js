@@ -41,11 +41,11 @@ import Tesselator from './utils/tesselator';
 import { count } from './utils/count';
 import memoize from './utils/memoize';
 export { AmbientLight } from '@luma.gl/core';
-export var experimental = {
-  Tesselator: Tesselator,
-  flattenVertices: flattenVertices,
-  fillArray: fillArray,
-  count: count,
-  memoize: memoize
+export const experimental = {
+  Tesselator,
+  flattenVertices,
+  fillArray,
+  count,
+  memoize
 };
 //# sourceMappingURL=index.js.map

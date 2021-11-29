@@ -1,66 +1,70 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.parsePropTypes = parsePropTypes;
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
-var _slicedToArray2 = _interopRequireDefault(require("@babel/runtime/helpers/slicedToArray"));
-
-var TYPE_DEFINITIONS = {
+const TYPE_DEFINITIONS = {
   boolean: {
-    validate: function validate(value, propType) {
+    validate(value, propType) {
       return true;
     },
-    equal: function equal(value1, value2, propType) {
+
+    equal(value1, value2, propType) {
       return Boolean(value1) === Boolean(value2);
     }
+
   },
   number: {
-    validate: function validate(value, propType) {
+    validate(value, propType) {
       return Number.isFinite(value) && (!('max' in propType) || value <= propType.max) && (!('min' in propType) || value >= propType.min);
     }
+
   },
   color: {
-    validate: function validate(value, propType) {
+    validate(value, propType) {
       return isArray(value) && (value.length === 3 || value.length === 4);
     },
-    equal: function equal(value1, value2, propType) {
+
+    equal(value1, value2, propType) {
       return arrayEqual(value1, value2);
     }
+
   },
   accessor: {
-    validate: function validate(value, propType) {
-      var valueType = getTypeOf(value);
+    validate(value, propType) {
+      const valueType = getTypeOf(value);
       return valueType === 'function' || valueType === getTypeOf(propType.value);
     },
-    equal: function equal(value1, value2, propType) {
+
+    equal(value1, value2, propType) {
       if (typeof value2 === 'function') {
         return true;
       }
 
       return arrayEqual(value1, value2);
     }
+
   },
   array: {
-    validate: function validate(value, propType) {
+    validate(value, propType) {
       return propType.optional && !value || isArray(value);
     },
-    equal: function equal(value1, value2, propType) {
+
+    equal(value1, value2, propType) {
       return propType.compare ? arrayEqual(value1, value2) : value1 === value2;
     }
+
   },
   function: {
-    validate: function validate(value, propType) {
+    validate(value, propType) {
       return propType.optional && !value || typeof value === 'function';
     },
-    equal: function equal(value1, value2, propType) {
+
+    equal(value1, value2, propType) {
       return !propType.compare || value1 === value2;
     }
+
   }
 };
 
@@ -73,13 +77,13 @@ function arrayEqual(array1, array2) {
     return false;
   }
 
-  var len = array1.length;
+  const len = array1.length;
 
   if (len !== array2.length) {
     return false;
   }
 
-  for (var i = 0; i < len; i++) {
+  for (let i = 0; i < len; i++) {
     if (array1[i] !== array2[i]) {
       return false;
     }
@@ -89,30 +93,24 @@ function arrayEqual(array1, array2) {
 }
 
 function parsePropTypes(propDefs) {
-  var propTypes = {};
-  var defaultProps = {};
-  var deprecatedProps = {};
+  const propTypes = {};
+  const defaultProps = {};
+  const deprecatedProps = {};
 
-  var _arr = Object.entries(propDefs);
-
-  for (var _i = 0; _i < _arr.length; _i++) {
-    var _arr$_i = (0, _slicedToArray2.default)(_arr[_i], 2),
-        propName = _arr$_i[0],
-        propDef = _arr$_i[1];
-
+  for (const [propName, propDef] of Object.entries(propDefs)) {
     if (propDef && propDef.deprecatedFor) {
       deprecatedProps[propName] = Array.isArray(propDef.deprecatedFor) ? propDef.deprecatedFor : [propDef.deprecatedFor];
     } else {
-      var propType = parsePropType(propName, propDef);
+      const propType = parsePropType(propName, propDef);
       propTypes[propName] = propType;
       defaultProps[propName] = propType.value;
     }
   }
 
   return {
-    propTypes: propTypes,
-    defaultProps: defaultProps,
-    deprecatedProps: deprecatedProps
+    propTypes,
+    defaultProps,
+    deprecatedProps
   };
 }
 
@@ -149,7 +147,7 @@ function parsePropType(name, propDef) {
 
     default:
       return {
-        name: name,
+        name,
         type: 'unknown',
         value: propDef
       };
@@ -160,20 +158,20 @@ function normalizePropDefinition(name, propDef) {
   if (!('type' in propDef)) {
     if (!('value' in propDef)) {
       return {
-        name: name,
+        name,
         type: 'object',
         value: propDef
       };
     }
 
     return Object.assign({
-      name: name,
+      name,
       type: getTypeOf(propDef.value)
     }, propDef);
   }
 
   return Object.assign({
-    name: name
+    name
   }, TYPE_DEFINITIONS[propDef.type], propDef);
 }
 
@@ -190,6 +188,6 @@ function getTypeOf(value) {
     return 'null';
   }
 
-  return (0, _typeof2.default)(value);
+  return typeof value;
 }
 //# sourceMappingURL=prop-types.js.map

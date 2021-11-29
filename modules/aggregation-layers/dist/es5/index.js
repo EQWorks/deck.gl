@@ -5,51 +5,51 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "ScreenGridLayer", {
+Object.defineProperty(exports, "AGGREGATION_OPERATION", {
   enumerable: true,
-  get: function get() {
-    return _screenGridLayer.default;
+  get: function () {
+    return _aggregationOperationUtils.AGGREGATION_OPERATION;
   }
 });
 Object.defineProperty(exports, "CPUGridLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _cpuGridLayer.default;
-  }
-});
-Object.defineProperty(exports, "HexagonLayer", {
-  enumerable: true,
-  get: function get() {
-    return _hexagonLayer.default;
   }
 });
 Object.defineProperty(exports, "ContourLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _contourLayer.default;
-  }
-});
-Object.defineProperty(exports, "GridLayer", {
-  enumerable: true,
-  get: function get() {
-    return _gridLayer.default;
   }
 });
 Object.defineProperty(exports, "GPUGridLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _gpuGridLayer.default;
   }
 });
-Object.defineProperty(exports, "AGGREGATION_OPERATION", {
+Object.defineProperty(exports, "GridLayer", {
   enumerable: true,
-  get: function get() {
-    return _aggregationOperationUtils.AGGREGATION_OPERATION;
+  get: function () {
+    return _gridLayer.default;
+  }
+});
+Object.defineProperty(exports, "HexagonLayer", {
+  enumerable: true,
+  get: function () {
+    return _hexagonLayer.default;
+  }
+});
+Object.defineProperty(exports, "ScreenGridLayer", {
+  enumerable: true,
+  get: function () {
+    return _screenGridLayer.default;
   }
 });
 Object.defineProperty(exports, "_GPUGridAggregator", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _gpuGridAggregator.default;
   }
 });
@@ -77,7 +77,7 @@ var _scaleUtils = require("./utils/scale-utils");
 
 var _colorUtils = require("./utils/color-utils");
 
-var experimental = {
+const experimental = {
   BinSorter: _binSorter.default,
   linearScale: _scaleUtils.linearScale,
   getLinearScale: _scaleUtils.getLinearScale,

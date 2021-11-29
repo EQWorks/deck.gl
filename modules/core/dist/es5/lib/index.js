@@ -5,33 +5,33 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "COORDINATE_SYSTEM", {
+Object.defineProperty(exports, "AttributeManager", {
   enumerable: true,
-  get: function get() {
-    return _constants.COORDINATE_SYSTEM;
+  get: function () {
+    return _attributeManager.default;
   }
 });
-Object.defineProperty(exports, "Layer", {
+Object.defineProperty(exports, "COORDINATE_SYSTEM", {
   enumerable: true,
-  get: function get() {
-    return _layer.default;
+  get: function () {
+    return _constants.COORDINATE_SYSTEM;
   }
 });
 Object.defineProperty(exports, "CompositeLayer", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _compositeLayer.default;
   }
 });
-Object.defineProperty(exports, "AttributeManager", {
+Object.defineProperty(exports, "Layer", {
   enumerable: true,
-  get: function get() {
-    return _attributeManager.default;
+  get: function () {
+    return _layer.default;
   }
 });
 Object.defineProperty(exports, "LayerManager", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _layerManager.default;
   }
 });

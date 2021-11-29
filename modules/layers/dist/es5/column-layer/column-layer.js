@@ -7,18 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _get2 = _interopRequireDefault(require("@babel/runtime/helpers/get"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
 var _core = require("@luma.gl/core");
@@ -29,10 +17,12 @@ var _columnLayerVertex = _interopRequireDefault(require("./column-layer-vertex.g
 
 var _columnLayerFragment = _interopRequireDefault(require("./column-layer-fragment.glsl"));
 
-var fp64LowPart = _core.fp64.fp64LowPart;
-var defaultMaterial = new _core.PhongMaterial();
-var DEFAULT_COLOR = [0, 0, 0, 255];
-var defaultProps = {
+const {
+  fp64LowPart
+} = _core.fp64;
+const defaultMaterial = new _core.PhongMaterial();
+const DEFAULT_COLOR = [0, 0, 0, 255];
+const defaultProps = {
   diskResolution: {
     type: 'number',
     min: 4,
@@ -74,9 +64,7 @@ var defaultProps = {
   stroked: false,
   getPosition: {
     type: 'accessor',
-    value: function value(x) {
-      return x.position;
-    }
+    value: x => x.position
   },
   getFillColor: {
     type: 'accessor',
@@ -100,263 +88,243 @@ var defaultProps = {
   }
 };
 
-var ColumnLayer = function (_Layer) {
-  (0, _inherits2.default)(ColumnLayer, _Layer);
-
-  function ColumnLayer() {
-    (0, _classCallCheck2.default)(this, ColumnLayer);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(ColumnLayer).apply(this, arguments));
+class ColumnLayer extends _keplerOutdatedDeck.Layer {
+  getShaders() {
+    const projectModule = this.use64bitProjection() ? 'project64' : 'project32';
+    return {
+      vs: _columnLayerVertex.default,
+      fs: _columnLayerFragment.default,
+      modules: [projectModule, 'gouraud-lighting', 'picking']
+    };
   }
 
-  (0, _createClass2.default)(ColumnLayer, [{
-    key: "getShaders",
-    value: function getShaders() {
-      var projectModule = this.use64bitProjection() ? 'project64' : 'project32';
-      return {
-        vs: _columnLayerVertex.default,
-        fs: _columnLayerFragment.default,
-        modules: [projectModule, 'gouraud-lighting', 'picking']
-      };
-    }
-  }, {
-    key: "initializeState",
-    value: function initializeState() {
-      var attributeManager = this.getAttributeManager();
-      attributeManager.addInstanced({
-        instancePositions: {
-          size: 3,
-          transition: true,
-          accessor: 'getPosition'
-        },
-        instanceElevations: {
-          size: 1,
-          transition: true,
-          accessor: 'getElevation'
-        },
-        instancePositions64xyLow: {
-          size: 2,
-          accessor: 'getPosition',
-          update: this.calculateInstancePositions64xyLow
-        },
-        instanceFillColors: {
-          size: 4,
-          type: 5121,
-          transition: true,
-          accessor: 'getFillColor',
-          defaultValue: DEFAULT_COLOR
-        },
-        instanceLineColors: {
-          size: 4,
-          type: 5121,
-          transition: true,
-          accessor: 'getLineColor',
-          defaultValue: DEFAULT_COLOR
-        },
-        instanceStrokeWidths: {
-          size: 1,
-          accessor: 'getLineWidth',
-          transition: true
-        }
-      });
-    }
-  }, {
-    key: "updateState",
-    value: function updateState(_ref) {
-      var props = _ref.props,
-          oldProps = _ref.oldProps,
-          changeFlags = _ref.changeFlags;
-      (0, _get2.default)((0, _getPrototypeOf2.default)(ColumnLayer.prototype), "updateState", this).call(this, {
-        props: props,
-        oldProps: oldProps,
-        changeFlags: changeFlags
-      });
-      var regenerateModels = props.fp64 !== oldProps.fp64;
-
-      if (regenerateModels) {
-        var gl = this.context.gl;
-
-        if (this.state.model) {
-          this.state.model.delete();
-        }
-
-        this.setState({
-          model: this._getModel(gl)
-        });
-        this.getAttributeManager().invalidateAll();
+  initializeState() {
+    const attributeManager = this.getAttributeManager();
+    attributeManager.addInstanced({
+      instancePositions: {
+        size: 3,
+        transition: true,
+        accessor: 'getPosition'
+      },
+      instanceElevations: {
+        size: 1,
+        transition: true,
+        accessor: 'getElevation'
+      },
+      instancePositions64xyLow: {
+        size: 2,
+        accessor: 'getPosition',
+        update: this.calculateInstancePositions64xyLow
+      },
+      instanceFillColors: {
+        size: 4,
+        type: 5121,
+        transition: true,
+        accessor: 'getFillColor',
+        defaultValue: DEFAULT_COLOR
+      },
+      instanceLineColors: {
+        size: 4,
+        type: 5121,
+        transition: true,
+        accessor: 'getLineColor',
+        defaultValue: DEFAULT_COLOR
+      },
+      instanceStrokeWidths: {
+        size: 1,
+        accessor: 'getLineWidth',
+        transition: true
       }
+    });
+  }
 
-      if (regenerateModels || props.diskResolution !== oldProps.diskResolution || props.vertices !== oldProps.vertices) {
-        this._updateGeometry(props);
-      }
-    }
-  }, {
-    key: "getGeometry",
-    value: function getGeometry(diskResolution, vertices) {
-      var geometry = new _columnGeometry.default({
-        radius: 1,
-        height: 2,
-        vertices: vertices,
-        nradial: diskResolution
-      });
-      var meanVertexDistance = 0;
+  updateState(_ref) {
+    let {
+      props,
+      oldProps,
+      changeFlags
+    } = _ref;
+    super.updateState({
+      props,
+      oldProps,
+      changeFlags
+    });
+    const regenerateModels = props.fp64 !== oldProps.fp64;
 
-      if (vertices) {
-        for (var i = 0; i < diskResolution; i++) {
-          var p = vertices[i];
-          var d = Math.sqrt(p[0] * p[0] + p[1] * p[1]);
-          meanVertexDistance += d / diskResolution;
-        }
-      } else {
-        meanVertexDistance = 1;
+    if (regenerateModels) {
+      const {
+        gl
+      } = this.context;
+
+      if (this.state.model) {
+        this.state.model.delete();
       }
 
       this.setState({
-        edgeDistance: Math.cos(Math.PI / diskResolution) * meanVertexDistance
+        model: this._getModel(gl)
       });
-      return geometry;
+      this.getAttributeManager().invalidateAll();
     }
-  }, {
-    key: "_getModel",
-    value: function _getModel(gl) {
-      return new _core.Model(gl, Object.assign({}, this.getShaders(), {
-        id: this.props.id,
-        isInstanced: true,
-        shaderCache: this.context.shaderCache
-      }));
+
+    if (regenerateModels || props.diskResolution !== oldProps.diskResolution || props.vertices !== oldProps.vertices) {
+      this._updateGeometry(props);
     }
-  }, {
-    key: "_updateGeometry",
-    value: function _updateGeometry(_ref2) {
-      var diskResolution = _ref2.diskResolution,
-          vertices = _ref2.vertices;
-      var geometry = this.getGeometry(diskResolution, vertices);
-      this.setState({
-        fillVertexCount: geometry.attributes.POSITION.value.length / 3,
-        wireframeVertexCount: geometry.indices.value.length
+  }
+
+  getGeometry(diskResolution, vertices) {
+    const geometry = new _columnGeometry.default({
+      radius: 1,
+      height: 2,
+      vertices,
+      nradial: diskResolution
+    });
+    let meanVertexDistance = 0;
+
+    if (vertices) {
+      for (let i = 0; i < diskResolution; i++) {
+        const p = vertices[i];
+        const d = Math.sqrt(p[0] * p[0] + p[1] * p[1]);
+        meanVertexDistance += d / diskResolution;
+      }
+    } else {
+      meanVertexDistance = 1;
+    }
+
+    this.setState({
+      edgeDistance: Math.cos(Math.PI / diskResolution) * meanVertexDistance
+    });
+    return geometry;
+  }
+
+  _getModel(gl) {
+    return new _core.Model(gl, Object.assign({}, this.getShaders(), {
+      id: this.props.id,
+      isInstanced: true,
+      shaderCache: this.context.shaderCache
+    }));
+  }
+
+  _updateGeometry(_ref2) {
+    let {
+      diskResolution,
+      vertices
+    } = _ref2;
+    const geometry = this.getGeometry(diskResolution, vertices);
+    this.setState({
+      fillVertexCount: geometry.attributes.POSITION.value.length / 3,
+      wireframeVertexCount: geometry.indices.value.length
+    });
+    this.state.model.setProps({
+      geometry
+    });
+  }
+
+  draw(_ref3) {
+    let {
+      uniforms
+    } = _ref3;
+    const {
+      viewport
+    } = this.context;
+    const {
+      lineWidthUnits,
+      lineWidthScale,
+      lineWidthMinPixels,
+      lineWidthMaxPixels,
+      elevationScale,
+      extruded,
+      filled,
+      stroked,
+      wireframe,
+      offset,
+      coverage,
+      radius,
+      angle
+    } = this.props;
+    const {
+      model,
+      fillVertexCount,
+      wireframeVertexCount,
+      edgeDistance
+    } = this.state;
+    const widthMultiplier = lineWidthUnits === 'pixels' ? viewport.distanceScales.metersPerPixel[2] : 1;
+    model.setUniforms(Object.assign({}, uniforms, {
+      radius,
+      angle: angle / 180 * Math.PI,
+      offset,
+      extruded,
+      coverage,
+      elevationScale,
+      edgeDistance,
+      widthScale: lineWidthScale * widthMultiplier,
+      widthMinPixels: lineWidthMinPixels,
+      widthMaxPixels: lineWidthMaxPixels
+    }));
+
+    if (extruded && wireframe) {
+      model.setProps({
+        isIndexed: true
       });
-      this.state.model.setProps({
-        geometry: geometry
+      model.setVertexCount(wireframeVertexCount).setDrawMode(1).setUniforms({
+        isStroke: true
+      }).draw();
+    }
+
+    if (filled) {
+      model.setProps({
+        isIndexed: false
       });
+      model.setVertexCount(fillVertexCount).setDrawMode(5).setUniforms({
+        isStroke: false
+      }).draw();
     }
-  }, {
-    key: "draw",
-    value: function draw(_ref3) {
-      var uniforms = _ref3.uniforms;
-      var viewport = this.context.viewport;
-      var _this$props = this.props,
-          lineWidthUnits = _this$props.lineWidthUnits,
-          lineWidthScale = _this$props.lineWidthScale,
-          lineWidthMinPixels = _this$props.lineWidthMinPixels,
-          lineWidthMaxPixels = _this$props.lineWidthMaxPixels,
-          elevationScale = _this$props.elevationScale,
-          extruded = _this$props.extruded,
-          filled = _this$props.filled,
-          stroked = _this$props.stroked,
-          wireframe = _this$props.wireframe,
-          offset = _this$props.offset,
-          coverage = _this$props.coverage,
-          radius = _this$props.radius,
-          angle = _this$props.angle;
-      var _this$state = this.state,
-          model = _this$state.model,
-          fillVertexCount = _this$state.fillVertexCount,
-          wireframeVertexCount = _this$state.wireframeVertexCount,
-          edgeDistance = _this$state.edgeDistance;
-      var widthMultiplier = lineWidthUnits === 'pixels' ? viewport.distanceScales.metersPerPixel[2] : 1;
-      model.setUniforms(Object.assign({}, uniforms, {
-        radius: radius,
-        angle: angle / 180 * Math.PI,
-        offset: offset,
-        extruded: extruded,
-        coverage: coverage,
-        elevationScale: elevationScale,
-        edgeDistance: edgeDistance,
-        widthScale: lineWidthScale * widthMultiplier,
-        widthMinPixels: lineWidthMinPixels,
-        widthMaxPixels: lineWidthMaxPixels
-      }));
 
-      if (extruded && wireframe) {
-        model.setProps({
-          isIndexed: true
-        });
-        model.setVertexCount(wireframeVertexCount).setDrawMode(1).setUniforms({
-          isStroke: true
-        }).draw();
-      }
-
-      if (filled) {
-        model.setProps({
-          isIndexed: false
-        });
-        model.setVertexCount(fillVertexCount).setDrawMode(5).setUniforms({
-          isStroke: false
-        }).draw();
-      }
-
-      if (!extruded && stroked) {
-        model.setProps({
-          isIndexed: false
-        });
-        model.setVertexCount(fillVertexCount * 2 / 3).setDrawMode(5).setUniforms({
-          isStroke: true
-        }).draw();
-      }
+    if (!extruded && stroked) {
+      model.setProps({
+        isIndexed: false
+      });
+      model.setVertexCount(fillVertexCount * 2 / 3).setDrawMode(5).setUniforms({
+        isStroke: true
+      }).draw();
     }
-  }, {
-    key: "calculateInstancePositions64xyLow",
-    value: function calculateInstancePositions64xyLow(attribute, _ref4) {
-      var startRow = _ref4.startRow,
-          endRow = _ref4.endRow;
-      var isFP64 = this.use64bitPositions();
-      attribute.constant = !isFP64;
+  }
 
-      if (!isFP64) {
-        attribute.value = new Float32Array(2);
-        return;
-      }
+  calculateInstancePositions64xyLow(attribute, _ref4) {
+    let {
+      startRow,
+      endRow
+    } = _ref4;
+    const isFP64 = this.use64bitPositions();
+    attribute.constant = !isFP64;
 
-      var _this$props2 = this.props,
-          data = _this$props2.data,
-          getPosition = _this$props2.getPosition;
-      var value = attribute.value,
-          size = attribute.size;
-      var i = startRow * size;
-
-      var _createIterable = (0, _keplerOutdatedDeck.createIterable)(data, startRow, endRow),
-          iterable = _createIterable.iterable,
-          objectInfo = _createIterable.objectInfo;
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = iterable[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var object = _step.value;
-          objectInfo.index++;
-          var position = getPosition(object, objectInfo);
-          value[i++] = fp64LowPart(position[0]);
-          value[i++] = fp64LowPart(position[1]);
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
+    if (!isFP64) {
+      attribute.value = new Float32Array(2);
+      return;
     }
-  }]);
-  return ColumnLayer;
-}(_keplerOutdatedDeck.Layer);
+
+    const {
+      data,
+      getPosition
+    } = this.props;
+    const {
+      value,
+      size
+    } = attribute;
+    let i = startRow * size;
+    const {
+      iterable,
+      objectInfo
+    } = (0, _keplerOutdatedDeck.createIterable)(data, startRow, endRow);
+
+    for (const object of iterable) {
+      objectInfo.index++;
+      const position = getPosition(object, objectInfo);
+      value[i++] = fp64LowPart(position[0]);
+      value[i++] = fp64LowPart(position[1]);
+    }
+  }
+
+}
 
 exports.default = ColumnLayer;
 ColumnLayer.layerName = 'ColumnLayer';

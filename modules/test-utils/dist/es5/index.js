@@ -5,58 +5,58 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "toLowPrecision", {
+Object.defineProperty(exports, "SnapshotTestRunner", {
   enumerable: true,
-  get: function get() {
-    return _precision.toLowPrecision;
-  }
-});
-Object.defineProperty(exports, "gl", {
-  enumerable: true,
-  get: function get() {
-    return _setupGl.default;
-  }
-});
-Object.defineProperty(exports, "testLayer", {
-  enumerable: true,
-  get: function get() {
-    return _lifecycleTest.testLayer;
-  }
-});
-Object.defineProperty(exports, "testInitializeLayer", {
-  enumerable: true,
-  get: function get() {
-    return _lifecycleTest.testInitializeLayer;
-  }
-});
-Object.defineProperty(exports, "testUpdateLayer", {
-  enumerable: true,
-  get: function get() {
-    return _lifecycleTest.testUpdateLayer;
-  }
-});
-Object.defineProperty(exports, "testDrawLayer", {
-  enumerable: true,
-  get: function get() {
-    return _lifecycleTest.testDrawLayer;
-  }
-});
-Object.defineProperty(exports, "generateLayerTests", {
-  enumerable: true,
-  get: function get() {
-    return _generateLayerTests.generateLayerTests;
+  get: function () {
+    return _snapshotTestRunner.default;
   }
 });
 Object.defineProperty(exports, "TestRunner", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _testRunner.default;
   }
 });
-Object.defineProperty(exports, "SnapshotTestRunner", {
+Object.defineProperty(exports, "generateLayerTests", {
   enumerable: true,
-  get: function get() {
-    return _snapshotTestRunner.default;
+  get: function () {
+    return _generateLayerTests.generateLayerTests;
+  }
+});
+Object.defineProperty(exports, "gl", {
+  enumerable: true,
+  get: function () {
+    return _setupGl.default;
+  }
+});
+Object.defineProperty(exports, "testDrawLayer", {
+  enumerable: true,
+  get: function () {
+    return _lifecycleTest.testDrawLayer;
+  }
+});
+Object.defineProperty(exports, "testInitializeLayer", {
+  enumerable: true,
+  get: function () {
+    return _lifecycleTest.testInitializeLayer;
+  }
+});
+Object.defineProperty(exports, "testLayer", {
+  enumerable: true,
+  get: function () {
+    return _lifecycleTest.testLayer;
+  }
+});
+Object.defineProperty(exports, "testUpdateLayer", {
+  enumerable: true,
+  get: function () {
+    return _lifecycleTest.testUpdateLayer;
+  }
+});
+Object.defineProperty(exports, "toLowPrecision", {
+  enumerable: true,
+  get: function () {
+    return _precision.toLowPrecision;
   }
 });
 

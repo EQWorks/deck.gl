@@ -7,13 +7,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 Object.defineProperty(exports, "DeckGL", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _deckgl.default;
   }
 });
 Object.defineProperty(exports, "default", {
   enumerable: true,
-  get: function get() {
+  get: function () {
     return _deckgl.default;
   }
 });

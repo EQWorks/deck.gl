@@ -1,8 +1,8 @@
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import { DeckGLModel, DeckGLView } from './widget';
 import { MODULE_NAME, MODULE_VERSION } from './version';
-var EXTENSION_ID = 'deckgl-widget:plugin';
-var DeckGLPlugin = {
+const EXTENSION_ID = 'deckgl-widget:plugin';
+const DeckGLPlugin = {
   id: EXTENSION_ID,
   requires: [IJupyterWidgetRegistry],
   activate: activateWidgetExtension,
@@ -15,8 +15,8 @@ function activateWidgetExtension(app, registry) {
     name: MODULE_NAME,
     version: MODULE_VERSION,
     exports: {
-      DeckGLModel: DeckGLModel,
-      DeckGLView: DeckGLView
+      DeckGLModel,
+      DeckGLView
     }
   });
 }

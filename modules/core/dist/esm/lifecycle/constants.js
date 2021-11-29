@@ -1,4 +1,4 @@
-export var LIFECYCLE = {
+export const LIFECYCLE = {
   NO_STATE: 'Awaiting state',
   MATCHED: 'Matched. State transferred from previous layer',
   INITIALIZED: 'Initialized',

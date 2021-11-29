@@ -1,19 +1,14 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.parsePosition = parsePosition;
 exports.getPosition = getPosition;
-
-var _typeof2 = _interopRequireDefault(require("@babel/runtime/helpers/typeof"));
-
-var PERCENT_OR_PIXELS_REGEX = /([0-9]+\.?[0-9]*)(%|px)/;
+exports.parsePosition = parsePosition;
+const PERCENT_OR_PIXELS_REGEX = /([0-9]+\.?[0-9]*)(%|px)/;
 
 function parsePosition(value) {
-  switch ((0, _typeof2.default)(value)) {
+  switch (typeof value) {
     case 'number':
       return {
         position: value,
@@ -21,14 +16,14 @@ function parsePosition(value) {
       };
 
     case 'string':
-      var match = value.match(PERCENT_OR_PIXELS_REGEX);
+      const match = value.match(PERCENT_OR_PIXELS_REGEX);
 
       if (match && match.length >= 3) {
-        var relative = match[2] === '%';
-        var position = parseFloat(match[1]);
+        const relative = match[2] === '%';
+        const position = parseFloat(match[1]);
         return {
           position: relative ? position / 100 : position,
-          relative: relative
+          relative
         };
       }
 

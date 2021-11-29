@@ -5,13 +5,7 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.DEFAULT_RADIUS = exports.DEFAULT_CUTOFF = exports.DEFAULT_BUFFER = exports.DEFAULT_FONT_SIZE = exports.DEFAULT_FONT_WEIGHT = exports.DEFAULT_FONT_FAMILY = exports.DEFAULT_CHAR_SET = void 0;
-
-var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/defineProperty"));
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
+exports.default = exports.DEFAULT_RADIUS = exports.DEFAULT_FONT_WEIGHT = exports.DEFAULT_FONT_SIZE = exports.DEFAULT_FONT_FAMILY = exports.DEFAULT_CUTOFF = exports.DEFAULT_CHAR_SET = exports.DEFAULT_BUFFER = void 0;
 
 var _core = require("@luma.gl/core");
 
@@ -22,57 +16,57 @@ var _fontAtlasUtils = require("./font-atlas-utils");
 var _lruCache = _interopRequireDefault(require("./lru-cache"));
 
 function getDefaultCharacterSet() {
-  var charSet = [];
+  const charSet = [];
 
-  for (var i = 32; i < 128; i++) {
+  for (let i = 32; i < 128; i++) {
     charSet.push(String.fromCharCode(i));
   }
 
   return charSet;
 }
 
-var DEFAULT_CHAR_SET = getDefaultCharacterSet();
+const DEFAULT_CHAR_SET = getDefaultCharacterSet();
 exports.DEFAULT_CHAR_SET = DEFAULT_CHAR_SET;
-var DEFAULT_FONT_FAMILY = 'Monaco, monospace';
+const DEFAULT_FONT_FAMILY = 'Monaco, monospace';
 exports.DEFAULT_FONT_FAMILY = DEFAULT_FONT_FAMILY;
-var DEFAULT_FONT_WEIGHT = 'normal';
+const DEFAULT_FONT_WEIGHT = 'normal';
 exports.DEFAULT_FONT_WEIGHT = DEFAULT_FONT_WEIGHT;
-var DEFAULT_FONT_SIZE = 64;
+const DEFAULT_FONT_SIZE = 64;
 exports.DEFAULT_FONT_SIZE = DEFAULT_FONT_SIZE;
-var DEFAULT_BUFFER = 2;
+const DEFAULT_BUFFER = 2;
 exports.DEFAULT_BUFFER = DEFAULT_BUFFER;
-var DEFAULT_CUTOFF = 0.25;
+const DEFAULT_CUTOFF = 0.25;
 exports.DEFAULT_CUTOFF = DEFAULT_CUTOFF;
-var DEFAULT_RADIUS = 3;
+const DEFAULT_RADIUS = 3;
 exports.DEFAULT_RADIUS = DEFAULT_RADIUS;
-var GL_TEXTURE_WRAP_S = 0x2802;
-var GL_TEXTURE_WRAP_T = 0x2803;
-var GL_CLAMP_TO_EDGE = 0x812f;
-var MAX_CANVAS_WIDTH = 1024;
-var BASELINE_SCALE = 0.9;
-var HEIGHT_SCALE = 1.2;
-var CACHE_LIMIT = 3;
-var cache = new _lruCache.default(CACHE_LIMIT);
-var VALID_PROPS = ['fontFamily', 'fontWeight', 'characterSet', 'fontSize', 'sdf', 'buffer', 'cutoff', 'radius'];
+const GL_TEXTURE_WRAP_S = 0x2802;
+const GL_TEXTURE_WRAP_T = 0x2803;
+const GL_CLAMP_TO_EDGE = 0x812f;
+const MAX_CANVAS_WIDTH = 1024;
+const BASELINE_SCALE = 0.9;
+const HEIGHT_SCALE = 1.2;
+const CACHE_LIMIT = 3;
+const cache = new _lruCache.default(CACHE_LIMIT);
+const VALID_PROPS = ['fontFamily', 'fontWeight', 'characterSet', 'fontSize', 'sdf', 'buffer', 'cutoff', 'radius'];
 
 function getNewChars(key, characterSet) {
-  var cachedFontAtlas = cache.get(key);
+  const cachedFontAtlas = cache.get(key);
 
   if (!cachedFontAtlas) {
     return characterSet;
   }
 
-  var newChars = [];
-  var cachedMapping = cachedFontAtlas.mapping;
-  var cachedCharSet = Object.keys(cachedMapping);
+  const newChars = [];
+  const cachedMapping = cachedFontAtlas.mapping;
+  let cachedCharSet = Object.keys(cachedMapping);
   cachedCharSet = new Set(cachedCharSet);
-  var charSet = characterSet;
+  let charSet = characterSet;
 
   if (charSet instanceof Array) {
     charSet = new Set(charSet);
   }
 
-  charSet.forEach(function (char) {
+  charSet.forEach(char => {
     if (!cachedCharSet.has(char)) {
       newChars.push(char);
     }
@@ -81,7 +75,7 @@ function getNewChars(key, characterSet) {
 }
 
 function populateAlphaChannel(alphaChannel, imageData) {
-  for (var i = 0; i < alphaChannel.length; i++) {
+  for (let i = 0; i < alphaChannel.length; i++) {
     imageData.data[4 * i + 3] = alphaChannel[i];
   }
 }
@@ -93,9 +87,8 @@ function setTextStyle(ctx, fontFamily, fontSize, fontWeight) {
   ctx.textAlign = 'left';
 }
 
-var FontAtlasManager = function () {
-  function FontAtlasManager(gl) {
-    (0, _classCallCheck2.default)(this, FontAtlasManager);
+class FontAtlasManager {
+  constructor(gl) {
     this.gl = gl;
     this.props = {
       fontFamily: DEFAULT_FONT_FAMILY,
@@ -111,215 +104,166 @@ var FontAtlasManager = function () {
     this._texture = new _core.Texture2D(this.gl);
   }
 
-  (0, _createClass2.default)(FontAtlasManager, [{
-    key: "finalize",
-    value: function finalize() {
-      this._texture.delete();
-    }
-  }, {
-    key: "setProps",
-    value: function setProps() {
-      var _this = this;
+  finalize() {
+    this._texture.delete();
+  }
 
-      var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      VALID_PROPS.forEach(function (prop) {
-        if (prop in props) {
-          _this.props[prop] = props[prop];
-        }
+  get texture() {
+    return this._texture;
+  }
+
+  get mapping() {
+    const data = cache.get(this._key);
+    return data && data.mapping;
+  }
+
+  get scale() {
+    return HEIGHT_SCALE;
+  }
+
+  setProps() {
+    let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    VALID_PROPS.forEach(prop => {
+      if (prop in props) {
+        this.props[prop] = props[prop];
+      }
+    });
+    const oldKey = this._key;
+    this._key = this._getKey();
+    const charSet = getNewChars(this._key, this.props.characterSet);
+    const cachedFontAtlas = cache.get(this._key);
+
+    if (cachedFontAtlas && charSet.length === 0) {
+      if (this._key !== oldKey) {
+        this._updateTexture(cachedFontAtlas);
+      }
+
+      return;
+    }
+
+    const fontAtlas = this._generateFontAtlas(this._key, charSet, cachedFontAtlas);
+
+    this._updateTexture(fontAtlas);
+
+    cache.set(this._key, fontAtlas);
+  }
+
+  _updateTexture(_ref) {
+    let {
+      data: canvas,
+      width,
+      height
+    } = _ref;
+
+    if (this._texture.width !== width || this._texture.height !== height) {
+      this._texture.resize({
+        width,
+        height
       });
-      var oldKey = this._key;
-      this._key = this._getKey();
-      var charSet = getNewChars(this._key, this.props.characterSet);
-      var cachedFontAtlas = cache.get(this._key);
+    }
 
-      if (cachedFontAtlas && charSet.length === 0) {
-        if (this._key !== oldKey) {
-          this._updateTexture(cachedFontAtlas);
-        }
-
-        return;
+    this._texture.setImageData({
+      data: canvas,
+      width,
+      height,
+      parameters: {
+        [GL_TEXTURE_WRAP_S]: GL_CLAMP_TO_EDGE,
+        [GL_TEXTURE_WRAP_T]: GL_CLAMP_TO_EDGE,
+        [37440]: true
       }
+    });
 
-      var fontAtlas = this._generateFontAtlas(this._key, charSet, cachedFontAtlas);
+    this._texture.generateMipmap();
+  }
 
-      this._updateTexture(fontAtlas);
+  _generateFontAtlas(key, characterSet, cachedFontAtlas) {
+    const {
+      fontFamily,
+      fontWeight,
+      fontSize,
+      buffer,
+      sdf,
+      radius,
+      cutoff
+    } = this.props;
+    let canvas = cachedFontAtlas && cachedFontAtlas.data;
 
-      cache.set(this._key, fontAtlas);
+    if (!canvas) {
+      canvas = document.createElement('canvas');
+      canvas.width = MAX_CANVAS_WIDTH;
     }
-  }, {
-    key: "_updateTexture",
-    value: function _updateTexture(_ref) {
-      var _parameters;
 
-      var canvas = _ref.data,
-          width = _ref.width,
-          height = _ref.height;
+    const ctx = canvas.getContext('2d');
+    setTextStyle(ctx, fontFamily, fontSize, fontWeight);
+    const {
+      mapping,
+      canvasHeight,
+      xOffset,
+      yOffset
+    } = (0, _fontAtlasUtils.buildMapping)(Object.assign({
+      getFontWidth: char => ctx.measureText(char).width,
+      fontHeight: fontSize * HEIGHT_SCALE,
+      buffer,
+      characterSet,
+      maxCanvasWidth: MAX_CANVAS_WIDTH
+    }, cachedFontAtlas && {
+      mapping: cachedFontAtlas.mapping,
+      xOffset: cachedFontAtlas.xOffset,
+      yOffset: cachedFontAtlas.yOffset
+    }));
 
-      if (this._texture.width !== width || this._texture.height !== height) {
-        this._texture.resize({
-          width: width,
-          height: height
-        });
+    if (canvas.height !== canvasHeight) {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      canvas.height = canvasHeight;
+      ctx.putImageData(imageData, 0, 0);
+    }
+
+    setTextStyle(ctx, fontFamily, fontSize, fontWeight);
+
+    if (sdf) {
+      const tinySDF = new _tinySdf.default(fontSize, buffer, radius, cutoff, fontFamily, fontWeight);
+      const imageData = ctx.getImageData(0, 0, tinySDF.size, tinySDF.size);
+
+      for (const char of characterSet) {
+        populateAlphaChannel(tinySDF.draw(char), imageData);
+        ctx.putImageData(imageData, mapping[char].x - buffer, mapping[char].y - buffer);
       }
-
-      this._texture.setImageData({
-        data: canvas,
-        width: width,
-        height: height,
-        parameters: (_parameters = {}, (0, _defineProperty2.default)(_parameters, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE), (0, _defineProperty2.default)(_parameters, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE), (0, _defineProperty2.default)(_parameters, 37440, true), _parameters)
-      });
-
-      this._texture.generateMipmap();
-    }
-  }, {
-    key: "_generateFontAtlas",
-    value: function _generateFontAtlas(key, characterSet, cachedFontAtlas) {
-      var _this$props = this.props,
-          fontFamily = _this$props.fontFamily,
-          fontWeight = _this$props.fontWeight,
-          fontSize = _this$props.fontSize,
-          buffer = _this$props.buffer,
-          sdf = _this$props.sdf,
-          radius = _this$props.radius,
-          cutoff = _this$props.cutoff;
-      var canvas = cachedFontAtlas && cachedFontAtlas.data;
-
-      if (!canvas) {
-        canvas = document.createElement('canvas');
-        canvas.width = MAX_CANVAS_WIDTH;
+    } else {
+      for (const char of characterSet) {
+        ctx.fillText(char, mapping[char].x, mapping[char].y + fontSize * BASELINE_SCALE);
       }
-
-      var ctx = canvas.getContext('2d');
-      setTextStyle(ctx, fontFamily, fontSize, fontWeight);
-
-      var _buildMapping = (0, _fontAtlasUtils.buildMapping)(Object.assign({
-        getFontWidth: function getFontWidth(char) {
-          return ctx.measureText(char).width;
-        },
-        fontHeight: fontSize * HEIGHT_SCALE,
-        buffer: buffer,
-        characterSet: characterSet,
-        maxCanvasWidth: MAX_CANVAS_WIDTH
-      }, cachedFontAtlas && {
-        mapping: cachedFontAtlas.mapping,
-        xOffset: cachedFontAtlas.xOffset,
-        yOffset: cachedFontAtlas.yOffset
-      })),
-          mapping = _buildMapping.mapping,
-          canvasHeight = _buildMapping.canvasHeight,
-          xOffset = _buildMapping.xOffset,
-          yOffset = _buildMapping.yOffset;
-
-      if (canvas.height !== canvasHeight) {
-        var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        canvas.height = canvasHeight;
-        ctx.putImageData(imageData, 0, 0);
-      }
-
-      setTextStyle(ctx, fontFamily, fontSize, fontWeight);
-
-      if (sdf) {
-        var tinySDF = new _tinySdf.default(fontSize, buffer, radius, cutoff, fontFamily, fontWeight);
-
-        var _imageData = ctx.getImageData(0, 0, tinySDF.size, tinySDF.size);
-
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-          for (var _iterator = characterSet[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var char = _step.value;
-            populateAlphaChannel(tinySDF.draw(char), _imageData);
-            ctx.putImageData(_imageData, mapping[char].x - buffer, mapping[char].y - buffer);
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-      } else {
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-
-        try {
-          for (var _iterator2 = characterSet[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var _char = _step2.value;
-            ctx.fillText(_char, mapping[_char].x, mapping[_char].y + fontSize * BASELINE_SCALE);
-          }
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-              _iterator2.return();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
-        }
-      }
-
-      return {
-        xOffset: xOffset,
-        yOffset: yOffset,
-        mapping: mapping,
-        data: canvas,
-        width: canvas.width,
-        height: canvas.height
-      };
     }
-  }, {
-    key: "_getKey",
-    value: function _getKey() {
-      var _this$props2 = this.props,
-          gl = _this$props2.gl,
-          fontFamily = _this$props2.fontFamily,
-          fontWeight = _this$props2.fontWeight,
-          fontSize = _this$props2.fontSize,
-          buffer = _this$props2.buffer,
-          sdf = _this$props2.sdf,
-          radius = _this$props2.radius,
-          cutoff = _this$props2.cutoff;
 
-      if (sdf) {
-        return "".concat(gl, " ").concat(fontFamily, " ").concat(fontWeight, " ").concat(fontSize, " ").concat(buffer, " ").concat(radius, " ").concat(cutoff);
-      }
+    return {
+      xOffset,
+      yOffset,
+      mapping,
+      data: canvas,
+      width: canvas.width,
+      height: canvas.height
+    };
+  }
 
-      return "".concat(gl, " ").concat(fontFamily, " ").concat(fontWeight, " ").concat(fontSize, " ").concat(buffer);
+  _getKey() {
+    const {
+      gl,
+      fontFamily,
+      fontWeight,
+      fontSize,
+      buffer,
+      sdf,
+      radius,
+      cutoff
+    } = this.props;
+
+    if (sdf) {
+      return "".concat(gl, " ").concat(fontFamily, " ").concat(fontWeight, " ").concat(fontSize, " ").concat(buffer, " ").concat(radius, " ").concat(cutoff);
     }
-  }, {
-    key: "texture",
-    get: function get() {
-      return this._texture;
-    }
-  }, {
-    key: "mapping",
-    get: function get() {
-      var data = cache.get(this._key);
-      return data && data.mapping;
-    }
-  }, {
-    key: "scale",
-    get: function get() {
-      return HEIGHT_SCALE;
-    }
-  }]);
-  return FontAtlasManager;
-}();
+
+    return "".concat(gl, " ").concat(fontFamily, " ").concat(fontWeight, " ").concat(fontSize, " ").concat(buffer);
+  }
+
+}
 
 exports.default = FontAtlasManager;
 //# sourceMappingURL=font-atlas-manager.js.map

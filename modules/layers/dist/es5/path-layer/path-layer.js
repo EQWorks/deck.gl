@@ -7,18 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _get2 = _interopRequireDefault(require("@babel/runtime/helpers/get"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
 var _core = require("@luma.gl/core");
@@ -31,8 +19,8 @@ var _pathLayerVertex2 = _interopRequireDefault(require("./path-layer-vertex-64.g
 
 var _pathLayerFragment = _interopRequireDefault(require("./path-layer-fragment.glsl"));
 
-var DEFAULT_COLOR = [0, 0, 0, 255];
-var defaultProps = {
+const DEFAULT_COLOR = [0, 0, 0, 255];
+const defaultProps = {
   widthUnits: 'meters',
   widthScale: {
     type: 'number',
@@ -60,9 +48,7 @@ var defaultProps = {
   billboard: false,
   getPath: {
     type: 'accessor',
-    value: function value(object) {
-      return object.path;
-    }
+    value: object => object.path
   },
   getColor: {
     type: 'accessor',
@@ -77,266 +63,270 @@ var defaultProps = {
     value: [0, 0]
   }
 };
-var ATTRIBUTE_TRANSITION = {
-  enter: function enter(value, chunk) {
+const ATTRIBUTE_TRANSITION = {
+  enter: (value, chunk) => {
     return chunk.length ? chunk.subarray(chunk.length - value.length) : value;
   }
 };
 
-var PathLayer = function (_Layer) {
-  (0, _inherits2.default)(PathLayer, _Layer);
-
-  function PathLayer() {
-    (0, _classCallCheck2.default)(this, PathLayer);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(PathLayer).apply(this, arguments));
+class PathLayer extends _keplerOutdatedDeck.Layer {
+  getShaders() {
+    return this.use64bitProjection() ? {
+      vs: _pathLayerVertex2.default,
+      fs: _pathLayerFragment.default,
+      modules: ['project64', 'picking']
+    } : {
+      vs: _pathLayerVertex.default,
+      fs: _pathLayerFragment.default,
+      modules: ['project32', 'picking']
+    };
   }
 
-  (0, _createClass2.default)(PathLayer, [{
-    key: "getShaders",
-    value: function getShaders() {
-      return this.use64bitProjection() ? {
-        vs: _pathLayerVertex2.default,
-        fs: _pathLayerFragment.default,
-        modules: ['project64', 'picking']
-      } : {
-        vs: _pathLayerVertex.default,
-        fs: _pathLayerFragment.default,
-        modules: ['project32', 'picking']
-      };
-    }
-  }, {
-    key: "initializeState",
-    value: function initializeState() {
-      var _this = this;
-
-      var noAlloc = true;
-      var attributeManager = this.getAttributeManager();
-      attributeManager.addInstanced({
-        instanceStartPositions: {
-          size: 3,
-          transition: ATTRIBUTE_TRANSITION,
-          accessor: 'getPath',
-          update: this.calculateStartPositions,
-          noAlloc: noAlloc
-        },
-        instanceEndPositions: {
-          size: 3,
-          transition: ATTRIBUTE_TRANSITION,
-          accessor: 'getPath',
-          update: this.calculateEndPositions,
-          noAlloc: noAlloc
-        },
-        instanceStartEndPositions64xyLow: {
-          size: 4,
-          update: this.calculateInstanceStartEndPositions64xyLow,
-          noAlloc: noAlloc
-        },
-        instanceLeftPositions: {
-          size: 3,
-          accessor: 'getPath',
-          update: this.calculateLeftPositions,
-          noAlloc: noAlloc
-        },
-        instanceRightPositions: {
-          size: 3,
-          accessor: 'getPath',
-          update: this.calculateRightPositions,
-          noAlloc: noAlloc
-        },
-        instanceNeighborPositions64xyLow: {
-          size: 4,
-          update: this.calculateInstanceNeighborPositions64xyLow,
-          noAlloc: noAlloc
-        },
-        instanceStrokeWidths: {
-          size: 1,
-          accessor: 'getWidth',
-          transition: ATTRIBUTE_TRANSITION,
-          defaultValue: 1
-        },
-        instanceDashArrays: {
-          size: 2,
-          accessor: 'getDashArray'
-        },
-        instanceColors: {
-          size: 4,
-          type: 5121,
-          accessor: 'getColor',
-          transition: ATTRIBUTE_TRANSITION,
-          defaultValue: DEFAULT_COLOR
-        },
-        instancePickingColors: {
-          size: 3,
-          type: 5121,
-          accessor: function accessor(object, _ref) {
-            var index = _ref.index,
-                value = _ref.target;
-            return _this.encodePickingColor(index, value);
-          }
+  initializeState() {
+    const noAlloc = true;
+    const attributeManager = this.getAttributeManager();
+    attributeManager.addInstanced({
+      instanceStartPositions: {
+        size: 3,
+        transition: ATTRIBUTE_TRANSITION,
+        accessor: 'getPath',
+        update: this.calculateStartPositions,
+        noAlloc
+      },
+      instanceEndPositions: {
+        size: 3,
+        transition: ATTRIBUTE_TRANSITION,
+        accessor: 'getPath',
+        update: this.calculateEndPositions,
+        noAlloc
+      },
+      instanceStartEndPositions64xyLow: {
+        size: 4,
+        update: this.calculateInstanceStartEndPositions64xyLow,
+        noAlloc
+      },
+      instanceLeftPositions: {
+        size: 3,
+        accessor: 'getPath',
+        update: this.calculateLeftPositions,
+        noAlloc
+      },
+      instanceRightPositions: {
+        size: 3,
+        accessor: 'getPath',
+        update: this.calculateRightPositions,
+        noAlloc
+      },
+      instanceNeighborPositions64xyLow: {
+        size: 4,
+        update: this.calculateInstanceNeighborPositions64xyLow,
+        noAlloc
+      },
+      instanceStrokeWidths: {
+        size: 1,
+        accessor: 'getWidth',
+        transition: ATTRIBUTE_TRANSITION,
+        defaultValue: 1
+      },
+      instanceDashArrays: {
+        size: 2,
+        accessor: 'getDashArray'
+      },
+      instanceColors: {
+        size: 4,
+        type: 5121,
+        accessor: 'getColor',
+        transition: ATTRIBUTE_TRANSITION,
+        defaultValue: DEFAULT_COLOR
+      },
+      instancePickingColors: {
+        size: 3,
+        type: 5121,
+        accessor: (object, _ref) => {
+          let {
+            index,
+            target: value
+          } = _ref;
+          return this.encodePickingColor(index, value);
         }
+      }
+    });
+    this.setState({
+      pathTesselator: new _pathTesselator.default({})
+    });
+  }
+
+  updateState(_ref2) {
+    let {
+      oldProps,
+      props,
+      changeFlags
+    } = _ref2;
+    super.updateState({
+      props,
+      oldProps,
+      changeFlags
+    });
+    const attributeManager = this.getAttributeManager();
+    const geometryChanged = changeFlags.dataChanged || props.fp64 !== oldProps.fp64 || changeFlags.updateTriggersChanged && (changeFlags.updateTriggersChanged.all || changeFlags.updateTriggersChanged.getPath);
+
+    if (geometryChanged) {
+      const {
+        pathTesselator
+      } = this.state;
+      pathTesselator.updateGeometry({
+        data: props.data,
+        getGeometry: props.getPath,
+        positionFormat: props.positionFormat,
+        fp64: this.use64bitPositions()
       });
       this.setState({
-        pathTesselator: new _pathTesselator.default({})
+        numInstances: pathTesselator.instanceCount,
+        bufferLayout: pathTesselator.bufferLayout
       });
+      attributeManager.invalidateAll();
     }
-  }, {
-    key: "updateState",
-    value: function updateState(_ref2) {
-      var oldProps = _ref2.oldProps,
-          props = _ref2.props,
-          changeFlags = _ref2.changeFlags;
-      (0, _get2.default)((0, _getPrototypeOf2.default)(PathLayer.prototype), "updateState", this).call(this, {
-        props: props,
-        oldProps: oldProps,
-        changeFlags: changeFlags
-      });
-      var attributeManager = this.getAttributeManager();
-      var geometryChanged = changeFlags.dataChanged || props.fp64 !== oldProps.fp64 || changeFlags.updateTriggersChanged && (changeFlags.updateTriggersChanged.all || changeFlags.updateTriggersChanged.getPath);
 
-      if (geometryChanged) {
-        var pathTesselator = this.state.pathTesselator;
-        pathTesselator.updateGeometry({
-          data: props.data,
-          getGeometry: props.getPath,
-          positionFormat: props.positionFormat,
-          fp64: this.use64bitPositions()
-        });
-        this.setState({
-          numInstances: pathTesselator.instanceCount,
-          bufferLayout: pathTesselator.bufferLayout
-        });
-        attributeManager.invalidateAll();
+    if (props.fp64 !== oldProps.fp64) {
+      const {
+        gl
+      } = this.context;
+
+      if (this.state.model) {
+        this.state.model.delete();
       }
 
-      if (props.fp64 !== oldProps.fp64) {
-        var gl = this.context.gl;
+      this.setState({
+        model: this._getModel(gl)
+      });
+      attributeManager.invalidateAll();
+    }
+  }
 
-        if (this.state.model) {
-          this.state.model.delete();
+  draw(_ref3) {
+    let {
+      uniforms
+    } = _ref3;
+    const {
+      viewport
+    } = this.context;
+    const {
+      rounded,
+      billboard,
+      miterLimit,
+      widthUnits,
+      widthScale,
+      widthMinPixels,
+      widthMaxPixels,
+      dashJustified
+    } = this.props;
+    const widthMultiplier = widthUnits === 'pixels' ? viewport.distanceScales.metersPerPixel[2] : 1;
+    this.state.model.setUniforms(Object.assign({}, uniforms, {
+      jointType: Number(rounded),
+      billboard,
+      alignMode: Number(dashJustified),
+      widthScale: widthScale * widthMultiplier,
+      miterLimit,
+      widthMinPixels,
+      widthMaxPixels
+    })).draw();
+  }
+
+  _getModel(gl) {
+    const SEGMENT_INDICES = [0, 2, 1, 1, 2, 4, 1, 4, 3, 3, 4, 5];
+    const SEGMENT_POSITIONS = [0, 0, 1, 0, -1, 0, 0, 1, 0, 1, -1, 0, 1, 1, 0, 1, 0, 1];
+    return new _core.Model(gl, Object.assign({}, this.getShaders(), {
+      id: this.props.id,
+      geometry: new _core.Geometry({
+        drawMode: 4,
+        attributes: {
+          indices: new Uint16Array(SEGMENT_INDICES),
+          positions: new Float32Array(SEGMENT_POSITIONS)
         }
+      }),
+      isInstanced: true,
+      shaderCache: this.context.shaderCache
+    }));
+  }
 
-        this.setState({
-          model: this._getModel(gl)
-        });
-        attributeManager.invalidateAll();
-      }
-    }
-  }, {
-    key: "draw",
-    value: function draw(_ref3) {
-      var uniforms = _ref3.uniforms;
-      var viewport = this.context.viewport;
-      var _this$props = this.props,
-          rounded = _this$props.rounded,
-          billboard = _this$props.billboard,
-          miterLimit = _this$props.miterLimit,
-          widthUnits = _this$props.widthUnits,
-          widthScale = _this$props.widthScale,
-          widthMinPixels = _this$props.widthMinPixels,
-          widthMaxPixels = _this$props.widthMaxPixels,
-          dashJustified = _this$props.dashJustified;
-      var widthMultiplier = widthUnits === 'pixels' ? viewport.distanceScales.metersPerPixel[2] : 1;
-      this.state.model.setUniforms(Object.assign({}, uniforms, {
-        jointType: Number(rounded),
-        billboard: billboard,
-        alignMode: Number(dashJustified),
-        widthScale: widthScale * widthMultiplier,
-        miterLimit: miterLimit,
-        widthMinPixels: widthMinPixels,
-        widthMaxPixels: widthMaxPixels
-      })).draw();
-    }
-  }, {
-    key: "_getModel",
-    value: function _getModel(gl) {
-      var SEGMENT_INDICES = [0, 2, 1, 1, 2, 4, 1, 4, 3, 3, 4, 5];
-      var SEGMENT_POSITIONS = [0, 0, 1, 0, -1, 0, 0, 1, 0, 1, -1, 0, 1, 1, 0, 1, 0, 1];
-      return new _core.Model(gl, Object.assign({}, this.getShaders(), {
-        id: this.props.id,
-        geometry: new _core.Geometry({
-          drawMode: 4,
-          attributes: {
-            indices: new Uint16Array(SEGMENT_INDICES),
-            positions: new Float32Array(SEGMENT_POSITIONS)
-          }
-        }),
-        isInstanced: true,
-        shaderCache: this.context.shaderCache
-      }));
-    }
-  }, {
-    key: "calculateStartPositions",
-    value: function calculateStartPositions(attribute) {
-      var pathTesselator = this.state.pathTesselator;
-      attribute.bufferLayout = pathTesselator.bufferLayout;
-      attribute.value = pathTesselator.get('startPositions');
-    }
-  }, {
-    key: "calculateEndPositions",
-    value: function calculateEndPositions(attribute) {
-      var pathTesselator = this.state.pathTesselator;
-      attribute.bufferLayout = pathTesselator.bufferLayout;
-      attribute.value = pathTesselator.get('endPositions');
-    }
-  }, {
-    key: "calculateInstanceStartEndPositions64xyLow",
-    value: function calculateInstanceStartEndPositions64xyLow(attribute) {
-      var isFP64 = this.use64bitPositions();
-      attribute.constant = !isFP64;
+  calculateStartPositions(attribute) {
+    const {
+      pathTesselator
+    } = this.state;
+    attribute.bufferLayout = pathTesselator.bufferLayout;
+    attribute.value = pathTesselator.get('startPositions');
+  }
 
-      if (isFP64) {
-        attribute.value = this.state.pathTesselator.get('startEndPositions64XyLow');
-      } else {
-        attribute.value = new Float32Array(4);
-      }
-    }
-  }, {
-    key: "calculateLeftPositions",
-    value: function calculateLeftPositions(attribute) {
-      var pathTesselator = this.state.pathTesselator;
-      attribute.value = pathTesselator.get('leftPositions');
-    }
-  }, {
-    key: "calculateRightPositions",
-    value: function calculateRightPositions(attribute) {
-      var pathTesselator = this.state.pathTesselator;
-      attribute.value = pathTesselator.get('rightPositions');
-    }
-  }, {
-    key: "calculateInstanceNeighborPositions64xyLow",
-    value: function calculateInstanceNeighborPositions64xyLow(attribute) {
-      var isFP64 = this.use64bitPositions();
-      attribute.constant = !isFP64;
+  calculateEndPositions(attribute) {
+    const {
+      pathTesselator
+    } = this.state;
+    attribute.bufferLayout = pathTesselator.bufferLayout;
+    attribute.value = pathTesselator.get('endPositions');
+  }
 
-      if (isFP64) {
-        attribute.value = this.state.pathTesselator.get('neighborPositions64XyLow');
-      } else {
-        attribute.value = new Float32Array(4);
-      }
-    }
-  }, {
-    key: "clearPickingColor",
-    value: function clearPickingColor(color) {
-      var pickedPathIndex = this.decodePickingColor(color);
-      var bufferLayout = this.state.pathTesselator.bufferLayout;
-      var numVertices = bufferLayout[pickedPathIndex];
-      var startInstanceIndex = 0;
+  calculateInstanceStartEndPositions64xyLow(attribute) {
+    const isFP64 = this.use64bitPositions();
+    attribute.constant = !isFP64;
 
-      for (var pathIndex = 0; pathIndex < pickedPathIndex; pathIndex++) {
-        startInstanceIndex += bufferLayout[pathIndex];
-      }
-
-      var instancePickingColors = this.getAttributeManager().attributes.instancePickingColors;
-      var value = instancePickingColors.value;
-      var endInstanceIndex = startInstanceIndex + numVertices;
-      value.fill(0, startInstanceIndex * 3, endInstanceIndex * 3);
-      instancePickingColors.update({
-        value: value
-      });
+    if (isFP64) {
+      attribute.value = this.state.pathTesselator.get('startEndPositions64XyLow');
+    } else {
+      attribute.value = new Float32Array(4);
     }
-  }]);
-  return PathLayer;
-}(_keplerOutdatedDeck.Layer);
+  }
+
+  calculateLeftPositions(attribute) {
+    const {
+      pathTesselator
+    } = this.state;
+    attribute.value = pathTesselator.get('leftPositions');
+  }
+
+  calculateRightPositions(attribute) {
+    const {
+      pathTesselator
+    } = this.state;
+    attribute.value = pathTesselator.get('rightPositions');
+  }
+
+  calculateInstanceNeighborPositions64xyLow(attribute) {
+    const isFP64 = this.use64bitPositions();
+    attribute.constant = !isFP64;
+
+    if (isFP64) {
+      attribute.value = this.state.pathTesselator.get('neighborPositions64XyLow');
+    } else {
+      attribute.value = new Float32Array(4);
+    }
+  }
+
+  clearPickingColor(color) {
+    const pickedPathIndex = this.decodePickingColor(color);
+    const {
+      bufferLayout
+    } = this.state.pathTesselator;
+    const numVertices = bufferLayout[pickedPathIndex];
+    let startInstanceIndex = 0;
+
+    for (let pathIndex = 0; pathIndex < pickedPathIndex; pathIndex++) {
+      startInstanceIndex += bufferLayout[pathIndex];
+    }
+
+    const {
+      instancePickingColors
+    } = this.getAttributeManager().attributes;
+    const {
+      value
+    } = instancePickingColors;
+    const endInstanceIndex = startInstanceIndex + numVertices;
+    value.fill(0, startInstanceIndex * 3, endInstanceIndex * 3);
+    instancePickingColors.update({
+      value
+    });
+  }
+
+}
 
 exports.default = PathLayer;
 PathLayer.layerName = 'PathLayer';

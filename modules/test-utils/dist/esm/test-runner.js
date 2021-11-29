@@ -1,8 +1,6 @@
-import _classCallCheck from "@babel/runtime/helpers/esm/classCallCheck";
-import _createClass from "@babel/runtime/helpers/esm/createClass";
 import { Deck, MapView } from 'kepler-outdated-deck.gl-core';
-var GL_VENDOR = 0x1f00;
-var DEFAULT_DECK_PROPS = Object.assign({}, Deck.defaultProps, {
+const GL_VENDOR = 0x1f00;
+const DEFAULT_DECK_PROPS = Object.assign({}, Deck.defaultProps, {
   id: 'deckgl-render-test',
   width: 800,
   height: 450,
@@ -15,33 +13,25 @@ var DEFAULT_DECK_PROPS = Object.assign({}, Deck.defaultProps, {
   useDevicePixels: false,
   debug: true
 });
-var DEFAULT_TEST_OPTIONS = {
-  onTestStart: function onTestStart(testCase) {
-    return console.log("# ".concat(testCase.name));
-  },
-  onTestPass: function onTestPass(testCase) {
-    return console.log("ok ".concat(testCase.name, " passed"));
-  },
-  onTestFail: function onTestFail(testCase) {
-    return console.log("not ok ".concat(testCase.name, " failed"));
-  },
+const DEFAULT_TEST_OPTIONS = {
+  onTestStart: testCase => console.log("# ".concat(testCase.name)),
+  onTestPass: testCase => console.log("ok ".concat(testCase.name, " passed")),
+  onTestFail: testCase => console.log("not ok ".concat(testCase.name, " failed")),
   timeout: 2000
 };
-var DEFAULT_TEST_CASE = {
+const DEFAULT_TEST_CASE = {
   name: 'Unnamed test',
   props: {},
-  onAfterRender: function onAfterRender(_ref) {
-    var done = _ref.done;
+  onAfterRender: _ref => {
+    let {
+      done
+    } = _ref;
     return done();
   }
 };
-
-var TestRunner = function () {
-  function TestRunner() {
-    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, TestRunner);
-
+export default class TestRunner {
+  constructor() {
+    let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     this.props = Object.assign({}, DEFAULT_DECK_PROPS, props);
     this.isRunning = false;
     this._testCases = [];
@@ -50,148 +40,106 @@ var TestRunner = function () {
     this.testOptions = Object.assign({}, DEFAULT_TEST_OPTIONS);
   }
 
-  _createClass(TestRunner, [{
-    key: "add",
-    value: function add(testCases) {
-      if (!Array.isArray(testCases)) {
-        testCases = [testCases];
-      }
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = testCases[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var testCase = _step.value;
-
-          this._testCases.push(testCase);
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      return this;
+  add(testCases) {
+    if (!Array.isArray(testCases)) {
+      testCases = [testCases];
     }
-  }, {
-    key: "run",
-    value: function run() {
-      var _this = this;
 
-      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      Object.assign(this.testOptions, options);
-      return new Promise(function (resolve, reject) {
-        _this.deck = new Deck(Object.assign({}, _this.props, {
-          onWebGLInitialized: _this._onWebGLInitialized.bind(_this),
-          onLoad: resolve
-        }));
-        _this.isRunning = true;
-        _this._currentTestCase = null;
-      }).then(function () {
-        var promise = Promise.resolve();
+    for (const testCase of testCases) {
+      this._testCases.push(testCase);
+    }
 
-        _this._testCases.forEach(function (testCase) {
-          promise = promise.then(function () {
-            return _this._runTest(testCase);
+    return this;
+  }
+
+  run() {
+    let options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+    Object.assign(this.testOptions, options);
+    return new Promise((resolve, reject) => {
+      this.deck = new Deck(Object.assign({}, this.props, {
+        onWebGLInitialized: this._onWebGLInitialized.bind(this),
+        onLoad: resolve
+      }));
+      this.isRunning = true;
+      this._currentTestCase = null;
+    }).then(() => {
+      let promise = Promise.resolve();
+
+      this._testCases.forEach(testCase => {
+        promise = promise.then(() => this._runTest(testCase));
+      });
+
+      return promise;
+    }).catch(error => {
+      this._fail({
+        error: error.message
+      });
+    }).finally(() => {
+      this.deck.finalize();
+      this.deck = null;
+    });
+  }
+
+  initTestCase(testCase) {
+    for (const key in DEFAULT_TEST_CASE) {
+      testCase[key] = testCase[key] || DEFAULT_TEST_CASE[key];
+    }
+
+    this.testOptions.onTestStart(testCase);
+  }
+
+  assert(testCase) {
+    this.onTestPass(testCase);
+
+    this._next();
+  }
+
+  _pass(result) {
+    this.testOptions.onTestPass(this._currentTestCase, result);
+  }
+
+  _fail(result) {
+    this.testOptions.onTestFail(this._currentTestCase, result);
+  }
+
+  _onWebGLInitialized(gl) {
+    const vendorMasked = gl.getParameter(GL_VENDOR);
+    const ext = gl.getExtension('WEBGL_debug_renderer_info');
+    const vendorUnmasked = ext && gl.getParameter(ext.UNMASKED_VENDOR_WEBGL || GL_VENDOR);
+    this.gpuVendor = vendorUnmasked || vendorMasked;
+  }
+
+  _runTest(testCase) {
+    return new Promise((resolve, reject) => {
+      const {
+        deck
+      } = this;
+      this._currentTestCase = testCase;
+      this._next = resolve;
+      this.initTestCase(testCase);
+      let isDone = false;
+      let timeoutId = null;
+
+      const done = () => {
+        if (!isDone) {
+          isDone = true;
+          window.clearTimeout(timeoutId);
+          this.assert(testCase);
+        }
+      };
+
+      timeoutId = window.setTimeout(done, testCase.timeout || this.testOptions.timeout);
+      deck.setProps(Object.assign({}, this.props, testCase, {
+        onAfterRender: () => {
+          testCase.onAfterRender({
+            deck,
+            layers: deck.layerManager.getLayers(),
+            done
           });
-        });
+        }
+      }));
+    });
+  }
 
-        return promise;
-      }).catch(function (error) {
-        _this._fail({
-          error: error.message
-        });
-      }).finally(function () {
-        _this.deck.finalize();
-
-        _this.deck = null;
-      });
-    }
-  }, {
-    key: "initTestCase",
-    value: function initTestCase(testCase) {
-      for (var key in DEFAULT_TEST_CASE) {
-        testCase[key] = testCase[key] || DEFAULT_TEST_CASE[key];
-      }
-
-      this.testOptions.onTestStart(testCase);
-    }
-  }, {
-    key: "assert",
-    value: function assert(testCase) {
-      this.onTestPass(testCase);
-
-      this._next();
-    }
-  }, {
-    key: "_pass",
-    value: function _pass(result) {
-      this.testOptions.onTestPass(this._currentTestCase, result);
-    }
-  }, {
-    key: "_fail",
-    value: function _fail(result) {
-      this.testOptions.onTestFail(this._currentTestCase, result);
-    }
-  }, {
-    key: "_onWebGLInitialized",
-    value: function _onWebGLInitialized(gl) {
-      var vendorMasked = gl.getParameter(GL_VENDOR);
-      var ext = gl.getExtension('WEBGL_debug_renderer_info');
-      var vendorUnmasked = ext && gl.getParameter(ext.UNMASKED_VENDOR_WEBGL || GL_VENDOR);
-      this.gpuVendor = vendorUnmasked || vendorMasked;
-    }
-  }, {
-    key: "_runTest",
-    value: function _runTest(testCase) {
-      var _this2 = this;
-
-      return new Promise(function (resolve, reject) {
-        var deck = _this2.deck;
-        _this2._currentTestCase = testCase;
-        _this2._next = resolve;
-
-        _this2.initTestCase(testCase);
-
-        var isDone = false;
-        var timeoutId = null;
-
-        var done = function done() {
-          if (!isDone) {
-            isDone = true;
-            window.clearTimeout(timeoutId);
-
-            _this2.assert(testCase);
-          }
-        };
-
-        timeoutId = window.setTimeout(done, testCase.timeout || _this2.testOptions.timeout);
-        deck.setProps(Object.assign({}, _this2.props, testCase, {
-          onAfterRender: function onAfterRender() {
-            testCase.onAfterRender({
-              deck: deck,
-              layers: deck.layerManager.getLayers(),
-              done: done
-            });
-          }
-        }));
-      });
-    }
-  }]);
-
-  return TestRunner;
-}();
-
-export { TestRunner as default };
+}
 //# sourceMappingURL=test-runner.js.map

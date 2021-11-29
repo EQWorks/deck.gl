@@ -11,8 +11,8 @@ var _widget = require("./widget");
 
 var _version = require("./version");
 
-var EXTENSION_ID = 'deckgl-widget:plugin';
-var DeckGLPlugin = {
+const EXTENSION_ID = 'deckgl-widget:plugin';
+const DeckGLPlugin = {
   id: EXTENSION_ID,
   requires: [_base.IJupyterWidgetRegistry],
   activate: activateWidgetExtension,

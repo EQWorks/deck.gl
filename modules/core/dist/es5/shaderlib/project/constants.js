@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.PROJECT_COORDINATE_SYSTEM = void 0;
-var PROJECT_COORDINATE_SYSTEM = {
+const PROJECT_COORDINATE_SYSTEM = {
   LNG_LAT: 1.0,
   LNGLAT_AUTO_OFFSET: 4.0,
   METER_OFFSETS: 2.0,

@@ -18,7 +18,7 @@ function createDeckInstance(map, overlay, deck) {
     destroyDeckInstance(deck);
   }
 
-  var eventListeners = {
+  const eventListeners = {
     click: null,
     mousemove: null,
     mouseout: null
@@ -37,22 +37,16 @@ function createDeckInstance(map, overlay, deck) {
     }
   });
 
-  var _loop = function _loop(eventType) {
-    eventListeners[eventType] = map.addListener(eventType, function (evt) {
-      return handleMouseEvent(deck, eventType, evt);
-    });
-  };
-
-  for (var eventType in eventListeners) {
-    _loop(eventType);
+  for (const eventType in eventListeners) {
+    eventListeners[eventType] = map.addListener(eventType, evt => handleMouseEvent(deck, eventType, evt));
   }
 
   return deck;
 }
 
 function createDeckCanvas(overlay) {
-  var container = overlay.getPanes().overlayLayer;
-  var deckCanvas = document.createElement('canvas');
+  const container = overlay.getPanes().overlayLayer;
+  const deckCanvas = document.createElement('canvas');
   Object.assign(deckCanvas.style, {
     position: 'absolute'
   });
@@ -61,9 +55,11 @@ function createDeckCanvas(overlay) {
 }
 
 function destroyDeckInstance(deck) {
-  var eventListeners = deck.props.userData._eventListeners;
+  const {
+    _eventListeners: eventListeners
+  } = deck.props.userData;
 
-  for (var eventType in eventListeners) {
+  for (const eventType in eventListeners) {
     eventListeners[eventType].remove();
   }
 
@@ -72,38 +68,38 @@ function destroyDeckInstance(deck) {
 }
 
 function getViewState(map, overlay) {
-  var container = map.getDiv();
-  var width = container.offsetWidth;
-  var height = container.offsetHeight;
-  var projection = overlay.getProjection();
-  var bounds = map.getBounds();
-  var ne = bounds.getNorthEast();
-  var sw = bounds.getSouthWest();
-  var topRight = projection.fromLatLngToDivPixel(ne);
-  var bottomLeft = projection.fromLatLngToDivPixel(sw);
-  var nwContainerPx = new google.maps.Point(0, 0);
-  var nw = projection.fromContainerPixelToLatLng(nwContainerPx);
-  var nwDivPx = projection.fromLatLngToDivPixel(nw);
-  var scale = (topRight.x - bottomLeft.x) / width;
-  var zoom = Math.log2(scale) + map.getZoom() - 1;
-  var centerPx = new google.maps.Point(width / 2, height / 2);
-  var centerContainer = projection.fromContainerPixelToLatLng(centerPx);
-  var latitude = centerContainer.lat();
-  var longitude = centerContainer.lng();
+  const container = map.getDiv();
+  const width = container.offsetWidth;
+  const height = container.offsetHeight;
+  const projection = overlay.getProjection();
+  const bounds = map.getBounds();
+  const ne = bounds.getNorthEast();
+  const sw = bounds.getSouthWest();
+  const topRight = projection.fromLatLngToDivPixel(ne);
+  const bottomLeft = projection.fromLatLngToDivPixel(sw);
+  const nwContainerPx = new google.maps.Point(0, 0);
+  const nw = projection.fromContainerPixelToLatLng(nwContainerPx);
+  const nwDivPx = projection.fromLatLngToDivPixel(nw);
+  const scale = (topRight.x - bottomLeft.x) / width;
+  const zoom = Math.log2(scale) + map.getZoom() - 1;
+  const centerPx = new google.maps.Point(width / 2, height / 2);
+  const centerContainer = projection.fromContainerPixelToLatLng(centerPx);
+  const latitude = centerContainer.lat();
+  const longitude = centerContainer.lng();
   return {
-    width: width,
-    height: height,
+    width,
+    height,
     left: nwDivPx.x,
     top: nwDivPx.y,
-    zoom: zoom,
+    zoom,
     pitch: map.getTilt(),
-    latitude: latitude,
-    longitude: longitude
+    latitude,
+    longitude
   };
 }
 
 function handleMouseEvent(deck, type, event) {
-  var callback;
+  let callback;
 
   switch (type) {
     case 'click':
@@ -127,7 +123,7 @@ function handleMouseEvent(deck, type, event) {
   }
 
   callback({
-    type: type,
+    type,
     offsetCenter: event.pixel,
     srcEvent: event
   });

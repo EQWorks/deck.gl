@@ -1,15 +1,10 @@
-import _classCallCheck from "@babel/runtime/helpers/esm/classCallCheck";
-import _createClass from "@babel/runtime/helpers/esm/createClass";
 import { LIFECYCLE } from '../lifecycle/constants';
 import { createProps } from '../lifecycle/create-props';
 import ComponentState from './component-state';
-var defaultProps = {};
-var counter = 0;
-
-var Component = function () {
-  function Component() {
-    _classCallCheck(this, Component);
-
+const defaultProps = {};
+let counter = 0;
+export default class Component {
+  constructor() {
     this.props = createProps.apply(this, arguments);
     this.id = this.props.id;
     this.count = counter++;
@@ -21,38 +16,32 @@ var Component = function () {
     Object.seal(this);
   }
 
-  _createClass(Component, [{
-    key: "clone",
-    value: function clone(newProps) {
-      var props = this.props;
-      var asyncProps = {};
+  clone(newProps) {
+    const {
+      props
+    } = this;
+    const asyncProps = {};
 
-      for (var key in props._asyncPropDefaultValues) {
-        if (key in props._asyncPropResolvedValues) {
-          asyncProps[key] = props._asyncPropResolvedValues[key];
-        } else if (key in props._asyncPropOriginalValues) {
-          asyncProps[key] = props._asyncPropOriginalValues[key];
-        }
+    for (const key in props._asyncPropDefaultValues) {
+      if (key in props._asyncPropResolvedValues) {
+        asyncProps[key] = props._asyncPropResolvedValues[key];
+      } else if (key in props._asyncPropOriginalValues) {
+        asyncProps[key] = props._asyncPropOriginalValues[key];
       }
-
-      return new this.constructor(Object.assign({}, props, asyncProps, newProps));
     }
-  }, {
-    key: "_initState",
-    value: function _initState() {
-      this.internalState = new ComponentState({});
-    }
-  }, {
-    key: "stats",
-    get: function get() {
-      return this.internalState.stats;
-    }
-  }]);
 
-  return Component;
-}();
+    return new this.constructor(Object.assign({}, props, asyncProps, newProps));
+  }
 
-export { Component as default };
+  get stats() {
+    return this.internalState.stats;
+  }
+
+  _initState() {
+    this.internalState = new ComponentState({});
+  }
+
+}
 Component.componentName = 'Component';
 Component.defaultProps = defaultProps;
 //# sourceMappingURL=component.js.map

@@ -1,23 +1,11 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
 
 var _core = require("@luma.gl/core");
 
@@ -29,10 +17,14 @@ var _pathLayer = _interopRequireDefault(require("../path-layer/path-layer"));
 
 var Polygon = _interopRequireWildcard(require("../solid-polygon-layer/polygon"));
 
-var defaultLineColor = [0, 0, 0, 255];
-var defaultFillColor = [0, 0, 0, 255];
-var defaultMaterial = new _core.PhongMaterial();
-var defaultProps = {
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+const defaultLineColor = [0, 0, 0, 255];
+const defaultFillColor = [0, 0, 0, 255];
+const defaultMaterial = new _core.PhongMaterial();
+const defaultProps = {
   stroked: true,
   filled: true,
   extruded: false,
@@ -48,9 +40,7 @@ var defaultProps = {
   fp64: false,
   getPolygon: {
     type: 'accessor',
-    value: function value(f) {
-      return f.polygon;
-    }
+    value: f => f.polygon
   },
   getFillColor: {
     type: 'accessor',
@@ -75,200 +65,172 @@ var defaultProps = {
   material: defaultMaterial
 };
 
-var PolygonLayer = function (_CompositeLayer) {
-  (0, _inherits2.default)(PolygonLayer, _CompositeLayer);
-
-  function PolygonLayer() {
-    (0, _classCallCheck2.default)(this, PolygonLayer);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(PolygonLayer).apply(this, arguments));
+class PolygonLayer extends _keplerOutdatedDeck.CompositeLayer {
+  initializeState() {
+    this.state = {
+      paths: []
+    };
   }
 
-  (0, _createClass2.default)(PolygonLayer, [{
-    key: "initializeState",
-    value: function initializeState() {
-      this.state = {
-        paths: []
-      };
-    }
-  }, {
-    key: "updateState",
-    value: function updateState(_ref) {
-      var oldProps = _ref.oldProps,
-          props = _ref.props,
-          changeFlags = _ref.changeFlags;
-      var geometryChanged = changeFlags.dataChanged || changeFlags.updateTriggersChanged && (changeFlags.updateTriggersChanged.all || changeFlags.updateTriggersChanged.getPolygon);
+  updateState(_ref) {
+    let {
+      oldProps,
+      props,
+      changeFlags
+    } = _ref;
+    const geometryChanged = changeFlags.dataChanged || changeFlags.updateTriggersChanged && (changeFlags.updateTriggersChanged.all || changeFlags.updateTriggersChanged.getPolygon);
 
-      if (geometryChanged) {
-        this.state.paths = this._getPaths(props);
+    if (geometryChanged) {
+      this.state.paths = this._getPaths(props);
+    }
+  }
+
+  getPickingInfo(_ref2) {
+    let {
+      info
+    } = _ref2;
+    return Object.assign(info, {
+      object: info.object && info.object.object || info.object
+    });
+  }
+
+  _getPaths(_ref3) {
+    let {
+      data,
+      getPolygon,
+      positionFormat
+    } = _ref3;
+    const paths = [];
+    const positionSize = positionFormat === 'XY' ? 2 : 3;
+    const {
+      iterable,
+      objectInfo
+    } = (0, _keplerOutdatedDeck.createIterable)(data);
+
+    for (const object of iterable) {
+      objectInfo.index++;
+      const {
+        positions,
+        holeIndices
+      } = Polygon.normalize(getPolygon(object, objectInfo), positionSize);
+
+      if (holeIndices) {
+        for (let i = 0; i <= holeIndices.length; i++) {
+          const path = positions.subarray(holeIndices[i - 1] || 0, holeIndices[i] || positions.length);
+          paths.push({
+            path,
+            object
+          });
+        }
+      } else {
+        paths.push({
+          path: positions,
+          object
+        });
       }
     }
-  }, {
-    key: "getPickingInfo",
-    value: function getPickingInfo(_ref2) {
-      var info = _ref2.info;
-      return Object.assign(info, {
-        object: info.object && info.object.object || info.object
-      });
+
+    return paths;
+  }
+
+  _getAccessor(accessor) {
+    if (typeof accessor === 'function') {
+      return x => accessor(x.object);
     }
-  }, {
-    key: "_getPaths",
-    value: function _getPaths(_ref3) {
-      var data = _ref3.data,
-          getPolygon = _ref3.getPolygon,
-          positionFormat = _ref3.positionFormat;
-      var paths = [];
-      var positionSize = positionFormat === 'XY' ? 2 : 3;
 
-      var _createIterable = (0, _keplerOutdatedDeck.createIterable)(data),
-          iterable = _createIterable.iterable,
-          objectInfo = _createIterable.objectInfo;
+    return accessor;
+  }
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = iterable[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var object = _step.value;
-          objectInfo.index++;
-
-          var _Polygon$normalize = Polygon.normalize(getPolygon(object, objectInfo), positionSize),
-              positions = _Polygon$normalize.positions,
-              holeIndices = _Polygon$normalize.holeIndices;
-
-          if (holeIndices) {
-            for (var i = 0; i <= holeIndices.length; i++) {
-              var path = positions.subarray(holeIndices[i - 1] || 0, holeIndices[i] || positions.length);
-              paths.push({
-                path: path,
-                object: object
-              });
-            }
-          } else {
-            paths.push({
-              path: positions,
-              object: object
-            });
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+  renderLayers() {
+    const {
+      data,
+      stroked,
+      filled,
+      extruded,
+      wireframe,
+      elevationScale,
+      transitions
+    } = this.props;
+    const {
+      lineWidthUnits,
+      lineWidthScale,
+      lineWidthMinPixels,
+      lineWidthMaxPixels,
+      lineJointRounded,
+      lineMiterLimit,
+      lineDashJustified,
+      fp64
+    } = this.props;
+    const {
+      getFillColor,
+      getLineColor,
+      getLineWidth,
+      getLineDashArray,
+      getElevation,
+      getPolygon,
+      updateTriggers,
+      material
+    } = this.props;
+    const {
+      paths
+    } = this.state;
+    const FillLayer = this.getSubLayerClass('fill', _solidPolygonLayer.default);
+    const StrokeLayer = this.getSubLayerClass('stroke', _pathLayer.default);
+    const polygonLayer = this.shouldRenderSubLayer('fill', paths) && new FillLayer({
+      extruded,
+      elevationScale,
+      fp64,
+      filled,
+      wireframe,
+      getElevation,
+      getFillColor,
+      getLineColor,
+      material,
+      transitions
+    }, this.getSubLayerProps({
+      id: 'fill',
+      updateTriggers: {
+        getPolygon: updateTriggers.getPolygon,
+        getElevation: updateTriggers.getElevation,
+        getFillColor: updateTriggers.getFillColor,
+        getLineColor: updateTriggers.getLineColor
       }
-
-      return paths;
-    }
-  }, {
-    key: "_getAccessor",
-    value: function _getAccessor(accessor) {
-      if (typeof accessor === 'function') {
-        return function (x) {
-          return accessor(x.object);
-        };
+    }), {
+      data,
+      getPolygon
+    });
+    const polygonLineLayer = !extruded && stroked && this.shouldRenderSubLayer('stroke', paths) && new StrokeLayer({
+      fp64,
+      widthUnits: lineWidthUnits,
+      widthScale: lineWidthScale,
+      widthMinPixels: lineWidthMinPixels,
+      widthMaxPixels: lineWidthMaxPixels,
+      rounded: lineJointRounded,
+      miterLimit: lineMiterLimit,
+      dashJustified: lineDashJustified,
+      transitions: transitions && {
+        getWidth: transitions.getLineWidth,
+        getColor: transitions.getLineColor,
+        getPath: transitions.getPolygon
+      },
+      getColor: this._getAccessor(getLineColor),
+      getWidth: this._getAccessor(getLineWidth),
+      getDashArray: this._getAccessor(getLineDashArray)
+    }, this.getSubLayerProps({
+      id: 'stroke',
+      updateTriggers: {
+        getWidth: updateTriggers.getLineWidth,
+        getColor: updateTriggers.getLineColor,
+        getDashArray: updateTriggers.getLineDashArray
       }
+    }), {
+      data: paths,
+      getPath: x => x.path
+    });
+    return [!extruded && polygonLayer, polygonLineLayer, extruded && polygonLayer];
+  }
 
-      return accessor;
-    }
-  }, {
-    key: "renderLayers",
-    value: function renderLayers() {
-      var _this$props = this.props,
-          data = _this$props.data,
-          stroked = _this$props.stroked,
-          filled = _this$props.filled,
-          extruded = _this$props.extruded,
-          wireframe = _this$props.wireframe,
-          elevationScale = _this$props.elevationScale,
-          transitions = _this$props.transitions;
-      var _this$props2 = this.props,
-          lineWidthUnits = _this$props2.lineWidthUnits,
-          lineWidthScale = _this$props2.lineWidthScale,
-          lineWidthMinPixels = _this$props2.lineWidthMinPixels,
-          lineWidthMaxPixels = _this$props2.lineWidthMaxPixels,
-          lineJointRounded = _this$props2.lineJointRounded,
-          lineMiterLimit = _this$props2.lineMiterLimit,
-          lineDashJustified = _this$props2.lineDashJustified,
-          fp64 = _this$props2.fp64;
-      var _this$props3 = this.props,
-          getFillColor = _this$props3.getFillColor,
-          getLineColor = _this$props3.getLineColor,
-          getLineWidth = _this$props3.getLineWidth,
-          getLineDashArray = _this$props3.getLineDashArray,
-          getElevation = _this$props3.getElevation,
-          getPolygon = _this$props3.getPolygon,
-          updateTriggers = _this$props3.updateTriggers,
-          material = _this$props3.material;
-      var paths = this.state.paths;
-      var FillLayer = this.getSubLayerClass('fill', _solidPolygonLayer.default);
-      var StrokeLayer = this.getSubLayerClass('stroke', _pathLayer.default);
-      var polygonLayer = this.shouldRenderSubLayer('fill', paths) && new FillLayer({
-        extruded: extruded,
-        elevationScale: elevationScale,
-        fp64: fp64,
-        filled: filled,
-        wireframe: wireframe,
-        getElevation: getElevation,
-        getFillColor: getFillColor,
-        getLineColor: getLineColor,
-        material: material,
-        transitions: transitions
-      }, this.getSubLayerProps({
-        id: 'fill',
-        updateTriggers: {
-          getPolygon: updateTriggers.getPolygon,
-          getElevation: updateTriggers.getElevation,
-          getFillColor: updateTriggers.getFillColor,
-          getLineColor: updateTriggers.getLineColor
-        }
-      }), {
-        data: data,
-        getPolygon: getPolygon
-      });
-      var polygonLineLayer = !extruded && stroked && this.shouldRenderSubLayer('stroke', paths) && new StrokeLayer({
-        fp64: fp64,
-        widthUnits: lineWidthUnits,
-        widthScale: lineWidthScale,
-        widthMinPixels: lineWidthMinPixels,
-        widthMaxPixels: lineWidthMaxPixels,
-        rounded: lineJointRounded,
-        miterLimit: lineMiterLimit,
-        dashJustified: lineDashJustified,
-        transitions: transitions && {
-          getWidth: transitions.getLineWidth,
-          getColor: transitions.getLineColor,
-          getPath: transitions.getPolygon
-        },
-        getColor: this._getAccessor(getLineColor),
-        getWidth: this._getAccessor(getLineWidth),
-        getDashArray: this._getAccessor(getLineDashArray)
-      }, this.getSubLayerProps({
-        id: 'stroke',
-        updateTriggers: {
-          getWidth: updateTriggers.getLineWidth,
-          getColor: updateTriggers.getLineColor,
-          getDashArray: updateTriggers.getLineDashArray
-        }
-      }), {
-        data: paths,
-        getPath: function getPath(x) {
-          return x.path;
-        }
-      });
-      return [!extruded && polygonLayer, polygonLineLayer, extruded && polygonLayer];
-    }
-  }]);
-  return PolygonLayer;
-}(_keplerOutdatedDeck.CompositeLayer);
+}
 
 exports.default = PolygonLayer;
 PolygonLayer.layerName = 'PolygonLayer';

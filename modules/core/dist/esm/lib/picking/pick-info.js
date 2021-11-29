@@ -1,29 +1,31 @@
 export function processPickInfo(_ref) {
-  var pickInfo = _ref.pickInfo,
-      lastPickedInfo = _ref.lastPickedInfo,
-      mode = _ref.mode,
-      layers = _ref.layers,
-      viewports = _ref.viewports,
-      x = _ref.x,
-      y = _ref.y,
-      deviceX = _ref.deviceX,
-      deviceY = _ref.deviceY,
-      pixelRatio = _ref.pixelRatio;
-  var pickedColor = pickInfo.pickedColor,
-      pickedLayer = pickInfo.pickedLayer,
-      pickedObjectIndex = pickInfo.pickedObjectIndex;
-  var affectedLayers = pickedLayer ? [pickedLayer] : [];
+  let {
+    pickInfo,
+    lastPickedInfo,
+    mode,
+    layers,
+    viewports,
+    x,
+    y,
+    deviceX,
+    deviceY,
+    pixelRatio
+  } = _ref;
+  const {
+    pickedColor,
+    pickedLayer,
+    pickedObjectIndex
+  } = pickInfo;
+  const affectedLayers = pickedLayer ? [pickedLayer] : [];
 
   if (mode === 'hover') {
-    var lastPickedObjectIndex = lastPickedInfo.index;
-    var lastPickedLayerId = lastPickedInfo.layerId;
-    var pickedLayerId = pickedLayer && pickedLayer.props.id;
+    const lastPickedObjectIndex = lastPickedInfo.index;
+    const lastPickedLayerId = lastPickedInfo.layerId;
+    const pickedLayerId = pickedLayer && pickedLayer.props.id;
 
     if (pickedLayerId !== lastPickedLayerId || pickedObjectIndex !== lastPickedObjectIndex) {
       if (pickedLayerId !== lastPickedLayerId) {
-        var lastPickedLayer = layers.find(function (layer) {
-          return layer.props.id === lastPickedLayerId;
-        });
+        const lastPickedLayer = layers.find(layer => layer.props.id === lastPickedLayerId);
 
         if (lastPickedLayer) {
           affectedLayers.unshift(lastPickedLayer);
@@ -36,27 +38,27 @@ export function processPickInfo(_ref) {
     }
   }
 
-  var viewport = getViewportFromCoordinates({
-    viewports: viewports
+  const viewport = getViewportFromCoordinates({
+    viewports
   });
-  var coordinate = viewport && viewport.unproject([x, y]);
-  var baseInfo = {
+  const coordinate = viewport && viewport.unproject([x, y]);
+  const baseInfo = {
     color: null,
     layer: null,
     index: -1,
     picked: false,
-    x: x,
-    y: y,
+    x,
+    y,
     pixel: [x, y],
-    coordinate: coordinate,
+    coordinate,
     lngLat: coordinate,
     devicePixel: [deviceX, deviceY],
-    pixelRatio: pixelRatio
+    pixelRatio
   };
-  var infos = new Map();
+  const infos = new Map();
   infos.set(null, baseInfo);
-  affectedLayers.forEach(function (layer) {
-    var info = Object.assign({}, baseInfo);
+  affectedLayers.forEach(layer => {
+    let info = Object.assign({}, baseInfo);
 
     if (layer === pickedLayer) {
       info.color = pickedColor;
@@ -65,9 +67,9 @@ export function processPickInfo(_ref) {
     }
 
     info = getLayerPickingInfo({
-      layer: layer,
-      info: info,
-      mode: mode
+      layer,
+      info,
+      mode
     });
 
     if (layer === pickedLayer && mode === 'hover') {
@@ -79,9 +81,9 @@ export function processPickInfo(_ref) {
     }
 
     if (mode === 'hover') {
-      var pickingSelectedColor = layer.props.autoHighlight && pickedLayer === layer ? pickedColor : null;
+      const pickingSelectedColor = layer.props.autoHighlight && pickedLayer === layer ? pickedColor : null;
       layer.setModuleParameters({
-        pickingSelectedColor: pickingSelectedColor
+        pickingSelectedColor
       });
       layer.setNeedsRedraw();
     }
@@ -89,17 +91,19 @@ export function processPickInfo(_ref) {
   return infos;
 }
 export function getLayerPickingInfo(_ref2) {
-  var layer = _ref2.layer,
-      info = _ref2.info,
-      mode = _ref2.mode;
+  let {
+    layer,
+    info,
+    mode
+  } = _ref2;
 
   while (layer && info) {
-    var sourceLayer = info.layer || layer;
+    const sourceLayer = info.layer || layer;
     info.layer = layer;
     info = layer.pickLayer({
-      info: info,
-      mode: mode,
-      sourceLayer: sourceLayer
+      info,
+      mode,
+      sourceLayer
     });
     layer = layer.parent;
   }
@@ -108,8 +112,10 @@ export function getLayerPickingInfo(_ref2) {
 }
 
 function getViewportFromCoordinates(_ref3) {
-  var viewports = _ref3.viewports;
-  var viewport = viewports[0];
+  let {
+    viewports
+  } = _ref3;
+  const viewport = viewports[0];
   return viewport;
 }
 //# sourceMappingURL=pick-info.js.map

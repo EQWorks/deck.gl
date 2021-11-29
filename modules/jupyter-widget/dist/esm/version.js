@@ -1,5 +1,5 @@
-var data = require('../package.json');
+const data = require('../package.json');
 
-export var MODULE_VERSION = data.version;
-export var MODULE_NAME = data.name;
+export const MODULE_VERSION = data.version;
+export const MODULE_NAME = data.name;
 //# sourceMappingURL=version.js.map

@@ -3,15 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getShaders = getShaders;
 exports.getBuffers = getBuffers;
+exports.getShaders = getShaders;
 exports.padBuffer = padBuffer;
 
 var _core = require("@luma.gl/core");
 
 var _arrayUtils = require("../utils/array-utils");
 
-var ATTRIBUTE_MAPPING = {
+const ATTRIBUTE_MAPPING = {
   1: 'float',
   2: 'vec2',
   3: 'vec3',
@@ -19,15 +19,15 @@ var ATTRIBUTE_MAPPING = {
 };
 
 function getShaders(transitions) {
-  var varyings = [];
-  var attributeDeclarations = [];
-  var uniformsDeclarations = [];
-  var varyingDeclarations = [];
-  var calculations = [];
+  const varyings = [];
+  const attributeDeclarations = [];
+  const uniformsDeclarations = [];
+  const varyingDeclarations = [];
+  const calculations = [];
 
-  for (var attributeName in transitions) {
-    var transition = transitions[attributeName];
-    var attributeType = ATTRIBUTE_MAPPING[transition.attribute.size];
+  for (const attributeName in transitions) {
+    const transition = transitions[attributeName];
+    const attributeType = ATTRIBUTE_MAPPING[transition.attribute.size];
 
     if (attributeType) {
       transition.bufferIndex = varyings.length;
@@ -40,24 +40,25 @@ function getShaders(transitions) {
     }
   }
 
-  var vs = "\n#define SHADER_NAME feedback-vertex-shader\n".concat(attributeDeclarations.join('\n'), "\n").concat(uniformsDeclarations.join('\n'), "\n").concat(varyingDeclarations.join('\n'), "\n\nvoid main(void) {\n  ").concat(calculations.join('\n'), "\n  gl_Position = vec4(0.0);\n}\n");
-  var fs = "#define SHADER_NAME feedback-fragment-shader\n\nprecision highp float;\n\n".concat(varyingDeclarations.join('\n'), "\n\nvoid main(void) {\n  gl_FragColor = vec4(0.0);\n}\n");
+  const vs = "\n#define SHADER_NAME feedback-vertex-shader\n".concat(attributeDeclarations.join('\n'), "\n").concat(uniformsDeclarations.join('\n'), "\n").concat(varyingDeclarations.join('\n'), "\n\nvoid main(void) {\n  ").concat(calculations.join('\n'), "\n  gl_Position = vec4(0.0);\n}\n");
+  const fs = "#define SHADER_NAME feedback-fragment-shader\n\nprecision highp float;\n\n".concat(varyingDeclarations.join('\n'), "\n\nvoid main(void) {\n  gl_FragColor = vec4(0.0);\n}\n");
   return {
-    vs: vs,
-    fs: fs,
-    varyings: varyings
+    vs,
+    fs,
+    varyings
   };
 }
 
 function getBuffers(transitions) {
-  var sourceBuffers = {};
-  var feedbackBuffers = {};
+  const sourceBuffers = {};
+  const feedbackBuffers = {};
 
-  for (var attributeName in transitions) {
-    var _transitions$attribut = transitions[attributeName],
-        fromState = _transitions$attribut.fromState,
-        toState = _transitions$attribut.toState,
-        buffer = _transitions$attribut.buffer;
+  for (const attributeName in transitions) {
+    const {
+      fromState,
+      toState,
+      buffer
+    } = transitions[attributeName];
     sourceBuffers["".concat(attributeName, "From")] = fromState instanceof _core.Buffer ? [fromState, {
       divisor: 0
     }] : fromState;
@@ -66,38 +67,35 @@ function getBuffers(transitions) {
   }
 
   return {
-    sourceBuffers: sourceBuffers,
-    feedbackBuffers: feedbackBuffers
+    sourceBuffers,
+    feedbackBuffers
   };
 }
 
 function padBuffer(_ref) {
-  var fromState = _ref.fromState,
-      toState = _ref.toState,
-      fromLength = _ref.fromLength,
-      toLength = _ref.toLength,
-      fromBufferLayout = _ref.fromBufferLayout,
-      toBufferLayout = _ref.toBufferLayout,
-      _ref$getData = _ref.getData,
-      getData = _ref$getData === void 0 ? function (x) {
-    return x;
-  } : _ref$getData;
-  var hasBufferLayout = fromBufferLayout && toBufferLayout;
+  let {
+    fromState,
+    toState,
+    fromLength,
+    toLength,
+    fromBufferLayout,
+    toBufferLayout,
+    getData = x => x
+  } = _ref;
+  const hasBufferLayout = fromBufferLayout && toBufferLayout;
 
   if (!hasBufferLayout && fromLength >= toLength || !(fromState instanceof _core.Buffer)) {
     return;
   }
 
-  var data = new Float32Array(toLength);
-  var fromData = fromState.getData({});
-  var size = toState.size,
-      constant = toState.constant;
-  var toData = constant ? toState.getValue() : toState.getBuffer().getData({});
-  var getMissingData = constant ? function (i, chunk) {
-    return getData(toData, chunk);
-  } : function (i, chunk) {
-    return getData(toData.subarray(i, i + size), chunk);
-  };
+  const data = new Float32Array(toLength);
+  const fromData = fromState.getData({});
+  const {
+    size,
+    constant
+  } = toState;
+  const toData = constant ? toState.getValue() : toState.getBuffer().getData({});
+  const getMissingData = constant ? (i, chunk) => getData(toData, chunk) : (i, chunk) => getData(toData.subarray(i, i + size), chunk);
   (0, _arrayUtils.padArray)({
     source: fromData,
     target: data,
@@ -107,7 +105,7 @@ function padBuffer(_ref) {
     getData: getMissingData
   });
   fromState.setData({
-    data: data
+    data
   });
 }
 //# sourceMappingURL=attribute-transition-utils.js.map

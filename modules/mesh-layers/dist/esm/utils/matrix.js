@@ -1,21 +1,21 @@
 import { createIterable } from 'kepler-outdated-deck.gl-core';
-var RADIAN_PER_DEGREE = Math.PI / 180;
-var modelMatrix = new Float32Array(16);
-var valueArray = new Float32Array(12);
+const RADIAN_PER_DEGREE = Math.PI / 180;
+const modelMatrix = new Float32Array(16);
+const valueArray = new Float32Array(12);
 
 function calculateTransformMatrix(targetMatrix, orientation, scale) {
-  var pitch = orientation[0] * RADIAN_PER_DEGREE;
-  var yaw = orientation[1] * RADIAN_PER_DEGREE;
-  var roll = orientation[2] * RADIAN_PER_DEGREE;
-  var sr = Math.sin(roll);
-  var sp = Math.sin(pitch);
-  var sw = Math.sin(yaw);
-  var cr = Math.cos(roll);
-  var cp = Math.cos(pitch);
-  var cw = Math.cos(yaw);
-  var scx = scale[0];
-  var scy = scale[1];
-  var scz = scale[2];
+  const pitch = orientation[0] * RADIAN_PER_DEGREE;
+  const yaw = orientation[1] * RADIAN_PER_DEGREE;
+  const roll = orientation[2] * RADIAN_PER_DEGREE;
+  const sr = Math.sin(roll);
+  const sp = Math.sin(pitch);
+  const sw = Math.sin(yaw);
+  const cr = Math.cos(roll);
+  const cp = Math.cos(pitch);
+  const cw = Math.cos(yaw);
+  const scx = scale[0];
+  const scy = scale[1];
+  const scz = scale[2];
   targetMatrix[0] = scx * cw * cp;
   targetMatrix[1] = scx * sw * cp;
   targetMatrix[2] = scx * -sp;
@@ -43,7 +43,7 @@ function getExtendedMat3FromMat4(mat4) {
   return mat4.subarray(0, 12);
 }
 
-export var MATRIX_ATTRIBUTES = {
+export const MATRIX_ATTRIBUTES = {
   size: 12,
   accessor: ['getOrientation', 'getScale', 'getTranslation', 'getTransformMatrix'],
   shaderAttributes: {
@@ -68,21 +68,25 @@ export var MATRIX_ATTRIBUTES = {
       offset: 36
     }
   },
-  update: function update(attribute, _ref) {
-    var startRow = _ref.startRow,
-        endRow = _ref.endRow;
-    var _this$props = this.props,
-        data = _this$props.data,
-        getOrientation = _this$props.getOrientation,
-        getScale = _this$props.getScale,
-        getTranslation = _this$props.getTranslation,
-        getTransformMatrix = _this$props.getTransformMatrix;
-    var arrayMatrix = Array.isArray(getTransformMatrix);
-    var constantMatrix = arrayMatrix && getTransformMatrix.length === 16;
-    var constantScale = Array.isArray(getScale);
-    var constantOrientation = Array.isArray(getOrientation);
-    var constantTranslation = Array.isArray(getTranslation);
-    var hasMatrix = constantMatrix || !arrayMatrix && Boolean(getTransformMatrix(data[0]));
+
+  update(attribute, _ref) {
+    let {
+      startRow,
+      endRow
+    } = _ref;
+    const {
+      data,
+      getOrientation,
+      getScale,
+      getTranslation,
+      getTransformMatrix
+    } = this.props;
+    const arrayMatrix = Array.isArray(getTransformMatrix);
+    const constantMatrix = arrayMatrix && getTransformMatrix.length === 16;
+    const constantScale = Array.isArray(getScale);
+    const constantOrientation = Array.isArray(getOrientation);
+    const constantTranslation = Array.isArray(getTranslation);
+    const hasMatrix = constantMatrix || !arrayMatrix && Boolean(getTransformMatrix(data[0]));
 
     if (hasMatrix) {
       attribute.constant = constantMatrix;
@@ -90,84 +94,60 @@ export var MATRIX_ATTRIBUTES = {
       attribute.constant = constantOrientation && constantScale && constantTranslation;
     }
 
-    var instanceModelMatrixData = attribute.value;
+    const instanceModelMatrixData = attribute.value;
 
     if (attribute.constant) {
-      var matrix;
+      let matrix;
 
       if (hasMatrix) {
         modelMatrix.set(getTransformMatrix);
         matrix = getExtendedMat3FromMat4(modelMatrix);
       } else {
         matrix = valueArray;
-        var orientation = getOrientation;
-        var scale = getScale;
+        const orientation = getOrientation;
+        const scale = getScale;
         calculateTransformMatrix(matrix, orientation, scale);
         matrix.set(getTranslation, 9);
       }
 
       attribute.value = new Float32Array(matrix);
     } else {
-      var i = startRow * attribute.size;
+      let i = startRow * attribute.size;
+      const {
+        iterable,
+        objectInfo
+      } = createIterable(data, startRow, endRow);
 
-      var _createIterable = createIterable(data, startRow, endRow),
-          iterable = _createIterable.iterable,
-          objectInfo = _createIterable.objectInfo;
+      for (const object of iterable) {
+        objectInfo.index++;
+        let matrix;
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = iterable[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var object = _step.value;
-          objectInfo.index++;
-
-          var _matrix = void 0;
-
-          if (hasMatrix) {
-            modelMatrix.set(constantMatrix ? getTransformMatrix : getTransformMatrix(object, objectInfo));
-            _matrix = getExtendedMat3FromMat4(modelMatrix);
-          } else {
-            _matrix = valueArray;
-
-            var _orientation = constantOrientation ? getOrientation : getOrientation(object, objectInfo);
-
-            var _scale = constantScale ? getScale : getScale(object, objectInfo);
-
-            calculateTransformMatrix(_matrix, _orientation, _scale);
-
-            _matrix.set(constantTranslation ? getTranslation : getTranslation(object, objectInfo), 9);
-          }
-
-          instanceModelMatrixData[i++] = _matrix[0];
-          instanceModelMatrixData[i++] = _matrix[1];
-          instanceModelMatrixData[i++] = _matrix[2];
-          instanceModelMatrixData[i++] = _matrix[3];
-          instanceModelMatrixData[i++] = _matrix[4];
-          instanceModelMatrixData[i++] = _matrix[5];
-          instanceModelMatrixData[i++] = _matrix[6];
-          instanceModelMatrixData[i++] = _matrix[7];
-          instanceModelMatrixData[i++] = _matrix[8];
-          instanceModelMatrixData[i++] = _matrix[9];
-          instanceModelMatrixData[i++] = _matrix[10];
-          instanceModelMatrixData[i++] = _matrix[11];
+        if (hasMatrix) {
+          modelMatrix.set(constantMatrix ? getTransformMatrix : getTransformMatrix(object, objectInfo));
+          matrix = getExtendedMat3FromMat4(modelMatrix);
+        } else {
+          matrix = valueArray;
+          const orientation = constantOrientation ? getOrientation : getOrientation(object, objectInfo);
+          const scale = constantScale ? getScale : getScale(object, objectInfo);
+          calculateTransformMatrix(matrix, orientation, scale);
+          matrix.set(constantTranslation ? getTranslation : getTranslation(object, objectInfo), 9);
         }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+
+        instanceModelMatrixData[i++] = matrix[0];
+        instanceModelMatrixData[i++] = matrix[1];
+        instanceModelMatrixData[i++] = matrix[2];
+        instanceModelMatrixData[i++] = matrix[3];
+        instanceModelMatrixData[i++] = matrix[4];
+        instanceModelMatrixData[i++] = matrix[5];
+        instanceModelMatrixData[i++] = matrix[6];
+        instanceModelMatrixData[i++] = matrix[7];
+        instanceModelMatrixData[i++] = matrix[8];
+        instanceModelMatrixData[i++] = matrix[9];
+        instanceModelMatrixData[i++] = matrix[10];
+        instanceModelMatrixData[i++] = matrix[11];
       }
     }
   }
+
 };
 //# sourceMappingURL=matrix.js.map

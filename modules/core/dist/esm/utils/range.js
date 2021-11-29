@@ -1,5 +1,5 @@
-export var EMPTY = [];
-export var FULL = [[0, Infinity]];
+export const EMPTY = [];
+export const FULL = [[0, Infinity]];
 export function add(rangeList, range) {
   if (rangeList === FULL) {
     return rangeList;
@@ -13,12 +13,12 @@ export function add(rangeList, range) {
     return rangeList;
   }
 
-  var newRangeList = [];
-  var len = rangeList.length;
-  var insertPosition = 0;
+  const newRangeList = [];
+  const len = rangeList.length;
+  let insertPosition = 0;
 
-  for (var i = 0; i < len; i++) {
-    var range0 = rangeList[i];
+  for (let i = 0; i < len; i++) {
+    const range0 = rangeList[i];
 
     if (range0[1] < range[0]) {
       newRangeList.push(range0);

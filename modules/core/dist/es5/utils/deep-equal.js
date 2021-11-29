@@ -10,7 +10,7 @@ function deepEqual(a, b) {
     return true;
   }
 
-  return Object.keys(a).every(function (key) {
+  return Object.keys(a).every(key => {
     if (Array.isArray(a[key]) && Array.isArray(b[key])) {
       return deepEqual(a[key], b[key]);
     }

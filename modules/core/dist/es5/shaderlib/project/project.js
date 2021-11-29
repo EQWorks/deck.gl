@@ -13,10 +13,10 @@ var _project = _interopRequireDefault(require("./project.glsl"));
 
 var _viewportUniforms = require("./viewport-uniforms");
 
-var INITIAL_MODULE_OPTIONS = {};
+const INITIAL_MODULE_OPTIONS = {};
 
 function getUniforms() {
-  var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_MODULE_OPTIONS;
+  let opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_MODULE_OPTIONS;
 
   if (opts.viewport) {
     return (0, _viewportUniforms.getUniformsFromViewport)(opts);
@@ -29,7 +29,7 @@ var _default = {
   name: 'project',
   dependencies: [_core.fp32],
   vs: _project.default,
-  getUniforms: getUniforms,
+  getUniforms,
   deprecations: [{
     type: 'function',
     old: 'project_scale',

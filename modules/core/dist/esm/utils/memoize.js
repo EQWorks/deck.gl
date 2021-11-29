@@ -4,13 +4,13 @@ function isEqual(a, b) {
   }
 
   if (Array.isArray(a)) {
-    var len = a.length;
+    const len = a.length;
 
     if (!b || b.length !== len) {
       return false;
     }
 
-    for (var i = 0; i < len; i++) {
+    for (let i = 0; i < len; i++) {
       if (a[i] !== b[i]) {
         return false;
       }
@@ -23,10 +23,10 @@ function isEqual(a, b) {
 }
 
 export default function memoize(compute) {
-  var cachedArgs = {};
-  var cachedResult;
-  return function (args) {
-    for (var key in args) {
+  let cachedArgs = {};
+  let cachedResult;
+  return args => {
+    for (const key in args) {
       if (!isEqual(args[key], cachedArgs[key])) {
         cachedResult = compute(args);
         cachedArgs = args;

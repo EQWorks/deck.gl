@@ -16,20 +16,22 @@ var _inheritsFrom = require("./inherits-from");
 var _evaluateChildren = _interopRequireDefault(require("./evaluate-children"));
 
 function positionChildrenUnderViews(_ref) {
-  var children = _ref.children,
-      viewports = _ref.viewports,
-      deck = _ref.deck,
-      ContextProvider = _ref.ContextProvider;
-
-  var _ref2 = deck || {},
-      viewManager = _ref2.viewManager;
+  let {
+    children,
+    viewports,
+    deck,
+    ContextProvider
+  } = _ref;
+  const {
+    viewManager
+  } = deck || {};
 
   if (!viewManager || !viewManager.views.length) {
     return [];
   }
 
-  var defaultViewId = viewManager.views[0].id;
-  return children.map(function (child, i) {
+  const defaultViewId = viewManager.views[0].id;
+  return children.map((child, i) => {
     if (child.props.viewportId) {
       _keplerOutdatedDeck.log.removed('viewportId', '<View>')();
     }
@@ -38,48 +40,50 @@ function positionChildrenUnderViews(_ref) {
       _keplerOutdatedDeck.log.removed('viewId', '<View>')();
     }
 
-    var viewId = defaultViewId;
-    var viewChildren = child;
+    let viewId = defaultViewId;
+    let viewChildren = child;
 
     if ((0, _inheritsFrom.inheritsFrom)(child.type, _keplerOutdatedDeck.View)) {
       viewId = child.props.id || defaultViewId;
       viewChildren = child.props.children;
     }
 
-    var childStyle = viewChildren && viewChildren.props && viewChildren.props.style;
-    var viewport = viewManager.getViewport(viewId);
-    var viewState = viewManager.getViewState(viewId);
+    const childStyle = viewChildren && viewChildren.props && viewChildren.props.style;
+    const viewport = viewManager.getViewport(viewId);
+    const viewState = viewManager.getViewState(viewId);
 
     if (!viewport) {
       return null;
     }
 
-    var x = viewport.x,
-        y = viewport.y,
-        width = viewport.width,
-        height = viewport.height;
+    const {
+      x,
+      y,
+      width,
+      height
+    } = viewport;
     viewChildren = (0, _evaluateChildren.default)(viewChildren, {
-      x: x,
-      y: y,
-      width: width,
-      height: height,
-      viewport: viewport,
-      viewState: viewState
+      x,
+      y,
+      width,
+      height,
+      viewport,
+      viewState
     });
-    var style = {
+    const style = {
       position: 'absolute',
       zIndex: childStyle && childStyle.zIndex,
       pointerEvents: 'none',
       left: x,
       top: y,
-      width: width,
-      height: height
+      width,
+      height
     };
-    var key = "view-child-".concat(viewId, "-").concat(i);
+    const key = "view-child-".concat(viewId, "-").concat(i);
 
     if (ContextProvider) {
-      var contextValue = {
-        viewport: viewport,
+      const contextValue = {
+        viewport,
         container: deck.canvas.offsetParent,
         eventManager: deck.eventManager,
         onViewStateChange: deck._onViewStateChange
@@ -90,9 +94,9 @@ function positionChildrenUnderViews(_ref) {
     }
 
     return (0, _react.createElement)('div', {
-      key: key,
+      key,
       id: key,
-      style: style
+      style
     }, viewChildren);
   });
 }

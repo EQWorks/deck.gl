@@ -1,4 +1,4 @@
-export var COORDINATE_SYSTEM = {
+export const COORDINATE_SYSTEM = {
   LNGLAT: 1,
   LNGLAT_DEPRECATED: 5,
   METER_OFFSETS: 2,
@@ -6,7 +6,7 @@ export var COORDINATE_SYSTEM = {
   LNGLAT_OFFSETS: 3,
   IDENTITY: 0
 };
-export var EVENTS = {
+export const EVENTS = {
   click: {
     handler: 'onClick'
   },

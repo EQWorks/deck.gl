@@ -6,15 +6,16 @@ Object.defineProperty(exports, "__esModule", {
 exports.padArray = padArray;
 
 function padArrayChunk(_ref) {
-  var source = _ref.source,
-      target = _ref.target,
-      _ref$start = _ref.start,
-      start = _ref$start === void 0 ? 0 : _ref$start,
-      end = _ref.end,
-      getData = _ref.getData;
+  let {
+    source,
+    target,
+    start = 0,
+    end,
+    getData
+  } = _ref;
   end = end || target.length;
-  var sourceLength = source.length;
-  var targetLength = end - start;
+  const sourceLength = source.length;
+  const targetLength = end - start;
 
   if (sourceLength > targetLength) {
     target.set(source.subarray(0, targetLength), start);
@@ -27,12 +28,12 @@ function padArrayChunk(_ref) {
     return;
   }
 
-  var i = sourceLength;
+  let i = sourceLength;
 
   while (i < targetLength) {
-    var datum = getData(i, source);
+    const datum = getData(i, source);
 
-    for (var j = 0; j < datum.length; j++) {
+    for (let j = 0; j < datum.length; j++) {
       target[start + i] = datum[j];
       i++;
     }
@@ -40,37 +41,37 @@ function padArrayChunk(_ref) {
 }
 
 function padArray(_ref2) {
-  var source = _ref2.source,
-      target = _ref2.target,
-      size = _ref2.size,
-      getData = _ref2.getData,
-      sourceLayout = _ref2.sourceLayout,
-      targetLayout = _ref2.targetLayout;
+  let {
+    source,
+    target,
+    size,
+    getData,
+    sourceLayout,
+    targetLayout
+  } = _ref2;
 
   if (!Array.isArray(targetLayout)) {
     padArrayChunk({
-      source: source,
-      target: target,
-      getData: getData
+      source,
+      target,
+      getData
     });
     return target;
   }
 
-  var sourceIndex = 0;
-  var targetIndex = 0;
+  let sourceIndex = 0;
+  let targetIndex = 0;
 
-  var getChunkData = getData && function (i, chunk) {
-    return getData(i + targetIndex, chunk);
-  };
+  const getChunkData = getData && ((i, chunk) => getData(i + targetIndex, chunk));
 
-  var n = Math.min(sourceLayout.length, targetLayout.length);
+  const n = Math.min(sourceLayout.length, targetLayout.length);
 
-  for (var i = 0; i < n; i++) {
-    var sourceChunkLength = sourceLayout[i] * size;
-    var targetChunkLength = targetLayout[i] * size;
+  for (let i = 0; i < n; i++) {
+    const sourceChunkLength = sourceLayout[i] * size;
+    const targetChunkLength = targetLayout[i] * size;
     padArrayChunk({
       source: source.subarray(sourceIndex, sourceIndex + sourceChunkLength),
-      target: target,
+      target,
       start: targetIndex,
       end: targetIndex + targetChunkLength,
       getData: getChunkData
@@ -82,7 +83,7 @@ function padArray(_ref2) {
   if (targetIndex < target.length) {
     padArrayChunk({
       source: [],
-      target: target,
+      target,
       start: targetIndex,
       getData: getChunkData
     });

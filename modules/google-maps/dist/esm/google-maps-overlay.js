@@ -1,18 +1,12 @@
-import _classCallCheck from "@babel/runtime/helpers/esm/classCallCheck";
-import _createClass from "@babel/runtime/helpers/esm/createClass";
 import { createDeckInstance, destroyDeckInstance, getViewState } from './utils';
 
-var HIDE_ALL_LAYERS = function HIDE_ALL_LAYERS() {
-  return false;
-};
+const HIDE_ALL_LAYERS = () => false;
 
-var GoogleMapsOverlay = function () {
-  function GoogleMapsOverlay(props) {
-    _classCallCheck(this, GoogleMapsOverlay);
-
+export default class GoogleMapsOverlay {
+  constructor(props) {
     this.props = {};
     this._map = null;
-    var overlay = new google.maps.OverlayView();
+    const overlay = new google.maps.OverlayView();
     overlay.onAdd = this._onAdd.bind(this);
     overlay.onRemove = this._onRemove.bind(this);
     overlay.draw = this._draw.bind(this);
@@ -20,107 +14,92 @@ var GoogleMapsOverlay = function () {
     this.setProps(props);
   }
 
-  _createClass(GoogleMapsOverlay, [{
-    key: "setMap",
-    value: function setMap(map) {
-      if (map === this._map) {
-        return;
-      }
-
-      if (this._map) {
-        this._overlay.setMap(null);
-
-        this._map = null;
-      }
-
-      if (map) {
-        this._map = map;
-
-        this._overlay.setMap(map);
-      }
+  setMap(map) {
+    if (map === this._map) {
+      return;
     }
-  }, {
-    key: "setProps",
-    value: function setProps(props) {
-      Object.assign(this.props, props);
 
-      if (this._deck) {
-        this._deck.setProps(this.props);
-      }
-    }
-  }, {
-    key: "pickObject",
-    value: function pickObject(params) {
-      return this._deck && this._deck.pickObject(params);
-    }
-  }, {
-    key: "pickMultipleObjects",
-    value: function pickMultipleObjects(params) {
-      return this._deck && this._deck.pickMultipleObjects(params);
-    }
-  }, {
-    key: "pickObjects",
-    value: function pickObjects(params) {
-      return this._deck && this._deck.pickObjects(params);
-    }
-  }, {
-    key: "finalize",
-    value: function finalize() {
-      this.setMap(null);
+    if (this._map) {
+      this._overlay.setMap(null);
 
-      if (this._deck) {
-        destroyDeckInstance(this._deck);
-        this._deck = null;
-      }
+      this._map = null;
     }
-  }, {
-    key: "_onAdd",
-    value: function _onAdd() {
-      this._deck = createDeckInstance(this._map, this._overlay, this._deck);
 
+    if (map) {
+      this._map = map;
+
+      this._overlay.setMap(map);
+    }
+  }
+
+  setProps(props) {
+    Object.assign(this.props, props);
+
+    if (this._deck) {
       this._deck.setProps(this.props);
     }
-  }, {
-    key: "_onRemove",
-    value: function _onRemove() {
-      this._deck.setProps({
-        layerFilter: HIDE_ALL_LAYERS
-      });
+  }
+
+  pickObject(params) {
+    return this._deck && this._deck.pickObject(params);
+  }
+
+  pickMultipleObjects(params) {
+    return this._deck && this._deck.pickMultipleObjects(params);
+  }
+
+  pickObjects(params) {
+    return this._deck && this._deck.pickObjects(params);
+  }
+
+  finalize() {
+    this.setMap(null);
+
+    if (this._deck) {
+      destroyDeckInstance(this._deck);
+      this._deck = null;
     }
-  }, {
-    key: "_draw",
-    value: function _draw() {
-      var deck = this._deck;
+  }
 
-      var _getViewState = getViewState(this._map, this._overlay),
-          width = _getViewState.width,
-          height = _getViewState.height,
-          left = _getViewState.left,
-          top = _getViewState.top,
-          zoom = _getViewState.zoom,
-          pitch = _getViewState.pitch,
-          latitude = _getViewState.latitude,
-          longitude = _getViewState.longitude;
+  _onAdd() {
+    this._deck = createDeckInstance(this._map, this._overlay, this._deck);
 
-      var canSyncWithGoogleMaps = zoom >= 0 && pitch === 0;
-      deck.canvas.style.left = "".concat(left, "px");
-      deck.canvas.style.top = "".concat(top, "px");
-      deck.setProps({
-        width: width,
-        height: height,
-        viewState: {
-          latitude: latitude,
-          longitude: longitude,
-          zoom: zoom
-        },
-        layerFilter: canSyncWithGoogleMaps ? this.props.layerFilter : HIDE_ALL_LAYERS
-      });
-      deck.redraw();
-    }
-  }]);
+    this._deck.setProps(this.props);
+  }
 
-  return GoogleMapsOverlay;
-}();
+  _onRemove() {
+    this._deck.setProps({
+      layerFilter: HIDE_ALL_LAYERS
+    });
+  }
 
-export { GoogleMapsOverlay as default };
+  _draw() {
+    const deck = this._deck;
+    const {
+      width,
+      height,
+      left,
+      top,
+      zoom,
+      pitch,
+      latitude,
+      longitude
+    } = getViewState(this._map, this._overlay);
+    const canSyncWithGoogleMaps = zoom >= 0 && pitch === 0;
+    deck.canvas.style.left = "".concat(left, "px");
+    deck.canvas.style.top = "".concat(top, "px");
+    deck.setProps({
+      width,
+      height,
+      viewState: {
+        latitude,
+        longitude,
+        zoom
+      },
+      layerFilter: canSyncWithGoogleMaps ? this.props.layerFilter : HIDE_ALL_LAYERS
+    });
+    deck.redraw();
+  }
+
+}
 //# sourceMappingURL=google-maps-overlay.js.map

@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.EVENTS = exports.COORDINATE_SYSTEM = void 0;
-var COORDINATE_SYSTEM = {
+const COORDINATE_SYSTEM = {
   LNGLAT: 1,
   LNGLAT_DEPRECATED: 5,
   METER_OFFSETS: 2,
@@ -13,7 +13,7 @@ var COORDINATE_SYSTEM = {
   IDENTITY: 0
 };
 exports.COORDINATE_SYSTEM = COORDINATE_SYSTEM;
-var EVENTS = {
+const EVENTS = {
   click: {
     handler: 'onClick'
   },

@@ -38,28 +38,32 @@ function getGeojsonFeatures(geojson) {
 }
 
 function separateGeojsonFeatures(features) {
-  var separated = {
+  const separated = {
     pointFeatures: [],
     lineFeatures: [],
     polygonFeatures: [],
     polygonOutlineFeatures: []
   };
 
-  for (var featureIndex = 0; featureIndex < features.length; featureIndex++) {
-    var feature = features[featureIndex];
+  for (let featureIndex = 0; featureIndex < features.length; featureIndex++) {
+    const feature = features[featureIndex];
     assert(feature && feature.geometry, 'GeoJSON does not have geometry');
-    var geometry = feature.geometry;
-    var sourceFeature = {
-      feature: feature,
+    const {
+      geometry
+    } = feature;
+    const sourceFeature = {
+      feature,
       index: featureIndex
     };
 
     if (geometry.type === 'GeometryCollection') {
       assert(Array.isArray(geometry.geometries), 'GeoJSON does not have geometries array');
-      var geometries = geometry.geometries;
+      const {
+        geometries
+      } = geometry;
 
-      for (var i = 0; i < geometries.length; i++) {
-        var subGeometry = geometries[i];
+      for (let i = 0; i < geometries.length; i++) {
+        const subGeometry = geometries[i];
         separateGeometry(subGeometry, separated, sourceFeature);
       }
     } else {
@@ -71,85 +75,89 @@ function separateGeojsonFeatures(features) {
 }
 
 function separateGeometry(geometry, separated, sourceFeature) {
-  var type = geometry.type,
-      coordinates = geometry.coordinates;
-  var pointFeatures = separated.pointFeatures,
-      lineFeatures = separated.lineFeatures,
-      polygonFeatures = separated.polygonFeatures,
-      polygonOutlineFeatures = separated.polygonOutlineFeatures;
+  const {
+    type,
+    coordinates
+  } = geometry;
+  const {
+    pointFeatures,
+    lineFeatures,
+    polygonFeatures,
+    polygonOutlineFeatures
+  } = separated;
   checkCoordinates(type, coordinates);
 
   switch (type) {
     case 'Point':
       pointFeatures.push({
-        geometry: geometry,
-        sourceFeature: sourceFeature
+        geometry,
+        sourceFeature
       });
       break;
 
     case 'MultiPoint':
-      coordinates.forEach(function (point) {
+      coordinates.forEach(point => {
         pointFeatures.push({
           geometry: {
             type: 'Point',
             coordinates: point
           },
-          sourceFeature: sourceFeature
+          sourceFeature
         });
       });
       break;
 
     case 'LineString':
       lineFeatures.push({
-        geometry: geometry,
-        sourceFeature: sourceFeature
+        geometry,
+        sourceFeature
       });
       break;
 
     case 'MultiLineString':
-      coordinates.forEach(function (path) {
+      coordinates.forEach(path => {
         lineFeatures.push({
           geometry: {
             type: 'LineString',
             coordinates: path
           },
-          sourceFeature: sourceFeature
+          sourceFeature
         });
       });
       break;
 
     case 'Polygon':
       polygonFeatures.push({
-        geometry: geometry,
-        sourceFeature: sourceFeature
+        geometry,
+        sourceFeature
       });
-      coordinates.forEach(function (path) {
+      coordinates.forEach(path => {
         polygonOutlineFeatures.push({
           geometry: {
             type: 'LineString',
             coordinates: path
           },
-          sourceFeature: sourceFeature
+          sourceFeature
         });
       });
       break;
 
     case 'MultiPolygon':
-      coordinates.forEach(function (polygon) {
+      coordinates.forEach(polygon => {
         polygonFeatures.push({
           geometry: {
             type: 'Polygon',
             coordinates: polygon
           },
-          sourceFeature: sourceFeature
+          sourceFeature
         });
-        polygon.forEach(function (path) {
+        polygon.forEach(path => {
           polygonOutlineFeatures.push({
             geometry: {
               type: 'LineString',
               coordinates: path
             },
-            sourceFeature: sourceFeature
+            sourceFeature
           });
         });
       });
@@ -167,7 +175,7 @@ function unwrapSourceFeatureIndex(wrappedFeature) {
   return wrappedFeature.sourceFeature.index;
 }
 
-var COORDINATE_NEST_LEVEL = {
+const COORDINATE_NEST_LEVEL = {
   Point: 1,
   MultiPoint: 2,
   LineString: 2,
@@ -177,7 +185,7 @@ var COORDINATE_NEST_LEVEL = {
 };
 
 function checkCoordinates(type, coordinates) {
-  var nestLevel = COORDINATE_NEST_LEVEL[type];
+  let nestLevel = COORDINATE_NEST_LEVEL[type];
   assert(nestLevel, "Unknown GeoJSON type ".concat(type));
 
   while (coordinates && --nestLevel > 0) {

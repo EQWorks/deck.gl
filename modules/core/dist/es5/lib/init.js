@@ -8,8 +8,8 @@ var _log = _interopRequireDefault(require("../utils/log"));
 
 var _shaderlib = require("../shaderlib");
 
-var version = typeof "7.1.1" !== 'undefined' ? "7.1.1" : _globals.global.DECK_VERSION || 'untranspiled source';
-var STARTUP_MESSAGE = 'set deck.log.priority=1 (or higher) to trace attribute updates';
+const version = typeof "7.1.1" !== 'undefined' ? "7.1.1" : _globals.global.DECK_VERSION || 'untranspiled source';
+const STARTUP_MESSAGE = 'set deck.log.priority=1 (or higher) to trace attribute updates';
 
 if (_globals.global.deck && _globals.global.deck.VERSION !== version) {
   throw new Error("deck.gl - multiple versions detected: ".concat(_globals.global.deck.VERSION, " vs ").concat(version));
@@ -20,7 +20,7 @@ if (!_globals.global.deck) {
 
   _globals.global.deck = _globals.global.deck || {
     VERSION: version,
-    version: version,
+    version,
     log: _log.default
   };
   (0, _shaderlib.initializeShaderModules)();

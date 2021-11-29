@@ -1,5 +1,5 @@
 function loadCss(url) {
-  var link = document.createElement('link');
+  const link = document.createElement('link');
   link.type = 'text/css';
   link.rel = 'stylesheet';
   link.href = url;
@@ -7,9 +7,9 @@ function loadCss(url) {
 }
 
 function createWidgetDiv(idName) {
-  var width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
-  var height = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
-  var div = document.createElement('div');
+  let width = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 500;
+  let height = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
+  const div = document.createElement('div');
   div.style.width = "".concat(width, "px");
   div.style.height = "".concat(height, "px");
   div.id = idName;
@@ -17,7 +17,7 @@ function createWidgetDiv(idName) {
 }
 
 function createCanvas(idName) {
-  var canvas = document.createElement('canvas');
+  const canvas = document.createElement('canvas');
   Object.assign(canvas.style, {
     width: '100%',
     height: '100%',
@@ -29,7 +29,7 @@ function createCanvas(idName) {
 }
 
 function createMapDiv(idName) {
-  var div = document.createElement('div');
+  const div = document.createElement('div');
   Object.assign(div.style, {
     'pointer-events': 'none',
     height: '100%',
@@ -42,7 +42,7 @@ function createMapDiv(idName) {
 }
 
 function hideMapboxCSSWarning() {
-  var missingCssWarning = document.getElementsByClassName('mapboxgl-missing-css')[0];
+  const missingCssWarning = document.getElementsByClassName('mapboxgl-missing-css')[0];
 
   if (missingCssWarning) {
     missingCssWarning.style.display = 'none';
@@ -50,11 +50,11 @@ function hideMapboxCSSWarning() {
 }
 
 function createDeckScaffold(rootElement, uid) {
-  var width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
-  var height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 500;
-  var mapNode = createMapDiv("map-".concat(uid));
-  var canvasNode = createCanvas("deck-map-container-".concat(uid));
-  var mapWrapperNode = createWidgetDiv("deck-map-wrapper-".concat(uid), width, height);
+  let width = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
+  let height = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 500;
+  const mapNode = createMapDiv("map-".concat(uid));
+  const canvasNode = createCanvas("deck-map-container-".concat(uid));
+  const mapWrapperNode = createWidgetDiv("deck-map-wrapper-".concat(uid), width, height);
   mapWrapperNode.appendChild(canvasNode);
   mapWrapperNode.appendChild(mapNode);
   rootElement.appendChild(createWidgetDiv("deck-container-".concat(uid), width, height)).appendChild(mapWrapperNode);
@@ -66,14 +66,16 @@ function waitForElementToDisplay(selector, time, cb) {
     return;
   }
 
-  setTimeout(function () {
+  setTimeout(() => {
     waitForElementToDisplay(selector, time, cb);
   }, time);
 }
 
 function setMapProps(map, props) {
   if ('viewState' in props && props.viewState.longitude && props.viewState.latitude) {
-    var viewState = props.viewState;
+    const {
+      viewState
+    } = props;
     map.jumpTo({
       center: [viewState.longitude, viewState.latitude],
       zoom: Number.isFinite(viewState.zoom) ? viewState.zoom : 10,
@@ -91,9 +93,9 @@ function setMapProps(map, props) {
 }
 
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0;
-    var v = c === 'x' ? r : r & 0x3 | 0x8;
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : r & 0x3 | 0x8;
     return v.toString(16);
   });
 }

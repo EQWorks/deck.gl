@@ -7,18 +7,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _classCallCheck2 = _interopRequireDefault(require("@babel/runtime/helpers/classCallCheck"));
-
-var _createClass2 = _interopRequireDefault(require("@babel/runtime/helpers/createClass"));
-
-var _possibleConstructorReturn2 = _interopRequireDefault(require("@babel/runtime/helpers/possibleConstructorReturn"));
-
-var _getPrototypeOf2 = _interopRequireDefault(require("@babel/runtime/helpers/getPrototypeOf"));
-
-var _get2 = _interopRequireDefault(require("@babel/runtime/helpers/get"));
-
-var _inherits2 = _interopRequireDefault(require("@babel/runtime/helpers/inherits"));
-
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
 var _core = require("@luma.gl/core");
@@ -29,21 +17,19 @@ var _arcLayerVertex2 = _interopRequireDefault(require("./arc-layer-vertex-64.gls
 
 var _arcLayerFragment = _interopRequireDefault(require("./arc-layer-fragment.glsl"));
 
-var fp64LowPart = _core.fp64.fp64LowPart;
-var DEFAULT_COLOR = [0, 0, 0, 255];
-var defaultProps = {
+const {
+  fp64LowPart
+} = _core.fp64;
+const DEFAULT_COLOR = [0, 0, 0, 255];
+const defaultProps = {
   fp64: false,
   getSourcePosition: {
     type: 'accessor',
-    value: function value(x) {
-      return x.sourcePosition;
-    }
+    value: x => x.sourcePosition
   },
   getTargetPosition: {
     type: 'accessor',
-    value: function value(x) {
-      return x.targetPosition;
-    }
+    value: x => x.targetPosition
   },
   getSourceColor: {
     type: 'accessor',
@@ -86,250 +72,213 @@ var defaultProps = {
   }
 };
 
-var ArcLayer = function (_Layer) {
-  (0, _inherits2.default)(ArcLayer, _Layer);
-
-  function ArcLayer() {
-    (0, _classCallCheck2.default)(this, ArcLayer);
-    return (0, _possibleConstructorReturn2.default)(this, (0, _getPrototypeOf2.default)(ArcLayer).apply(this, arguments));
+class ArcLayer extends _keplerOutdatedDeck.Layer {
+  getShaders() {
+    return this.use64bitProjection() ? {
+      vs: _arcLayerVertex2.default,
+      fs: _arcLayerFragment.default,
+      modules: ['project64', 'picking']
+    } : {
+      vs: _arcLayerVertex.default,
+      fs: _arcLayerFragment.default,
+      modules: ['picking']
+    };
   }
 
-  (0, _createClass2.default)(ArcLayer, [{
-    key: "getShaders",
-    value: function getShaders() {
-      return this.use64bitProjection() ? {
-        vs: _arcLayerVertex2.default,
-        fs: _arcLayerFragment.default,
-        modules: ['project64', 'picking']
-      } : {
-        vs: _arcLayerVertex.default,
-        fs: _arcLayerFragment.default,
-        modules: ['picking']
-      };
-    }
-  }, {
-    key: "initializeState",
-    value: function initializeState() {
-      var attributeManager = this.getAttributeManager();
-      attributeManager.addInstanced({
-        instancePositions: {
-          size: 4,
-          transition: true,
-          accessor: ['getSourcePosition', 'getTargetPosition'],
-          update: this.calculateInstancePositions
-        },
-        instancePositions64Low: {
-          size: 4,
-          accessor: ['getSourcePosition', 'getTargetPosition'],
-          update: this.calculateInstancePositions64Low
-        },
-        instanceSourceColors: {
-          size: 4,
-          type: 5121,
-          transition: true,
-          accessor: 'getSourceColor',
-          defaultValue: DEFAULT_COLOR
-        },
-        instanceTargetColors: {
-          size: 4,
-          type: 5121,
-          transition: true,
-          accessor: 'getTargetColor',
-          defaultValue: DEFAULT_COLOR
-        },
-        instanceWidths: {
-          size: 1,
-          transition: true,
-          accessor: 'getWidth',
-          defaultValue: 1
-        },
-        instanceHeights: {
-          size: 1,
-          transition: true,
-          accessor: 'getHeight',
-          defaultValue: 1
-        },
-        instanceTilts: {
-          size: 1,
-          transition: true,
-          accessor: 'getTilt',
-          defaultValue: 0
-        }
+  initializeState() {
+    const attributeManager = this.getAttributeManager();
+    attributeManager.addInstanced({
+      instancePositions: {
+        size: 4,
+        transition: true,
+        accessor: ['getSourcePosition', 'getTargetPosition'],
+        update: this.calculateInstancePositions
+      },
+      instancePositions64Low: {
+        size: 4,
+        accessor: ['getSourcePosition', 'getTargetPosition'],
+        update: this.calculateInstancePositions64Low
+      },
+      instanceSourceColors: {
+        size: 4,
+        type: 5121,
+        transition: true,
+        accessor: 'getSourceColor',
+        defaultValue: DEFAULT_COLOR
+      },
+      instanceTargetColors: {
+        size: 4,
+        type: 5121,
+        transition: true,
+        accessor: 'getTargetColor',
+        defaultValue: DEFAULT_COLOR
+      },
+      instanceWidths: {
+        size: 1,
+        transition: true,
+        accessor: 'getWidth',
+        defaultValue: 1
+      },
+      instanceHeights: {
+        size: 1,
+        transition: true,
+        accessor: 'getHeight',
+        defaultValue: 1
+      },
+      instanceTilts: {
+        size: 1,
+        transition: true,
+        accessor: 'getTilt',
+        defaultValue: 0
+      }
+    });
+  }
+
+  updateState(_ref) {
+    let {
+      props,
+      oldProps,
+      changeFlags
+    } = _ref;
+    super.updateState({
+      props,
+      oldProps,
+      changeFlags
+    });
+
+    if (props.fp64 !== oldProps.fp64) {
+      const {
+        gl
+      } = this.context;
+
+      if (this.state.model) {
+        this.state.model.delete();
+      }
+
+      this.setState({
+        model: this._getModel(gl)
       });
+      this.getAttributeManager().invalidateAll();
     }
-  }, {
-    key: "updateState",
-    value: function updateState(_ref) {
-      var props = _ref.props,
-          oldProps = _ref.oldProps,
-          changeFlags = _ref.changeFlags;
-      (0, _get2.default)((0, _getPrototypeOf2.default)(ArcLayer.prototype), "updateState", this).call(this, {
-        props: props,
-        oldProps: oldProps,
-        changeFlags: changeFlags
-      });
+  }
 
-      if (props.fp64 !== oldProps.fp64) {
-        var gl = this.context.gl;
+  draw(_ref2) {
+    let {
+      uniforms
+    } = _ref2;
+    const {
+      viewport
+    } = this.context;
+    const {
+      widthUnits,
+      widthScale,
+      widthMinPixels,
+      widthMaxPixels
+    } = this.props;
+    const widthMultiplier = widthUnits === 'pixels' ? viewport.distanceScales.metersPerPixel[2] : 1;
+    this.state.model.setUniforms(Object.assign({}, uniforms, {
+      widthScale: widthScale * widthMultiplier,
+      widthMinPixels,
+      widthMaxPixels
+    })).draw();
+  }
 
-        if (this.state.model) {
-          this.state.model.delete();
+  _getModel(gl) {
+    let positions = [];
+    const NUM_SEGMENTS = 50;
+
+    for (let i = 0; i < NUM_SEGMENTS; i++) {
+      positions = positions.concat([i, -1, 0, i, 1, 0]);
+    }
+
+    const model = new _core.Model(gl, Object.assign({}, this.getShaders(), {
+      id: this.props.id,
+      geometry: new _core.Geometry({
+        drawMode: 5,
+        attributes: {
+          positions: new Float32Array(positions)
         }
+      }),
+      isInstanced: true,
+      shaderCache: this.context.shaderCache
+    }));
+    model.setUniforms({
+      numSegments: NUM_SEGMENTS
+    });
+    return model;
+  }
 
-        this.setState({
-          model: this._getModel(gl)
-        });
-        this.getAttributeManager().invalidateAll();
-      }
+  calculateInstancePositions(attribute, _ref3) {
+    let {
+      startRow,
+      endRow
+    } = _ref3;
+    const {
+      data,
+      getSourcePosition,
+      getTargetPosition
+    } = this.props;
+    const {
+      value,
+      size
+    } = attribute;
+    let i = startRow * size;
+    const {
+      iterable,
+      objectInfo
+    } = (0, _keplerOutdatedDeck.createIterable)(data, startRow, endRow);
+
+    for (const object of iterable) {
+      objectInfo.index++;
+      const sourcePosition = getSourcePosition(object, objectInfo);
+      value[i++] = sourcePosition[0];
+      value[i++] = sourcePosition[1];
+      const targetPosition = getTargetPosition(object, objectInfo);
+      value[i++] = targetPosition[0];
+      value[i++] = targetPosition[1];
     }
-  }, {
-    key: "draw",
-    value: function draw(_ref2) {
-      var uniforms = _ref2.uniforms;
-      var viewport = this.context.viewport;
-      var _this$props = this.props,
-          widthUnits = _this$props.widthUnits,
-          widthScale = _this$props.widthScale,
-          widthMinPixels = _this$props.widthMinPixels,
-          widthMaxPixels = _this$props.widthMaxPixels;
-      var widthMultiplier = widthUnits === 'pixels' ? viewport.distanceScales.metersPerPixel[2] : 1;
-      this.state.model.setUniforms(Object.assign({}, uniforms, {
-        widthScale: widthScale * widthMultiplier,
-        widthMinPixels: widthMinPixels,
-        widthMaxPixels: widthMaxPixels
-      })).draw();
+  }
+
+  calculateInstancePositions64Low(attribute, _ref4) {
+    let {
+      startRow,
+      endRow
+    } = _ref4;
+    const isFP64 = this.use64bitPositions();
+    attribute.constant = !isFP64;
+
+    if (!isFP64) {
+      attribute.value = new Float32Array(4);
+      return;
     }
-  }, {
-    key: "_getModel",
-    value: function _getModel(gl) {
-      var positions = [];
-      var NUM_SEGMENTS = 50;
 
-      for (var i = 0; i < NUM_SEGMENTS; i++) {
-        positions = positions.concat([i, -1, 0, i, 1, 0]);
-      }
+    const {
+      data,
+      getSourcePosition,
+      getTargetPosition
+    } = this.props;
+    const {
+      value,
+      size
+    } = attribute;
+    let i = startRow * size;
+    const {
+      iterable,
+      objectInfo
+    } = (0, _keplerOutdatedDeck.createIterable)(data, startRow, endRow);
 
-      var model = new _core.Model(gl, Object.assign({}, this.getShaders(), {
-        id: this.props.id,
-        geometry: new _core.Geometry({
-          drawMode: 5,
-          attributes: {
-            positions: new Float32Array(positions)
-          }
-        }),
-        isInstanced: true,
-        shaderCache: this.context.shaderCache
-      }));
-      model.setUniforms({
-        numSegments: NUM_SEGMENTS
-      });
-      return model;
+    for (const object of iterable) {
+      objectInfo.index++;
+      const sourcePosition = getSourcePosition(object, objectInfo);
+      value[i++] = fp64LowPart(sourcePosition[0]);
+      value[i++] = fp64LowPart(sourcePosition[1]);
+      const targetPosition = getTargetPosition(object, objectInfo);
+      value[i++] = fp64LowPart(targetPosition[0]);
+      value[i++] = fp64LowPart(targetPosition[1]);
     }
-  }, {
-    key: "calculateInstancePositions",
-    value: function calculateInstancePositions(attribute, _ref3) {
-      var startRow = _ref3.startRow,
-          endRow = _ref3.endRow;
-      var _this$props2 = this.props,
-          data = _this$props2.data,
-          getSourcePosition = _this$props2.getSourcePosition,
-          getTargetPosition = _this$props2.getTargetPosition;
-      var value = attribute.value,
-          size = attribute.size;
-      var i = startRow * size;
+  }
 
-      var _createIterable = (0, _keplerOutdatedDeck.createIterable)(data, startRow, endRow),
-          iterable = _createIterable.iterable,
-          objectInfo = _createIterable.objectInfo;
-
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = iterable[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var object = _step.value;
-          objectInfo.index++;
-          var sourcePosition = getSourcePosition(object, objectInfo);
-          value[i++] = sourcePosition[0];
-          value[i++] = sourcePosition[1];
-          var targetPosition = getTargetPosition(object, objectInfo);
-          value[i++] = targetPosition[0];
-          value[i++] = targetPosition[1];
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-    }
-  }, {
-    key: "calculateInstancePositions64Low",
-    value: function calculateInstancePositions64Low(attribute, _ref4) {
-      var startRow = _ref4.startRow,
-          endRow = _ref4.endRow;
-      var isFP64 = this.use64bitPositions();
-      attribute.constant = !isFP64;
-
-      if (!isFP64) {
-        attribute.value = new Float32Array(4);
-        return;
-      }
-
-      var _this$props3 = this.props,
-          data = _this$props3.data,
-          getSourcePosition = _this$props3.getSourcePosition,
-          getTargetPosition = _this$props3.getTargetPosition;
-      var value = attribute.value,
-          size = attribute.size;
-      var i = startRow * size;
-
-      var _createIterable2 = (0, _keplerOutdatedDeck.createIterable)(data, startRow, endRow),
-          iterable = _createIterable2.iterable,
-          objectInfo = _createIterable2.objectInfo;
-
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
-
-      try {
-        for (var _iterator2 = iterable[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var object = _step2.value;
-          objectInfo.index++;
-          var sourcePosition = getSourcePosition(object, objectInfo);
-          value[i++] = fp64LowPart(sourcePosition[0]);
-          value[i++] = fp64LowPart(sourcePosition[1]);
-          var targetPosition = getTargetPosition(object, objectInfo);
-          value[i++] = fp64LowPart(targetPosition[0]);
-          value[i++] = fp64LowPart(targetPosition[1]);
-        }
-      } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
-      }
-    }
-  }]);
-  return ArcLayer;
-}(_keplerOutdatedDeck.Layer);
+}
 
 exports.default = ArcLayer;
 ArcLayer.layerName = 'ArcLayer';

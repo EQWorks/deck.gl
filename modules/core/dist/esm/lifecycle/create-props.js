@@ -2,10 +2,10 @@ import { applyPropOverrides } from '../lib/seer-integration';
 import log from '../utils/log';
 import { parsePropTypes } from './prop-types';
 export function createProps() {
-  var component = this;
-  var propTypeDefs = getPropsPrototypeAndTypes(component.constructor);
-  var propsPrototype = propTypeDefs.defaultProps;
-  var propsInstance = Object.create(propsPrototype, {
+  const component = this;
+  const propTypeDefs = getPropsPrototypeAndTypes(component.constructor);
+  const propsPrototype = propTypeDefs.defaultProps;
+  const propsInstance = Object.create(propsPrototype, {
     _component: {
       enumerable: false,
       value: component
@@ -20,12 +20,16 @@ export function createProps() {
     }
   });
 
-  for (var i = 0; i < arguments.length; ++i) {
+  for (let i = 0; i < arguments.length; ++i) {
     Object.assign(propsInstance, arguments[i]);
   }
 
-  var layerName = component.constructor.layerName;
-  var deprecatedProps = propTypeDefs.deprecatedProps;
+  const {
+    layerName
+  } = component.constructor;
+  const {
+    deprecatedProps
+  } = propTypeDefs;
   checkDeprecatedProps(layerName, propsInstance, deprecatedProps);
   checkDeprecatedProps(layerName, propsInstance.updateTriggers, deprecatedProps);
   checkDeprecatedProps(layerName, propsInstance.transitions, deprecatedProps);
@@ -39,33 +43,13 @@ function checkDeprecatedProps(layerName, propsInstance, deprecatedProps) {
     return;
   }
 
-  for (var name in deprecatedProps) {
+  for (const name in deprecatedProps) {
     if (hasOwnProperty(propsInstance, name)) {
-      var nameStr = "".concat(layerName || 'Layer', ": ").concat(name);
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      const nameStr = "".concat(layerName || 'Layer', ": ").concat(name);
 
-      try {
-        for (var _iterator = deprecatedProps[name][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var newPropName = _step.value;
-
-          if (!hasOwnProperty(propsInstance, newPropName)) {
-            propsInstance[newPropName] = propsInstance[name];
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
+      for (const newPropName of deprecatedProps[name]) {
+        if (!hasOwnProperty(propsInstance, newPropName)) {
+          propsInstance[newPropName] = propsInstance[name];
         }
       }
 
@@ -75,7 +59,7 @@ function checkDeprecatedProps(layerName, propsInstance, deprecatedProps) {
 }
 
 function getPropsPrototypeAndTypes(componentClass) {
-  var props = getOwnProperty(componentClass, '_mergedDefaultProps');
+  const props = getOwnProperty(componentClass, '_mergedDefaultProps');
 
   if (props) {
     return {
@@ -89,7 +73,7 @@ function getPropsPrototypeAndTypes(componentClass) {
 }
 
 function createPropsPrototypeAndTypes(componentClass) {
-  var parent = componentClass.prototype;
+  const parent = componentClass.prototype;
 
   if (!parent) {
     return {
@@ -97,27 +81,27 @@ function createPropsPrototypeAndTypes(componentClass) {
     };
   }
 
-  var parentClass = Object.getPrototypeOf(componentClass);
-  var parentPropDefs = parent && getPropsPrototypeAndTypes(parentClass) || null;
-  var componentDefaultProps = getOwnProperty(componentClass, 'defaultProps') || {};
-  var componentPropDefs = parsePropTypes(componentDefaultProps);
-  var propTypes = Object.assign({}, parentPropDefs && parentPropDefs.propTypes, componentPropDefs.propTypes);
-  var defaultProps = createPropsPrototype(componentPropDefs.defaultProps, parentPropDefs && parentPropDefs.defaultProps, propTypes, componentClass);
-  var deprecatedProps = Object.assign({}, parentPropDefs && parentPropDefs.deprecatedProps, componentPropDefs.deprecatedProps);
+  const parentClass = Object.getPrototypeOf(componentClass);
+  const parentPropDefs = parent && getPropsPrototypeAndTypes(parentClass) || null;
+  const componentDefaultProps = getOwnProperty(componentClass, 'defaultProps') || {};
+  const componentPropDefs = parsePropTypes(componentDefaultProps);
+  const propTypes = Object.assign({}, parentPropDefs && parentPropDefs.propTypes, componentPropDefs.propTypes);
+  const defaultProps = createPropsPrototype(componentPropDefs.defaultProps, parentPropDefs && parentPropDefs.defaultProps, propTypes, componentClass);
+  const deprecatedProps = Object.assign({}, parentPropDefs && parentPropDefs.deprecatedProps, componentPropDefs.deprecatedProps);
   componentClass._mergedDefaultProps = defaultProps;
   componentClass._propTypes = propTypes;
   componentClass._deprecatedProps = deprecatedProps;
   return {
-    propTypes: propTypes,
-    defaultProps: defaultProps,
-    deprecatedProps: deprecatedProps
+    propTypes,
+    defaultProps,
+    deprecatedProps
   };
 }
 
 function createPropsPrototype(props, parentProps, propTypes, componentClass) {
-  var defaultProps = Object.create(null);
+  const defaultProps = Object.create(null);
   Object.assign(defaultProps, parentProps, props);
-  var id = getComponentName(componentClass);
+  const id = getComponentName(componentClass);
   delete props.id;
   Object.defineProperties(defaultProps, {
     id: {
@@ -131,8 +115,8 @@ function createPropsPrototype(props, parentProps, propTypes, componentClass) {
 }
 
 function addAsyncPropsToPropPrototype(defaultProps, propTypes) {
-  var defaultValues = {};
-  var descriptors = {
+  const defaultValues = {};
+  const descriptors = {
     _asyncPropDefaultValues: {
       enumerable: false,
       value: defaultValues
@@ -143,10 +127,12 @@ function addAsyncPropsToPropPrototype(defaultProps, propTypes) {
     }
   };
 
-  for (var propName in propTypes) {
-    var propType = propTypes[propName];
-    var name = propType.name,
-        value = propType.value;
+  for (const propName in propTypes) {
+    const propType = propTypes[propName];
+    const {
+      name,
+      value
+    } = propType;
 
     if (propType.async) {
       defaultValues[name] = value;
@@ -161,17 +147,19 @@ function getDescriptorForAsyncProp(name) {
   return {
     configurable: false,
     enumerable: true,
-    set: function set(newValue) {
+
+    set(newValue) {
       if (typeof newValue === 'string' || newValue instanceof Promise) {
         this._asyncPropOriginalValues[name] = newValue;
       } else {
         this._asyncPropResolvedValues[name] = newValue;
       }
     },
-    get: function get() {
+
+    get() {
       if (this._asyncPropResolvedValues) {
         if (name in this._asyncPropResolvedValues) {
-          var value = this._asyncPropResolvedValues[name];
+          const value = this._asyncPropResolvedValues[name];
 
           if (name === 'data') {
             return value || this._asyncPropDefaultValues[name];
@@ -181,7 +169,7 @@ function getDescriptorForAsyncProp(name) {
         }
 
         if (name in this._asyncPropOriginalValues) {
-          var state = this._component && this._component.internalState;
+          const state = this._component && this._component.internalState;
 
           if (state && state.hasAsyncProp(name)) {
             return state.getAsyncProp(name);
@@ -191,6 +179,7 @@ function getDescriptorForAsyncProp(name) {
 
       return this._asyncPropDefaultValues[name];
     }
+
   };
 }
 
@@ -203,7 +192,7 @@ function getOwnProperty(object, prop) {
 }
 
 function getComponentName(componentClass) {
-  var componentName = getOwnProperty(componentClass, 'layerName') || getOwnProperty(componentClass, 'componentName');
+  const componentName = getOwnProperty(componentClass, 'layerName') || getOwnProperty(componentClass, 'componentName');
 
   if (!componentName) {
     log.once(0, "".concat(componentClass.name, ".componentName not specified"))();

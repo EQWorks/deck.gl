@@ -1,21 +1,19 @@
 "use strict";
 
-var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
-
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = extractJSXLayers;
-
-var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
 
 var _react = _interopRequireWildcard(require("react"));
 
 var _inheritsFrom = require("./inherits-from");
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function wrapInView(node) {
   if (!node) {
@@ -38,26 +36,28 @@ function wrapInView(node) {
 }
 
 function extractJSXLayers(_ref) {
-  var children = _ref.children,
-      layers = _ref.layers,
-      views = _ref.views;
-  var reactChildren = [];
-  var jsxLayers = [];
-  var jsxViews = {};
+  let {
+    children,
+    layers,
+    views
+  } = _ref;
+  const reactChildren = [];
+  const jsxLayers = [];
+  const jsxViews = {};
 
-  _react.default.Children.forEach(wrapInView(children), function (reactElement) {
+  _react.default.Children.forEach(wrapInView(children), reactElement => {
     if (reactElement) {
-      var ElementType = reactElement.type;
+      const ElementType = reactElement.type;
 
       if ((0, _inheritsFrom.inheritsFrom)(ElementType, _keplerOutdatedDeck.Layer)) {
-        var layer = createLayer(ElementType, reactElement.props);
+        const layer = createLayer(ElementType, reactElement.props);
         jsxLayers.push(layer);
       } else {
         reactChildren.push(reactElement);
       }
 
       if (ElementType !== _keplerOutdatedDeck.View && (0, _inheritsFrom.inheritsFrom)(ElementType, _keplerOutdatedDeck.View) && reactElement.props.id) {
-        var view = new ElementType(reactElement.props);
+        const view = new ElementType(reactElement.props);
         jsxViews[view.id] = view;
       }
     }
@@ -65,7 +65,7 @@ function extractJSXLayers(_ref) {
 
   if (Object.keys(jsxViews).length > 0) {
     if (Array.isArray(views)) {
-      views.forEach(function (view) {
+      views.forEach(view => {
         jsxViews[view.id] = view;
       });
     } else if (views) {
@@ -75,19 +75,19 @@ function extractJSXLayers(_ref) {
     views = Object.values(jsxViews);
   }
 
-  layers = jsxLayers.length > 0 ? [].concat(jsxLayers, (0, _toConsumableArray2.default)(layers)) : layers;
+  layers = jsxLayers.length > 0 ? [...jsxLayers, ...layers] : layers;
   return {
-    layers: layers,
+    layers,
     children: reactChildren,
-    views: views
+    views
   };
 }
 
 function createLayer(LayerType, reactProps) {
-  var props = {};
-  var defaultProps = LayerType.defaultProps || {};
+  const props = {};
+  const defaultProps = LayerType.defaultProps || {};
 
-  for (var key in reactProps) {
+  for (const key in reactProps) {
     if (defaultProps[key] !== reactProps[key]) {
       props[key] = reactProps[key];
     }

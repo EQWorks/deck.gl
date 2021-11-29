@@ -3,13 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.compareArrays = compareArrays;
 exports.checkArray = checkArray;
+exports.compareArrays = compareArrays;
 
 function compareArrays(array1, array2) {
-  var length = Math.min(array1.length, array2.length);
+  const length = Math.min(array1.length, array2.length);
 
-  for (var i = 0; i < length; ++i) {
+  for (let i = 0; i < length; ++i) {
     if (array1[i] !== array2[i]) {
       return "Arrays are different in element ".concat(i, ": ").concat(array1[i], " vs ").concat(array2[i]);
     }
@@ -23,7 +23,7 @@ function compareArrays(array1, array2) {
 }
 
 function checkArray(array) {
-  for (var i = 0; i < array.length; ++i) {
+  for (let i = 0; i < array.length; ++i) {
     if (!Number.isFinite(array[i])) {
       throw new Error("Array has invalid element ".concat(i, ": ").concat(array[i]));
     }
