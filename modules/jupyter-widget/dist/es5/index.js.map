@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/index.js"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAEA;;AACA","sourcesContent":["// Copyright (c) Uber Technologies Inc.\n// Distributed under the terms of the Modified BSD License.\nexport {MODULE_VERSION, MODULE_NAME} from './version';\nexport {DeckGLModel, DeckGLView} from './widget';\n"],"file":"index.js"}

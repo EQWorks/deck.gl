@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/embed.js"],"names":["module","exports","require"],"mappings":";;AAAAA,MAAM,CAACC,OAAP,GAAiBC,OAAO,CAAC,YAAD,CAAxB","sourcesContent":["module.exports = require('./index.js');\n"],"file":"embed.js"}
