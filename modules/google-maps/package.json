@@ -1,5 +1,5 @@
 {
-  "name": "@deck.gl/google-maps",
+  "name": "kepler-outdated-deck.gl-google-maps",
   "description": "Use deck.gl as a custom Google Maps overlay",
   "license": "MIT",
   "version": "7.1.1",
@@ -30,6 +30,6 @@
     "prepublishOnly": "npm run build-bundle && npm run build-bundle -- --env.dev"
   },
   "peerDependencies": {
-    "@deck.gl/core": "^7.0.0"
+    "kepler-outdated-deck.gl-core": "^7.0.0"
   }
 }

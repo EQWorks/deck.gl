@@ -20,7 +20,7 @@
 
 /* global Image, HTMLCanvasElement */
 import GL from '@luma.gl/constants';
-import {Layer} from '@deck.gl/core';
+import { Layer } from 'kepler-outdated-deck.gl-core';
 import {Model, Geometry, Texture2D, fp64} from '@luma.gl/core';
 import {loadImage} from '@loaders.gl/images';
 

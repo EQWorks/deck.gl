@@ -59,7 +59,7 @@ module.exports = [
       filename: 'index.js',
       path: path.resolve(__dirname, 'dist'),
       libraryTarget: 'amd',
-      library: '@deck.gl/jupyter-widget',
+      library: 'kepler-outdated-deck.gl-jupyter-widget',
       publicPath: `https://unpkg.com/deck.gl@jupyter-widget@${version}/dist/`
     },
     devtool: 'source-map',

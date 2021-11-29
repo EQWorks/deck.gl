@@ -7,7 +7,7 @@ define(function() {
   window['requirejs'].config({
     map: {
       '*': {
-        '@deck.gl/jupyter-widget': 'nbextensions/pydeck/index'
+        'kepler-outdated-deck.gl-jupyter-widget': 'nbextensions/pydeck/index'
       }
     }
   });

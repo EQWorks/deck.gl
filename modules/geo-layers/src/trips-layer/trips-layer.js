@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {PathLayer} from '@deck.gl/layers';
-import {createIterable} from '@deck.gl/core';
+import { PathLayer } from 'kepler-outdated-deck.gl-layers';
+import { createIterable } from 'kepler-outdated-deck.gl-core';
 
 const defaultProps = {
   trailLength: {type: 'number', value: 120, min: 0},

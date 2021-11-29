@@ -1,5 +1,5 @@
 {
-  "name": "@deck.gl/json",
+  "name": "kepler-outdated-deck.gl-json",
   "description": "JSON format rendering components for deck.gl",
   "license": "MIT",
   "version": "7.1.1",
@@ -33,6 +33,6 @@
     "d3-dsv": "^1.0.8"
   },
   "peerDependencies": {
-    "@deck.gl/core": "^7.0.0"
+    "kepler-outdated-deck.gl-core": "^7.0.0"
   }
 }

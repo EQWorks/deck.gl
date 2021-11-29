@@ -20,7 +20,7 @@ deck.gl offers an extensive catalog of pre-packaged visualization "layers", incl
 Example constructing a deck.gl ScatterplotLayer: 
 
 ```js
-import {ScatterplotLayer} from '@deck.gl/layers';
+import {ScatterplotLayer} from 'kepler-outdated-deck.gl-layers';
 
 /**
  * data is an array of object in the shape of:
@@ -52,7 +52,7 @@ import DeckGL from 'deck.gl';
 ## Using deck.gl with Pure JS
 
 ```js
-import {Deck} from '@deck.gl/core';
+import {Deck} from 'kepler-outdated-deck.gl-core';
 
 const deck = new Deck({
   container: document.body,

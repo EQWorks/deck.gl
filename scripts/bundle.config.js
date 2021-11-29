@@ -29,7 +29,7 @@ function getExternals(packageInfo) {
     }
   }
 
-  if (externals['@deck.gl/core']) {
+  if (externals['kepler-outdated-deck.gl-core']) {
     // Do not bundle luma.gl if `core` is peer dependency
     externals = [
       externals,

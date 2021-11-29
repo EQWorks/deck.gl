@@ -1,6 +1,6 @@
 {
-  "name": "@deck.gl/geo-layers",
-  "description": "deck.gl layers supporting geospatial use cases and GIS formats",
+  "name": "kepler-outdated-deck.gl-geo-layers",
+  "description": "kepler-outdated-deck.gl layers supporting geospatial use cases and GIS formats",
   "license": "MIT",
   "version": "7.1.1",
   "publishConfig": {
@@ -34,7 +34,7 @@
     "s2-geometry": "^1.2.10"
   },
   "peerDependencies": {
-    "@deck.gl/core": "^7.0.0",
-    "@deck.gl/layers": "^7.0.0"
+    "kepler-outdated-deck.gl-core": "^7.0.0",
+    "kepler-outdated-deck.gl-layers": "^7.0.0"
   }
 }

@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {Layer, WebMercatorViewport, createIterable, log, experimental} from '@deck.gl/core';
+import { Layer, WebMercatorViewport, createIterable, log, experimental } from 'kepler-outdated-deck.gl-core';
 const {count} = experimental;
 import {defaultColorRange, colorRangeToFlatArray} from '../utils/color-utils';
 import GPUGridAggregator from '../utils/gpu-grid-aggregation/gpu-grid-aggregator';

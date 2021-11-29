@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 /* global fetch */
-import {Layer, createIterable} from '@deck.gl/core';
+import { Layer, createIterable } from 'kepler-outdated-deck.gl-core';
 import {fp64, ScenegraphNode, isWebGL2, pbr, log} from '@luma.gl/core';
 import {load} from '@loaders.gl/core';
 

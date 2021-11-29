@@ -1,5 +1,5 @@
-import {CompositeLayer} from '@deck.gl/core';
-import {GeoJsonLayer} from '@deck.gl/layers';
+import { CompositeLayer } from 'kepler-outdated-deck.gl-core';
+import { GeoJsonLayer } from 'kepler-outdated-deck.gl-layers';
 import TileCache from './utils/tile-cache';
 
 const defaultProps = {

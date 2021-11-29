@@ -20,7 +20,7 @@
 
 import React, {createElement} from 'react';
 import PropTypes from 'prop-types';
-import {Deck, experimental} from '@deck.gl/core';
+import { Deck, experimental } from 'kepler-outdated-deck.gl-core';
 const {memoize} = experimental;
 
 import extractJSXLayers from './utils/extract-jsx-layers';

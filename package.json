@@ -1,5 +1,5 @@
 {
-  "name": "deck.gl",
+  "name": "kepler-outdated-deck.gl",
   "description": "A suite of 3D-enabled data visualization overlays, suitable for react-map-gl",
   "license": "MIT",
   "private": "true",

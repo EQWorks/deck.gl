@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {Layer} from '@deck.gl/core';
+import { Layer } from 'kepler-outdated-deck.gl-core';
 import GL from '@luma.gl/constants';
 import {Model, Geometry, hasFeature, FEATURES, PhongMaterial} from '@luma.gl/core';
 

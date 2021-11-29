@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 import {PhongMaterial} from '@luma.gl/core';
-import {CompositeLayer, log} from '@deck.gl/core';
-import {ColumnLayer} from '@deck.gl/layers';
+import { CompositeLayer, log } from 'kepler-outdated-deck.gl-core';
+import { ColumnLayer } from 'kepler-outdated-deck.gl-layers';
 
 import BinSorter from '../utils/bin-sorter';
 import {defaultColorRange} from '../utils/color-utils';

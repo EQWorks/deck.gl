@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 import {PhongMaterial} from '@luma.gl/core';
-import {CompositeLayer, createIterable} from '@deck.gl/core';
+import { CompositeLayer, createIterable } from 'kepler-outdated-deck.gl-core';
 import SolidPolygonLayer from '../solid-polygon-layer/solid-polygon-layer';
 import PathLayer from '../path-layer/path-layer';
 import * as Polygon from '../solid-polygon-layer/polygon';

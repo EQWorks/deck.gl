@@ -1,5 +1,5 @@
 import {createElement} from 'react';
-import {View, log} from '@deck.gl/core';
+import { View, log } from 'kepler-outdated-deck.gl-core';
 import {inheritsFrom} from './inherits-from';
 import evaluateChildren from './evaluate-children';
 

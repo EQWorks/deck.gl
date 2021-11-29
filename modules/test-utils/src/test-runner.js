@@ -20,7 +20,7 @@
 
 /* global window, console */
 /* eslint-disable no-console */
-import {Deck, MapView} from '@deck.gl/core';
+import { Deck, MapView } from 'kepler-outdated-deck.gl-core';
 
 const GL_VENDOR = 0x1f00;
 

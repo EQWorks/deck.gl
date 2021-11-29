@@ -1,4 +1,4 @@
-import {log} from '@deck.gl/core';
+import { log } from 'kepler-outdated-deck.gl-core';
 import {Geometry, uid} from '@luma.gl/core';
 
 export default class ColumnGeometry extends Geometry {

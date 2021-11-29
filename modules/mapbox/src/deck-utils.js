@@ -1,4 +1,4 @@
-import {Deck, WebMercatorViewport} from '@deck.gl/core';
+import { Deck, WebMercatorViewport } from 'kepler-outdated-deck.gl-core';
 
 export function getDeckInstance({map, gl, deck}) {
   // Only create one deck instance per context

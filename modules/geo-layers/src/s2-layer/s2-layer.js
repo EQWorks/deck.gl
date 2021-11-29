@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {CompositeLayer} from '@deck.gl/core';
-import {PolygonLayer} from '@deck.gl/layers';
+import { CompositeLayer } from 'kepler-outdated-deck.gl-core';
+import { PolygonLayer } from 'kepler-outdated-deck.gl-layers';
 
 import {getS2Polygon} from './s2-utils';
 

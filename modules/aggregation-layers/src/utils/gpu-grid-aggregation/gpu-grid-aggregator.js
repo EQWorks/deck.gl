@@ -10,7 +10,7 @@ import {
   fp64 as fp64Utils,
   withParameters
 } from '@luma.gl/core';
-import {log} from '@deck.gl/core';
+import { log } from 'kepler-outdated-deck.gl-core';
 import {worldToPixels} from 'viewport-mercator-project';
 const {fp64ifyMatrix4} = fp64Utils;
 

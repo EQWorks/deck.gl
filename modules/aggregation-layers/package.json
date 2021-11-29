@@ -1,6 +1,6 @@
 {
-  "name": "@deck.gl/aggregation-layers",
-  "description": "deck.gl layers that aggregate the input data into alternative representations",
+  "name": "kepler-outdated-deck.gl-aggregation-layers",
+  "description": "kepler-outdated-deck.gl layers that aggregate the input data into alternative representations",
   "license": "MIT",
   "version": "7.1.1",
   "publishConfig": {
@@ -33,7 +33,7 @@
     "d3-hexbin": "^0.2.1"
   },
   "peerDependencies": {
-    "@deck.gl/core": "^7.0.0",
-    "@deck.gl/layers": "^7.0.0"
+    "kepler-outdated-deck.gl-core": "^7.0.0",
+    "kepler-outdated-deck.gl-layers": "^7.0.0"
   }
 }
