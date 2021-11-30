@@ -1772,12 +1772,33 @@
     npmlog "^4.1.2"
     write-file-atomic "^2.3.0"
 
+"@loaders.gl/core@1.3.7":
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/@loaders.gl/core/-/core-1.3.7.tgz#86ae42b7f16b67035a7a561affa393c4fd98076a"
+  integrity sha512-dFZkJQc+i2PoqlBMz/aO8Gnn0y6ICafQp8u6cTpCm96h/HHulE8qDBodQlHGHn9EMJDSgVl/zjni+QhqIK31dg==
+  dependencies:
+    "@babel/runtime" "^7.3.1"
+
 "@loaders.gl/core@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@loaders.gl/core/-/core-1.0.3.tgz#60a1467e583f28d974a72f947cf2c7c2bc266393"
   integrity sha512-ENyW3UqPgtOx81iY23Y8jD7FJ6miNduOzV6Z1xY7pXwoOGrF2BXTJ3P7KPLXTIBN98mh67jUax0fouBhrQL2Kw==
   dependencies:
     "@babel/runtime" "^7.3.1"
+
+"@loaders.gl/gltf@^1.3.0":
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/@loaders.gl/gltf/-/gltf-1.3.7.tgz#7f83c6f216934de280a8fdc54c5a1228e731e9f8"
+  integrity sha512-GHhnuF1AINHwTxoZWppgxFW6V8UCkZ1sB6dFZs0rVPraAOcoonNZEECHxSdPxcj9mPy8i7mhzq/UZ4MvPYV48w==
+  dependencies:
+    "@loaders.gl/core" "1.3.7"
+    "@loaders.gl/images" "1.3.7"
+    "@loaders.gl/loader-utils" "1.3.7"
+
+"@loaders.gl/images@1.3.7", "@loaders.gl/images@^1.3.0":
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/@loaders.gl/images/-/images-1.3.7.tgz#fa0975e76cba12379c423df50de1940b32f3df00"
+  integrity sha512-TKqW94vjvWc4RIChhr0Yx6HaVTe8K6h6GFeXcahsKeCxq9/k2qpcigRkXfmb6/37dkp2Qy5COHp73ECgN/q+NA==
 
 "@loaders.gl/images@^1.0.3":
   version "1.0.3"
@@ -1789,6 +1810,13 @@
     ndarray "^1.0.18"
     save-pixels "^2.3.2"
     through "^2.3.8"
+
+"@loaders.gl/loader-utils@1.3.7":
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/@loaders.gl/loader-utils/-/loader-utils-1.3.7.tgz#9266ba276dd4191f362c0e6bec5670fe79f2426c"
+  integrity sha512-fNOuSVDwAOy5ovvkzbRVBcRwk8KTOuzMXxAzBZ2r6bmL4rFb+LOS8eIuODD3WgIDvHtaV56MMOlQE2kyYX52+A==
+  dependencies:
+    "@babel/runtime" "^7.3.1"
 
 "@luma.gl/constants@^7.0.0-alpha.6":
   version "7.0.0-alpha.19"
@@ -5853,6 +5881,20 @@ glsl-transpiler@^1.8.3:
     prepr "^1.1.2"
     xtend "^4.0.1"
 
+glsl-transpiler@^1.8.5:
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/glsl-transpiler/-/glsl-transpiler-1.8.5.tgz#e25477109a7a538f3e24ba422c1af6fcd0556f14"
+  integrity sha512-A9KWeznPGsKblXDgByDmzbzYh3ILpIVXSYA81n0+uT9VdGpnFKFsb42ziBZtjNHotINiM4lRVajCYfoRFoYCLA==
+  dependencies:
+    array-flatten "^2.0.0"
+    float-regex "^1.0.0"
+    glsl-parser "^2.0.1"
+    glsl-tokenizer "^2.1.5"
+    inherits "^2.0.1"
+    pick-by-alias "^1.2.0"
+    prepr "^1.1.2"
+    xtend "^4.0.1"
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
@@ -7036,6 +7078,18 @@ kdbush@^3.0.0:
   dependencies:
     prop-types "^15.6.0"
 
+"kepler-outdated-luma.gl-addons@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/addons/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/addons/dist.tgz#384034f1b4832ee2020d2b15d5f1e800ac806139"
+  dependencies:
+    "@loaders.gl/gltf" "^1.3.0"
+    "@loaders.gl/images" "^1.3.0"
+    math.gl "^3.0.0"
+
+"kepler-outdated-luma.gl-constants@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/constants/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/constants/dist.tgz#b24ef5cd91cbe4676cd02448234d936a1e35d6a9"
+
 "kepler-outdated-luma.gl-core@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/core/dist.tgz":
   version "7.3.2"
   uid "6e973d0979a482ebb593178ebb2460b2c311ac2d"
@@ -7046,9 +7100,67 @@ kdbush@^3.0.0:
     probe.gl "^3.1.1"
     seer "^0.2.4"
 
+"kepler-outdated-luma.gl-debug@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/debug/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/debug/dist.tgz#df7e129287da82d5e2de79e91f2143bca5d8048b"
+  dependencies:
+    glsl-transpiler "^1.8.5"
+    math.gl "^3.0.0"
+    webgl-debug "^2.0.1"
+
 "kepler-outdated-luma.gl-effects@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/effects/dist.tgz":
   version "7.3.2"
   resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/effects/dist.tgz#25c4dc8191ddd2f052716f11aea1a524264eded9"
+
+"kepler-outdated-luma.gl-glfx@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/glfx/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/glfx/dist.tgz#5567fa821105640a190d6676f03ac837099c2fe9"
+
+"kepler-outdated-luma.gl-gpgpu@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/gpgpu/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/gpgpu/dist.tgz#804a6ee350af832f9de3fe6da662cea7b0fcbc71"
+
+"kepler-outdated-luma.gl-main@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/main/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/main/dist.tgz#915d568e1d1dac3e7a0a71d033e300e119f56b19"
+
+"kepler-outdated-luma.gl-script@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/script/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/script/dist.tgz#3490931c6af66dc4874d95e7d7cb5cad40bc6c26"
+  dependencies:
+    math.gl "^3.0.0"
+
+"kepler-outdated-luma.gl-shadertools@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/shadertools/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/shadertools/dist.tgz#1c0b3863889528c2ec89f3bd7da8094f364534a2"
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    math.gl "^3.0.0"
+
+"kepler-outdated-luma.gl-test-utils@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/test-utils/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/test-utils/dist.tgz#f2f43f7f5e098b6fc6dc8ef9b8c5255a8f62bf9b"
+  dependencies:
+    probe.gl "^3.1.1"
+
+"kepler-outdated-luma.gl-webgl-state-tracker@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/webgl-state-tracker/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/webgl-state-tracker/dist.tgz#612bf7bd8fb77172ea21623fc60c7a22ef935956"
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+
+"kepler-outdated-luma.gl-webgl2-polyfill@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/webgl2-polyfill/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/webgl2-polyfill/dist.tgz#e68e9944e275cd8f22209b800c8d8628f00e963b"
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+
+"kepler-outdated-luma.gl-webgl@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/webgl/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/webgl/dist.tgz#698ff55e2b6952307f1fa9db1ce66e9514c01ab4"
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    probe.gl "^3.1.1"
 
 killable@^1.0.0:
   version "1.0.0"
@@ -11360,6 +11472,11 @@ wcwidth@^1.0.0:
   integrity sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=
   dependencies:
     defaults "^1.0.3"
+
+webgl-debug@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/webgl-debug/-/webgl-debug-2.0.1.tgz#dc11bea3d947764bce061fdb5a23109c13787c95"
+  integrity sha512-G7BOpMmqdc31X1nb3eqwVxw/v1MNV/ulgw7Bs+7+a/sn+fC0d0OiMkerA55C6+3BL2vULyJ3kZLPcEL5GbXzhw==
 
 webidl-conversions@^4.0.2:
   version "4.0.2"
