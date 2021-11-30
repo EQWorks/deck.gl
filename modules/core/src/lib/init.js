@@ -26,18 +26,18 @@ import {initializeShaderModules} from '../shaderlib';
 // Fallback for tests and SSR since global variable is defined by Webpack.
 /* global __VERSION__ */
 const version =
-  typeof __VERSION__ !== 'undefined' ? __VERSION__ : global.DECK_VERSION || 'untranspiled source';
+  typeof __VERSION__ !== 'undefined' ? __VERSION__ : global.keplerDeck_VERSION || 'untranspiled source';
 
 const STARTUP_MESSAGE = 'set deck.log.priority=1 (or higher) to trace attribute updates';
 
-if (global.deck && global.deck.VERSION !== version) {
-  throw new Error(`deck.gl - multiple versions detected: ${global.deck.VERSION} vs ${version}`);
+if (global.keplerDeck && global.keplerDeck.VERSION !== version) {
+  throw new Error(`deck.gl - multiple versions detected: ${global.keplerDeck.VERSION} vs ${version}`);
 }
 
-if (!global.deck) {
+if (!global.keplerDeck) {
   log.log(0, `deck.gl ${version} - ${STARTUP_MESSAGE}`)();
 
-  global.deck = global.deck || {
+  global.keplerDeck = global.keplerDeck || {
     VERSION: version,
     version,
     log
