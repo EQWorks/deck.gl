@@ -10,9 +10,6 @@ if (global.keplerDeck && global.keplerDeck.VERSION !== version) {
 
 if (!global.keplerDeck) {
   log.log(0, "deck.gl ".concat(version, " - ").concat(STARTUP_MESSAGE))();
-  console.log("setting global.keplerDeck, message was: deck.gl ".concat(version, " - ").concat(STARTUP_MESSAGE));
-  console.dir(global);
-  console.dir(window);
   global.keplerDeck = global.keplerDeck || {
     VERSION: version,
     version,
