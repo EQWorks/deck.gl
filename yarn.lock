@@ -937,19 +937,19 @@
   dependencies:
     regenerator-runtime "^0.12.0"
 
+"@babel/runtime@^7.12.0", "@babel/runtime@^7.8.4":
+  version "7.16.3"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.3.tgz#b86f0db02a04187a3c17caa77de69840165d42d5"
+  integrity sha512-WBwekcqacdY2e9AF/Q7WLFUWmdJGJTkbjqTjoMDgXkVZ3ZRUvOPsLb5KdwISoQVsbP+DQzVZW4Zhci0DvpbNTQ==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@^7.3.1":
   version "7.4.2"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.2.tgz#f5ab6897320f16decd855eed70b705908a313fe8"
   integrity sha512-7Bl2rALb7HpvXFL7TETNzKSAeBVCPHELzc0C//9FCxN8nsiueWSJBqaF+2oIJScyILStASR/Cx5WMkXGYTiJFA==
   dependencies:
     regenerator-runtime "^0.13.2"
-
-"@babel/runtime@^7.8.4":
-  version "7.16.3"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.3.tgz#b86f0db02a04187a3c17caa77de69840165d42d5"
-  integrity sha512-WBwekcqacdY2e9AF/Q7WLFUWmdJGJTkbjqTjoMDgXkVZ3ZRUvOPsLb5KdwISoQVsbP+DQzVZW4Zhci0DvpbNTQ==
-  dependencies:
-    regenerator-runtime "^0.13.4"
 
 "@babel/template@^7.0.0", "@babel/template@^7.1.0":
   version "7.2.2"
@@ -1790,77 +1790,10 @@
     save-pixels "^2.3.2"
     through "^2.3.8"
 
-"@luma.gl/constants@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@luma.gl/constants/-/constants-7.1.0.tgz#4d95aab859719224b5f6fd56805e0041e30b2c11"
-  integrity sha512-yPfUw4dxUndWXjscPJ4M9stfr3zhkhDacXrGEV9hHhZg5nc4OQgYUGctQmP5GjtBObkWEJZ4d9aZrGpKB1jAAw==
-
-"@luma.gl/constants@7.1.0-beta.1":
-  version "7.1.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@luma.gl/constants/-/constants-7.1.0-beta.1.tgz#37fc17fa86169646210b5afb58796018cb1b98a0"
-  integrity sha512-32ap1QO7QNVWEIEIzAdTCCAvLlIN5NNfnEXEhkAkwnsrsl2KeaMFEP8ydCKPi9vw/5QxGDTZ5rj6GNFzGo8NWw==
-
 "@luma.gl/constants@^7.0.0-alpha.6":
   version "7.0.0-alpha.19"
   resolved "https://registry.yarnpkg.com/@luma.gl/constants/-/constants-7.0.0-alpha.19.tgz#f9dcb21ebb53d1736be27aad68073c1562bc3d81"
   integrity sha512-7vxAjPSX80eRkDiAp5ro8NWZS5syIgHiaNfG6yhvHDXFfR8nghks1EHA3CqToUy8RDZn7p08pv4P2V8dFhs64Q==
-
-"@luma.gl/core@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@luma.gl/core/-/core-7.1.0.tgz#7395390031a4e939abcda8b52587db242d00c6bd"
-  integrity sha512-YVMzgAwrhovn93B4Xox9P1T8o+MBOTRtsEhLBGc7yrraK9fLdPgC/c/14+EvgpDLhz+7js/+S0SvlnApNLi5Qw==
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-    "@luma.gl/constants" "7.1.0"
-    "@luma.gl/shadertools" "7.1.0"
-    "@luma.gl/webgl" "7.1.0"
-    "@luma.gl/webgl-state-tracker" "7.1.0"
-    "@luma.gl/webgl2-polyfill" "7.1.0"
-    math.gl "^2.3.0"
-    probe.gl "^3.0.2"
-    seer "^0.2.4"
-
-"@luma.gl/effects@^7.1.0-beta.1":
-  version "7.1.0-beta.1"
-  resolved "https://registry.yarnpkg.com/@luma.gl/effects/-/effects-7.1.0-beta.1.tgz#72367a085f82bbea9b7301377d9640167d1d630a"
-  integrity sha512-BLxIhEQlJNIz4jo52vLxZEYCLfmcijLqPTlzjUwbYpbG/PGBZxhGk7tfbWoe1IoE8Tr4FFvrLueMcWpJjqbg5g==
-  dependencies:
-    "@luma.gl/constants" "7.1.0-beta.1"
-
-"@luma.gl/shadertools@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@luma.gl/shadertools/-/shadertools-7.1.0.tgz#192c8fb8286a093e0632310dc3c1a0b7d0c80aca"
-  integrity sha512-1HMOIIKGX+qEIJE1amilJvUEaEWceSfMaCmfIXswQ4513+5QdRNwQW5csGh3a5FFhHcfmQO8am/V7GNu0Zcg8Q==
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-    math.gl "^2.3.0"
-
-"@luma.gl/webgl-state-tracker@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@luma.gl/webgl-state-tracker/-/webgl-state-tracker-7.1.0.tgz#aa903a6c241175749d300e26aaf5e4935b6be024"
-  integrity sha512-z/p2qtsLXix7LZi6hQjuje8dX3cbyo/WfOPo+xJUngYQBAHeSPu93kZPC9OFPS9Y/kLuXPFvSwvUvm43NZ8b0Q==
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-    "@luma.gl/constants" "7.1.0"
-
-"@luma.gl/webgl2-polyfill@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@luma.gl/webgl2-polyfill/-/webgl2-polyfill-7.1.0.tgz#5a8625092fbf239229bcde1d4ba4bd603b09e6ff"
-  integrity sha512-11nhXyb4LmSBaSy49hBgepSpGvekmVr0jGm8OwgaRIcWnVRAEILSD809kS7c20Ck7Xz+r8HEEj97BaWe8+rTPQ==
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-    "@luma.gl/constants" "7.1.0"
-
-"@luma.gl/webgl@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@luma.gl/webgl/-/webgl-7.1.0.tgz#a9994494218e7dde4acd9c11836412b4b9164596"
-  integrity sha512-+mnKPa4FHmci8oQxnPRWQDPApIjTl29Ol5Jh2vwS0PSUNeKQeLManXkDmQzbuVddIY/SUn2qcMNUnoosVepajg==
-  dependencies:
-    "@babel/runtime" "^7.0.0"
-    "@luma.gl/constants" "7.1.0"
-    "@luma.gl/webgl-state-tracker" "7.1.0"
-    "@luma.gl/webgl2-polyfill" "7.1.0"
-    probe.gl "^3.0.2"
 
 "@mapbox/geojson-area@0.2.2":
   version "0.2.2"
@@ -1920,6 +1853,14 @@
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@mapbox/whoots-js/-/whoots-js-3.1.0.tgz#497c67a1cef50d1a2459ba60f315e448d2ad87fe"
   integrity sha512-Es6WcD0nO5l+2BOQS4uLfNPYQaNDfbot3X1XUoloz+x0mPDS3eeORZJl06HXjwBG1fOGwCRnzK88LMdxKRrd6Q==
+
+"@math.gl/core@3.5.6":
+  version "3.5.6"
+  resolved "https://registry.yarnpkg.com/@math.gl/core/-/core-3.5.6.tgz#d849db978d7d4a4984bb63868adc693975d97ce7"
+  integrity sha512-UGCKtJUBA9MBswclK6l8DuZqLcEnqlSfI57WzSDUB/Nki4tHfmdImJyhp8ky9W4cIahV1YLMhHRK1oRpLeC1sw==
+  dependencies:
+    "@babel/runtime" "^7.12.0"
+    gl-matrix "~3.3.0"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -2099,6 +2040,13 @@
   dependencies:
     "@babel/runtime" "^7.0.0"
     probe.gl "3.0.1"
+
+"@probe.gl/stats@3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@probe.gl/stats/-/stats-3.4.1.tgz#5bc0ec5f87ae3195c22a98363e9c15031fbfe8e8"
+  integrity sha512-1Ol5cH8MQqIrGNgU4NCBj2cw1qiXYfHP1QCFX+u/xyrvgwLkPrOGkdSYMzw4VKTjJzNae4i7urOTf2m2hduZzQ==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
 
 "@probe.gl/test-utils@^3.0.1":
   version "3.0.1"
@@ -5731,6 +5679,11 @@ gl-matrix@^3.0.0:
   resolved "https://registry.yarnpkg.com/gl-matrix/-/gl-matrix-3.0.0.tgz#888301ac7650e148c3865370e13ec66d08a8381f"
   integrity sha512-PD4mVH/C/Zs64kOozeFnKY8ybhgwxXXQYGWdB4h68krAHknWJgk9uKOn6z8YElh5//vs++90pb6csrTIDWnexA==
 
+gl-matrix@~3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/gl-matrix/-/gl-matrix-3.3.0.tgz#232eef60b1c8b30a28cbbe75b2caf6c48fd6358b"
+  integrity sha512-COb7LDz+SXaHtl/h4LeaFcNdJdAQSDeVqjiIihSXNrkWObZLhDI4hIkZC11Aeqp7bcE72clzB0BnDXr2SmslRA==
+
 gl@^4.2.2:
   version "4.2.2"
   resolved "https://registry.yarnpkg.com/gl/-/gl-4.2.2.tgz#e5aa1a7a9ccb5f36464763ff9454f41f2fa59424"
@@ -7031,68 +6984,71 @@ kdbush@^3.0.0:
   resolved "https://registry.yarnpkg.com/kdbush/-/kdbush-3.0.0.tgz#f8484794d47004cc2d85ed3a79353dbe0abc2bf0"
   integrity sha512-hRkd6/XW4HTsA9vjVpY9tuXJYLSlelnkTmVFu4M9/7MIYQtFcHpbugAU7UbOfjOiVSVYl2fqgBuJ32JUmRo5Ew==
 
-"kepler-outdated-deck.gl-aggregation-layers@https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/aggregation-layers/dist.tgz":
+"kepler-outdated-deck.gl-aggregation-layers@file:modules/aggregation-layers":
   version "7.1.1"
-  resolved "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/aggregation-layers/dist.tgz#2a3840bfe217beeb371022c4e5fbad7aa719c31c"
   dependencies:
     d3-hexbin "^0.2.1"
 
-"kepler-outdated-deck.gl-core@https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/core/dist.tgz":
+"kepler-outdated-deck.gl-core@file:modules/core":
   version "7.1.1"
-  uid fdad29feb6e07609ccdb2948177b2a778c7493bf
-  resolved "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/core/dist.tgz#fdad29feb6e07609ccdb2948177b2a778c7493bf"
   dependencies:
-    "@luma.gl/core" "^7.1.0"
     gl-matrix "^3.0.0"
+    kepler-outdated-luma.gl-core "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/core/dist.tgz"
     math.gl "^2.3.0"
     mjolnir.js "^2.1.0"
     probe.gl "^3.0.1"
     seer "^0.2.4"
     viewport-mercator-project "^6.1.0"
 
-"kepler-outdated-deck.gl-geo-layers@https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/geo-layers/dist.tgz":
+"kepler-outdated-deck.gl-geo-layers@file:modules/geo-layers":
   version "7.1.1"
-  resolved "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/geo-layers/dist.tgz#f54dd5d7921b9184c1dfd6f005d680fed2558d94"
   dependencies:
     h3-js "^3.4.3"
     s2-geometry "^1.2.10"
 
-"kepler-outdated-deck.gl-google-maps@https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/google-maps/dist.tgz":
+"kepler-outdated-deck.gl-google-maps@file:modules/google-maps":
   version "7.1.1"
-  resolved "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/google-maps/dist.tgz#4b48d6b5d7a01513a7805524efe00339c0d4a6a0"
 
-"kepler-outdated-deck.gl-json@https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/json/dist.tgz":
+"kepler-outdated-deck.gl-json@file:modules/json":
   version "7.1.1"
-  uid "71afe6e591513137547558ef0a13e073e3175e12"
-  resolved "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/json/dist.tgz#71afe6e591513137547558ef0a13e073e3175e12"
   dependencies:
     d3-dsv "^1.0.8"
 
-"kepler-outdated-deck.gl-layers@https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/layers/dist.tgz":
+"kepler-outdated-deck.gl-layers@file:modules/layers":
   version "7.1.1"
-  resolved "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/layers/dist.tgz#905cf2e80e8d61878ba5b3dcd45b734c183aaa3c"
   dependencies:
     "@loaders.gl/core" "^1.0.3"
     "@loaders.gl/images" "^1.0.3"
     "@mapbox/tiny-sdf" "^1.1.0"
     earcut "^2.0.6"
 
-"kepler-outdated-deck.gl-mapbox@https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/mapbox/dist.tgz":
+"kepler-outdated-deck.gl-mapbox@file:modules/mapbox":
   version "7.1.1"
-  resolved "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/mapbox/dist.tgz#ff244d70127d7b862053303897fd05fcaa2943cc"
 
-"kepler-outdated-deck.gl-mesh-layers@https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/mesh-layers/dist.tgz":
+"kepler-outdated-deck.gl-mesh-layers@file:modules/mesh-layers":
   version "7.1.1"
-  resolved "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/mesh-layers/dist.tgz#b73f987a163c30619905a6cceb66fe58398331da"
   dependencies:
     "@loaders.gl/core" "^1.0.3"
     "@loaders.gl/images" "^1.0.3"
 
-"kepler-outdated-deck.gl-react@https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/react/dist.tgz":
+"kepler-outdated-deck.gl-react@file:modules/react":
   version "7.1.1"
-  resolved "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/react/dist.tgz#6817e65176bdc1bbeddabf661d9ded4735d32e3a"
   dependencies:
     prop-types "^15.6.0"
+
+"kepler-outdated-luma.gl-core@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/core/dist.tgz":
+  version "7.3.2"
+  uid "6e973d0979a482ebb593178ebb2460b2c311ac2d"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/core/dist.tgz#6e973d0979a482ebb593178ebb2460b2c311ac2d"
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    math.gl "^3.0.0"
+    probe.gl "^3.1.1"
+    seer "^0.2.4"
+
+"kepler-outdated-luma.gl-effects@https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/effects/dist.tgz":
+  version "7.3.2"
+  resolved "https://github.com/EQWorks/luma.gl/raw/build/outdated/modules/effects/dist.tgz#25c4dc8191ddd2f052716f11aea1a524264eded9"
 
 killable@^1.0.0:
   version "1.0.0"
@@ -7535,6 +7491,13 @@ math.gl@^2.3.0:
   dependencies:
     "@babel/runtime" "^7.0.0"
     gl-matrix "^3.0.0"
+
+math.gl@^3.0.0:
+  version "3.5.6"
+  resolved "https://registry.yarnpkg.com/math.gl/-/math.gl-3.5.6.tgz#805ac7444f8e5b339e88989c0fbcb9870774e315"
+  integrity sha512-+IzdFaQk46iYU85XObRNqnb5NUQon+rWDPnCoEIOKOKdykr2gJ15BcVjEs0ZvH4EDv5K/JVmLkWzY/6DCEx2Fw==
+  dependencies:
+    "@math.gl/core" "3.5.6"
 
 md5.js@^1.3.4:
   version "1.3.4"
@@ -9082,12 +9045,13 @@ probe.gl@3.0.1, probe.gl@^3.0.1:
   dependencies:
     "@babel/runtime" "^7.0.0"
 
-probe.gl@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/probe.gl/-/probe.gl-3.0.2.tgz#31b7844a2a9600d88c2cb35916f98a81e83a313a"
-  integrity sha512-Qc4myo375YtzRfQa1QhDIfXi4qjFJ9oJ9oe54TXjyS4vpLYd4T2j57NljQ64h1wqeL8dAVidGo2BNn3VG1tK3w==
+probe.gl@^3.1.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/probe.gl/-/probe.gl-3.4.1.tgz#88d8629fbac5a627049d6fdc6b8c364d56f00815"
+  integrity sha512-k/6YoZr6cBwnFpQLs/s4yZ8cCxapQzRrxl16EQg1b2wYXLlerDJ4PkNoQ3YDN9yu3Jcipipr+Avy1GRpyBF6ZA==
   dependencies:
     "@babel/runtime" "^7.0.0"
+    "@probe.gl/stats" "3.4.1"
 
 process-nextick-args@~2.0.0:
   version "2.0.0"

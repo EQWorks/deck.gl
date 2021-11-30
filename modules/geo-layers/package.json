@@ -34,7 +34,7 @@
     "s2-geometry": "^1.2.10"
   },
   "peerDependencies": {
-    "kepler-outdated-deck.gl-core": "^7.0.0",
-    "kepler-outdated-deck.gl-layers": "^7.0.0"
+    "kepler-outdated-deck.gl-core": "7.1.1",
+    "kepler-outdated-deck.gl-layers": "7.1.1"
   }
 }

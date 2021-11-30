@@ -33,6 +33,6 @@
     "d3-dsv": "^1.0.8"
   },
   "peerDependencies": {
-    "kepler-outdated-deck.gl-core": "^7.0.0"
+    "kepler-outdated-deck.gl-core": "7.1.1"
   }
 }

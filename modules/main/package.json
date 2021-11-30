@@ -27,6 +27,19 @@
     "prepublishOnly": "npm run build-bundle && npm run build-bundle -- --env.dev"
   },
   "dependencies": {
+  },
+  "devDependencies": {
+    "kepler-outdated-deck.gl-aggregation-layers": "file:../aggregation-layers",
+    "kepler-outdated-deck.gl-core": "file:../core",
+    "kepler-outdated-deck.gl-geo-layers": "file:../geo-layers",
+    "kepler-outdated-deck.gl-google-maps": "file:../google-maps",
+    "kepler-outdated-deck.gl-json": "file:../json",
+    "kepler-outdated-deck.gl-layers": "file:../layers",
+    "kepler-outdated-deck.gl-mapbox": "file:../mapbox",
+    "kepler-outdated-deck.gl-mesh-layers": "file:../mesh-layers",
+    "kepler-outdated-deck.gl-react": "file:../react"
+  },
+  "peerDependencies": {
     "kepler-outdated-deck.gl-aggregation-layers": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/aggregation-layers/dist.tgz",
     "kepler-outdated-deck.gl-core": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/core/dist.tgz",
     "kepler-outdated-deck.gl-geo-layers": "https://github.com/EQWorks/deck.gl/raw/build/outdated/modules/geo-layers/dist.tgz",

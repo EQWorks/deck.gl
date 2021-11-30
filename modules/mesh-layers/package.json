@@ -30,7 +30,7 @@
     "prepublishOnly": "npm run build-bundle && npm run build-bundle -- --env.dev"
   },
   "peerDependencies": {
-    "kepler-outdated-deck.gl-core": "^7.0.0"
+    "kepler-outdated-deck.gl-core": "7.1.1"
   },
   "dependencies": {
     "@loaders.gl/core": "^1.0.3",

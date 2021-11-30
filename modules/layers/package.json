@@ -35,6 +35,6 @@
     "earcut": "^2.0.6"
   },
   "peerDependencies": {
-    "kepler-outdated-deck.gl-core": "^7.0.0"
+    "kepler-outdated-deck.gl-core": "7.1.1"
   }
 }

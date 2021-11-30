@@ -29,7 +29,7 @@
     "prop-types": "^15.6.0"
   },
   "peerDependencies": {
-    "kepler-outdated-deck.gl-core": "^7.0.0",
+    "kepler-outdated-deck.gl-core": "7.1.1",
     "react": "0.14.x - 16.x",
     "react-dom": "0.14.x - 16.x"
   }

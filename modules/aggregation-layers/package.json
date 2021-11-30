@@ -33,7 +33,7 @@
     "d3-hexbin": "^0.2.1"
   },
   "peerDependencies": {
-    "kepler-outdated-deck.gl-core": "^7.0.0",
-    "kepler-outdated-deck.gl-layers": "^7.0.0"
+    "kepler-outdated-deck.gl-core": "7.1.1",
+    "kepler-outdated-deck.gl-layers": "7.1.1"
   }
 }
