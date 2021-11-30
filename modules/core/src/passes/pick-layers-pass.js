@@ -1,5 +1,5 @@
 import LayersPass from './layers-pass';
-import {withParameters} from '@luma.gl/core';
+import { withParameters } from 'kepler-outdated-luma.gl-core';
 
 export default class PickLayersPass extends LayersPass {
   render(props) {

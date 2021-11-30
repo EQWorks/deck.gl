@@ -1,6 +1,6 @@
 // Helper methods used by GPUGridAggregator.
-import GL from '@luma.gl/constants';
-import {Framebuffer, Texture2D} from '@luma.gl/core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Framebuffer, Texture2D } from 'kepler-outdated-luma.gl-core';
 
 export function getFloatTexture(gl, opts) {
   const {width = 1, height = 1} = opts;

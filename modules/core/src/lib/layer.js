@@ -27,8 +27,8 @@ import {removeLayerInSeer} from './seer-integration';
 import {diffProps, validateProps} from '../lifecycle/props';
 import {count} from '../utils/count';
 import log from '../utils/log';
-import GL from '@luma.gl/constants';
-import {withParameters} from '@luma.gl/core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { withParameters } from 'kepler-outdated-luma.gl-core';
 import assert from '../utils/assert';
 import {projectPosition, getWorldPosition} from '../shaderlib/project/project-functions';
 

@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 import { Layer, createIterable } from 'kepler-outdated-deck.gl-core';
-import GL from '@luma.gl/constants';
-import {Model, Geometry, fp64} from '@luma.gl/core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Model, Geometry, fp64 } from 'kepler-outdated-luma.gl-core';
 const {fp64LowPart} = fp64;
 
 import vs from './line-layer-vertex.glsl';

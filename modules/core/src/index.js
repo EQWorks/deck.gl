@@ -92,7 +92,7 @@ import {count} from './utils/count';
 import memoize from './utils/memoize';
 
 // lighting
-export {AmbientLight} from '@luma.gl/core';
+export { AmbientLight } from 'kepler-outdated-luma.gl-core';
 
 // Exports for layers
 // Experimental Features may change in minor version bumps, use at your own risk)

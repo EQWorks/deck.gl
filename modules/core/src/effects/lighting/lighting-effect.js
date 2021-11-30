@@ -1,4 +1,4 @@
-import {AmbientLight} from '@luma.gl/core';
+import { AmbientLight } from 'kepler-outdated-luma.gl-core';
 import DirectionalLight from './directional-light';
 import Effect from '../../lib/effect';
 

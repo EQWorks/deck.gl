@@ -1,5 +1,5 @@
 // We use `require` here because luma and deck core must be imported before `global`
-const lumaGLCore = require('@luma.gl/core');
+const lumaGLCore = require('kepler-outdated-luma.gl-core');
 const deckGLCore = require('../src');
 
 const DeckGL = require('./deckgl').default;

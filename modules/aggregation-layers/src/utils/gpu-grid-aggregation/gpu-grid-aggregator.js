@@ -1,4 +1,4 @@
-import GL from '@luma.gl/constants';
+import GL from 'kepler-outdated-luma.gl-constants';
 import {
   Buffer,
   Model,
@@ -9,7 +9,7 @@ import {
   readPixelsToBuffer,
   fp64 as fp64Utils,
   withParameters
-} from '@luma.gl/core';
+} from 'kepler-outdated-luma.gl-core';
 import { log } from 'kepler-outdated-deck.gl-core';
 import {worldToPixels} from 'viewport-mercator-project';
 const {fp64ifyMatrix4} = fp64Utils;

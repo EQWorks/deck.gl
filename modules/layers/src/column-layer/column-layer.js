@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 import { Layer, createIterable } from 'kepler-outdated-deck.gl-core';
-import GL from '@luma.gl/constants';
-import {Model, fp64, PhongMaterial} from '@luma.gl/core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Model, fp64, PhongMaterial } from 'kepler-outdated-luma.gl-core';
 import ColumnGeometry from './column-geometry';
 const {fp64LowPart} = fp64;
 const defaultMaterial = new PhongMaterial();

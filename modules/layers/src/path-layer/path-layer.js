@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 import { Layer } from 'kepler-outdated-deck.gl-core';
-import GL from '@luma.gl/constants';
-import {Model, Geometry} from '@luma.gl/core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Model, Geometry } from 'kepler-outdated-luma.gl-core';
 
 import PathTesselator from './path-tesselator';
 
