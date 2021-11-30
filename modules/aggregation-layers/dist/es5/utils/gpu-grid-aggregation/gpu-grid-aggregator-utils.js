@@ -7,14 +7,14 @@ exports.getFloatArray = getFloatArray;
 exports.getFloatTexture = getFloatTexture;
 exports.getFramebuffer = getFramebuffer;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 function getFloatTexture(gl, opts) {
   const {
     width = 1,
     height = 1
   } = opts;
-  const texture = new _core.Texture2D(gl, {
+  const texture = new _keplerOutdatedLuma.Texture2D(gl, {
     data: null,
     format: 34836,
     type: 5126,
@@ -38,7 +38,7 @@ function getFramebuffer(gl, opts) {
     height = 1,
     texture
   } = opts;
-  const fb = new _core.Framebuffer(gl, {
+  const fb = new _keplerOutdatedLuma.Framebuffer(gl, {
     id,
     width,
     height,

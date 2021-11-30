@@ -11,14 +11,14 @@ var _effect = _interopRequireDefault(require("../lib/effect"));
 
 var _screenPass = _interopRequireDefault(require("../passes/screen-pass"));
 
-var _shadertools = require("@luma.gl/shadertools");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-shadertools");
 
 class PostProcessEffect extends _effect.default {
   constructor(module) {
     let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     super(props);
     this.id = "".concat(module.name, "-pass");
-    (0, _shadertools.normalizeShaderModule)(module);
+    (0, _keplerOutdatedLuma.normalizeShaderModule)(module);
     this.module = module;
   }
 

@@ -40,7 +40,7 @@ export { createIterable } from './utils/iterable-utils';
 import Tesselator from './utils/tesselator';
 import { count } from './utils/count';
 import memoize from './utils/memoize';
-export { AmbientLight } from '@luma.gl/core';
+export { AmbientLight } from 'kepler-outdated-luma.gl-core';
 export const experimental = {
   Tesselator,
   flattenVertices,

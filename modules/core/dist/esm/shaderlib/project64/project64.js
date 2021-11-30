@@ -1,4 +1,4 @@
-import { fp64 } from '@luma.gl/core';
+import { fp64 } from 'kepler-outdated-luma.gl-core';
 const {
   fp64ify,
   fp64ifyMatrix4

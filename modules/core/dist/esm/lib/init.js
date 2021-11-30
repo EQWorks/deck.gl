@@ -1,16 +1,19 @@
 import { global } from '../utils/globals';
 import log from '../utils/log';
 import { initializeShaderModules } from '../shaderlib';
-const version = typeof "7.1.1" !== 'undefined' ? "7.1.1" : global.DECK_VERSION || 'untranspiled source';
+const version = typeof "7.1.1" !== 'undefined' ? "7.1.1" : global.keplerDeck_VERSION || 'untranspiled source';
 const STARTUP_MESSAGE = 'set deck.log.priority=1 (or higher) to trace attribute updates';
 
-if (global.deck && global.deck.VERSION !== version) {
-  throw new Error("deck.gl - multiple versions detected: ".concat(global.deck.VERSION, " vs ").concat(version));
+if (global.keplerDeck && global.keplerDeck.VERSION !== version) {
+  throw new Error("deck.gl - multiple versions detected: ".concat(global.keplerDeck.VERSION, " vs ").concat(version));
 }
 
-if (!global.deck) {
+if (!global.keplerDeck) {
   log.log(0, "deck.gl ".concat(version, " - ").concat(STARTUP_MESSAGE))();
-  global.deck = global.deck || {
+  console.log("setting global.keplerDeck, message was: deck.gl ".concat(version, " - ").concat(STARTUP_MESSAGE));
+  console.dir(global);
+  console.dir(window);
+  global.keplerDeck = global.keplerDeck || {
     VERSION: version,
     version,
     log

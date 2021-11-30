@@ -8,17 +8,20 @@ var _log = _interopRequireDefault(require("../utils/log"));
 
 var _shaderlib = require("../shaderlib");
 
-const version = typeof "7.1.1" !== 'undefined' ? "7.1.1" : _globals.global.DECK_VERSION || 'untranspiled source';
+const version = typeof "7.1.1" !== 'undefined' ? "7.1.1" : _globals.global.keplerDeck_VERSION || 'untranspiled source';
 const STARTUP_MESSAGE = 'set deck.log.priority=1 (or higher) to trace attribute updates';
 
-if (_globals.global.deck && _globals.global.deck.VERSION !== version) {
-  throw new Error("deck.gl - multiple versions detected: ".concat(_globals.global.deck.VERSION, " vs ").concat(version));
+if (_globals.global.keplerDeck && _globals.global.keplerDeck.VERSION !== version) {
+  throw new Error("deck.gl - multiple versions detected: ".concat(_globals.global.keplerDeck.VERSION, " vs ").concat(version));
 }
 
-if (!_globals.global.deck) {
+if (!_globals.global.keplerDeck) {
   _log.default.log(0, "deck.gl ".concat(version, " - ").concat(STARTUP_MESSAGE))();
 
-  _globals.global.deck = _globals.global.deck || {
+  console.log("setting global.keplerDeck, message was: deck.gl ".concat(version, " - ").concat(STARTUP_MESSAGE));
+  console.dir(_globals.global);
+  console.dir(window);
+  _globals.global.keplerDeck = _globals.global.keplerDeck || {
     VERSION: version,
     version,
     log: _log.default

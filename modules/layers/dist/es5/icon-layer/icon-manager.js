@@ -7,7 +7,7 @@ exports.buildMapping = buildMapping;
 exports.default = void 0;
 exports.getDiffIcons = getDiffIcons;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _images = require("@loaders.gl/images");
 
@@ -65,7 +65,7 @@ function buildRowMapping(mapping, columns, yOffset) {
 function resizeTexture(texture, width, height) {
   const oldWidth = texture.width;
   const oldHeight = texture.height;
-  const oldPixels = (0, _core.readPixelsToBuffer)(texture, {});
+  const oldPixels = (0, _keplerOutdatedLuma.readPixelsToBuffer)(texture, {});
   texture.resize({
     width,
     height
@@ -244,13 +244,13 @@ class IconManager {
       this._texture = null;
     }
 
-    if (iconAtlas instanceof _core.Texture2D) {
+    if (iconAtlas instanceof _keplerOutdatedLuma.Texture2D) {
       iconAtlas.setParameters(DEFAULT_TEXTURE_PARAMETERS);
       this._externalTexture = iconAtlas;
       this.onUpdate();
     } else if (typeof iconAtlas === 'string') {
       (0, _images.loadImage)(iconAtlas).then(data => {
-        this._texture = new _core.Texture2D(this.gl, {
+        this._texture = new _keplerOutdatedLuma.Texture2D(this.gl, {
           data,
           parameters: DEFAULT_TEXTURE_PARAMETERS
         });
@@ -282,7 +282,7 @@ class IconManager {
       this._canvasHeight = canvasHeight;
 
       if (!this._texture) {
-        this._texture = new _core.Texture2D(this.gl, {
+        this._texture = new _keplerOutdatedLuma.Texture2D(this.gl, {
           width: this._canvasWidth,
           height: this._canvasHeight,
           parameters: DEFAULT_TEXTURE_PARAMETERS

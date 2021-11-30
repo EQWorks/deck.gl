@@ -9,7 +9,7 @@ exports.default = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _pathTesselator = _interopRequireDefault(require("./path-tesselator"));
 
@@ -235,9 +235,9 @@ class PathLayer extends _keplerOutdatedDeck.Layer {
   _getModel(gl) {
     const SEGMENT_INDICES = [0, 2, 1, 1, 2, 4, 1, 4, 3, 3, 4, 5];
     const SEGMENT_POSITIONS = [0, 0, 1, 0, -1, 0, 0, 1, 0, 1, -1, 0, 1, 1, 0, 1, 0, 1];
-    return new _core.Model(gl, Object.assign({}, this.getShaders(), {
+    return new _keplerOutdatedLuma.Model(gl, Object.assign({}, this.getShaders(), {
       id: this.props.id,
-      geometry: new _core.Geometry({
+      geometry: new _keplerOutdatedLuma.Geometry({
         drawMode: 4,
         attributes: {
           indices: new Uint16Array(SEGMENT_INDICES),

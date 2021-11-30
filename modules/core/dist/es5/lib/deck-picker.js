@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _getPixelRatio = _interopRequireDefault(require("../utils/get-pixel-ratio"));
 
@@ -134,7 +134,7 @@ class DeckPicker {
     } = this;
 
     if (!this.pickingFBO) {
-      this.pickingFBO = new _core.Framebuffer(gl);
+      this.pickingFBO = new _keplerOutdatedLuma.Framebuffer(gl);
     }
 
     this.pickingFBO.resize({
@@ -329,7 +329,7 @@ class DeckPicker {
       height
     } = deviceRect;
     const pickedColors = new Uint8Array(width * height * 4);
-    (0, _core.readPixelsToArray)(pickingFBO, {
+    (0, _keplerOutdatedLuma.readPixelsToArray)(pickingFBO, {
       sourceX: x,
       sourceY: y,
       sourceWidth: width,

@@ -1,5 +1,5 @@
 import { Layer } from 'kepler-outdated-deck.gl-core';
-import { Model, Geometry, Texture2D, fp64 } from '@luma.gl/core';
+import { Model, Geometry, Texture2D, fp64 } from 'kepler-outdated-luma.gl-core';
 import { loadImage } from '@loaders.gl/images';
 const {
   fp64LowPart

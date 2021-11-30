@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _pass = _interopRequireDefault(require("./pass"));
 
@@ -26,7 +26,7 @@ class ScreenPass extends _pass.default {
 
   render(params) {
     const gl = this.gl;
-    (0, _core.withParameters)(gl, {
+    (0, _keplerOutdatedLuma.withParameters)(gl, {
       framebuffer: params.outputBuffer,
       clearColor: [0, 0, 0, 0]
     }, () => this._renderPass(gl, params));
@@ -38,7 +38,7 @@ class ScreenPass extends _pass.default {
   }
 
   _getModel(gl, module, fs, id, userProps) {
-    const model = new _core.ClipSpace(gl, {
+    const model = new _keplerOutdatedLuma.ClipSpace(gl, {
       id,
       fs,
       modules: [module]
@@ -53,7 +53,7 @@ class ScreenPass extends _pass.default {
       inputBuffer,
       outputBuffer
     } = _ref;
-    (0, _core.clear)(gl, {
+    (0, _keplerOutdatedLuma.clear)(gl, {
       color: true
     });
     this.model.draw({

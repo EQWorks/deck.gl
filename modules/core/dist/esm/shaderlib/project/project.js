@@ -1,4 +1,4 @@
-import { fp32 } from '@luma.gl/core';
+import { fp32 } from 'kepler-outdated-luma.gl-core';
 import projectShader from './project.glsl';
 import { getUniformsFromViewport } from './viewport-uniforms';
 const INITIAL_MODULE_OPTIONS = {};

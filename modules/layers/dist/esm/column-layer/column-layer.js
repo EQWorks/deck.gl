@@ -1,5 +1,5 @@
 import { Layer, createIterable } from 'kepler-outdated-deck.gl-core';
-import { Model, fp64, PhongMaterial } from '@luma.gl/core';
+import { Model, fp64, PhongMaterial } from 'kepler-outdated-luma.gl-core';
 import ColumnGeometry from './column-geometry';
 const {
   fp64LowPart

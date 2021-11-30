@@ -1,6 +1,6 @@
 import Effect from '../lib/effect';
 import ScreenPass from '../passes/screen-pass';
-import { normalizeShaderModule } from '@luma.gl/shadertools';
+import { normalizeShaderModule } from 'kepler-outdated-luma.gl-shadertools';
 export default class PostProcessEffect extends Effect {
   constructor(module) {
     let props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};

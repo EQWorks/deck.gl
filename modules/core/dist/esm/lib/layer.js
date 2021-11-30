@@ -4,7 +4,7 @@ import { removeLayerInSeer } from './seer-integration';
 import { diffProps, validateProps } from '../lifecycle/props';
 import { count } from '../utils/count';
 import log from '../utils/log';
-import { withParameters } from '@luma.gl/core';
+import { withParameters } from 'kepler-outdated-luma.gl-core';
 import assert from '../utils/assert';
 import { projectPosition, getWorldPosition } from '../shaderlib/project/project-functions';
 import Component from '../lifecycle/component';

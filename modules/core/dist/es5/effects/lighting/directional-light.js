@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
-class DirectionalLight extends _core.DirectionalLight {
+class DirectionalLight extends _keplerOutdatedLuma.DirectionalLight {
   getProjectedLight() {
     return this;
   }

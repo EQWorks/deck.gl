@@ -1,4 +1,4 @@
-import { Buffer } from '@luma.gl/core';
+import { Buffer } from 'kepler-outdated-luma.gl-core';
 import assert from '../utils/assert';
 import { createIterable } from '../utils/iterable-utils';
 import { fillArray } from '../utils/flatten';

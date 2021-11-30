@@ -1,5 +1,5 @@
 import { Layer } from 'kepler-outdated-deck.gl-core';
-import { Model, Geometry } from '@luma.gl/core';
+import { Model, Geometry } from 'kepler-outdated-luma.gl-core';
 import PathTesselator from './path-tesselator';
 import vs from './path-layer-vertex.glsl';
 import vs64 from './path-layer-vertex-64.glsl';

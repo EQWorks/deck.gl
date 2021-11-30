@@ -15,7 +15,7 @@ var _gpuGridAggregator = _interopRequireDefault(require("../utils/gpu-grid-aggre
 
 var _aggregationOperationUtils = require("../utils/aggregation-operation-utils");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _screenGridLayerVertex = _interopRequireDefault(require("./screen-grid-layer-vertex.glsl"));
 
@@ -58,7 +58,7 @@ const defaultProps = {
 
 class ScreenGridLayer extends _keplerOutdatedDeck.Layer {
   getShaders() {
-    const shaders = (0, _core.isWebGL2)(this.context.gl) ? {
+    const shaders = (0, _keplerOutdatedLuma.isWebGL2)(this.context.gl) ? {
       vs: _screenGridLayerVertex.default,
       fs: _screenGridLayerFragment.default
     } : {
@@ -183,7 +183,7 @@ class ScreenGridLayer extends _keplerOutdatedDeck.Layer {
       shouldUseMinMax
     };
 
-    if ((0, _core.isWebGL2)(gl)) {
+    if ((0, _keplerOutdatedLuma.isWebGL2)(gl)) {
       maxBuffer.bind({
         target: 35345
       });
@@ -200,7 +200,7 @@ class ScreenGridLayer extends _keplerOutdatedDeck.Layer {
       }, parameters)
     });
 
-    if ((0, _core.isWebGL2)(gl)) {
+    if ((0, _keplerOutdatedLuma.isWebGL2)(gl)) {
       maxBuffer.unbind();
     }
   }
@@ -289,9 +289,9 @@ class ScreenGridLayer extends _keplerOutdatedDeck.Layer {
   }
 
   _getModel(gl) {
-    return new _core.Model(gl, Object.assign({}, this.getShaders(), {
+    return new _keplerOutdatedLuma.Model(gl, Object.assign({}, this.getShaders(), {
       id: this.props.id,
-      geometry: new _core.Geometry({
+      geometry: new _keplerOutdatedLuma.Geometry({
         drawMode: 6,
         attributes: {
           positions: new Float32Array([0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0])
@@ -303,7 +303,7 @@ class ScreenGridLayer extends _keplerOutdatedDeck.Layer {
   }
 
   _getMaxCountBuffer(gl) {
-    return new _core.Buffer(gl, {
+    return new _keplerOutdatedLuma.Buffer(gl, {
       byteLength: 4 * 4,
       index: AGGREGATION_DATA_UBO_INDEX,
       accessor: {
@@ -357,7 +357,7 @@ class ScreenGridLayer extends _keplerOutdatedDeck.Layer {
   _setupUniformBuffer() {
     const gl = this.context.gl;
 
-    if (!(0, _core.isWebGL2)(gl)) {
+    if (!(0, _keplerOutdatedLuma.isWebGL2)(gl)) {
       return;
     }
 
@@ -488,7 +488,7 @@ class ScreenGridLayer extends _keplerOutdatedDeck.Layer {
       aggregationBuffer.delete();
     }
 
-    aggregationBuffer = new _core.Buffer(gl, {
+    aggregationBuffer = new _keplerOutdatedLuma.Buffer(gl, {
       byteLength: dataBytes,
       accessor: {
         size: 4,

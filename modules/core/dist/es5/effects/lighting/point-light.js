@@ -5,16 +5,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _projectFunctions = require("../../shaderlib/project/project-functions");
 
 var _lib = require("../../lib");
 
-class PointLight extends _core.PointLight {
+class PointLight extends _keplerOutdatedLuma.PointLight {
   constructor(props) {
     super(props);
-    this.projectedLight = new _core.PointLight(props);
+    this.projectedLight = new _keplerOutdatedLuma.PointLight(props);
   }
 
   getProjectedLight(_ref) {

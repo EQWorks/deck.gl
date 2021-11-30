@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", {
 Object.defineProperty(exports, "AmbientLight", {
   enumerable: true,
   get: function () {
-    return _core.AmbientLight;
+    return _keplerOutdatedLuma.AmbientLight;
   }
 });
 Object.defineProperty(exports, "AttributeManager", {
@@ -313,7 +313,7 @@ var _count = require("./utils/count");
 
 var _memoize = _interopRequireDefault(require("./utils/memoize"));
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 const experimental = {
   Tesselator: _tesselator.default,

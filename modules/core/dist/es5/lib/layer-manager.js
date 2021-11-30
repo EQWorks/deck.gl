@@ -9,7 +9,7 @@ exports.default = void 0;
 
 var _assert = _interopRequireDefault(require("../utils/assert"));
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _seer = _interopRequireDefault(require("seer"));
 
@@ -57,7 +57,7 @@ class LayerManager {
       layerManager: this,
       deck,
       gl,
-      shaderCache: gl && new _core._ShaderCache({
+      shaderCache: gl && new _keplerOutdatedLuma._ShaderCache({
         gl,
         _cachePrograms: true
       }),

@@ -5,13 +5,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 class BaseAttribute {
   constructor(gl) {
     let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
     const {
-      id = (0, _core.uid)('attribute'),
+      id = (0, _keplerOutdatedLuma.uid)('attribute'),
       type,
       isIndexed = false
     } = opts;
@@ -22,7 +22,7 @@ class BaseAttribute {
     this.type = type;
 
     if (isIndexed && !type) {
-      this.type = gl && (0, _core.hasFeature)(gl, _core.FEATURES.ELEMENT_INDEX_UINT32) ? 5125 : 5123;
+      this.type = gl && (0, _keplerOutdatedLuma.hasFeature)(gl, _keplerOutdatedLuma.FEATURES.ELEMENT_INDEX_UINT32) ? 5125 : 5123;
     }
 
     this.value = null;
@@ -130,7 +130,7 @@ class BaseAttribute {
     }
 
     delete props.size;
-    return new _core.Buffer(this.gl, props);
+    return new _keplerOutdatedLuma.Buffer(this.gl, props);
   }
 
   _setAccessor(opts) {
@@ -152,13 +152,13 @@ class BaseAttribute {
     this.divisor = divisor;
 
     if (isInstanced !== undefined) {
-      _core.log.deprecated('Attribute.isInstanced')();
+      _keplerOutdatedLuma.log.deprecated('Attribute.isInstanced')();
 
       this.divisor = isInstanced ? 1 : 0;
     }
 
     if (instanced !== undefined) {
-      _core.log.deprecated('Attribute.instanced')();
+      _keplerOutdatedLuma.log.deprecated('Attribute.instanced')();
 
       this.divisor = instanced ? 1 : 0;
     }

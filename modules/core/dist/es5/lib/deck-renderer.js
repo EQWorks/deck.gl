@@ -17,7 +17,7 @@ var _getPixelRatio = _interopRequireDefault(require("../utils/get-pixel-ratio"))
 
 var _postProcessEffect = _interopRequireDefault(require("../effects/post-process-effect"));
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 const LOG_PRIORITY_DRAW = 2;
 
@@ -89,7 +89,7 @@ class DeckRenderer {
       views,
       effects
     });
-    const outputBuffer = this.lastPostProcessEffect ? this.screenBuffer : _core.Framebuffer.getDefaultFramebuffer(this.gl);
+    const outputBuffer = this.lastPostProcessEffect ? this.screenBuffer : _keplerOutdatedLuma.Framebuffer.getDefaultFramebuffer(this.gl);
     const renderStats = layerPass.render({
       layers,
       viewports,
@@ -166,13 +166,13 @@ class DeckRenderer {
 
   prepareRenderBuffers() {
     if (!this.screenBuffer) {
-      this.screenBuffer = new _core.Framebuffer(this.gl);
+      this.screenBuffer = new _keplerOutdatedLuma.Framebuffer(this.gl);
     }
 
     this.screenBuffer.resize();
 
     if (!this.offscreenBuffer) {
-      this.offscreenBuffer = new _core.Framebuffer(this.gl);
+      this.offscreenBuffer = new _keplerOutdatedLuma.Framebuffer(this.gl);
     }
 
     this.offscreenBuffer.resize();
@@ -189,7 +189,7 @@ class DeckRenderer {
       if (effect instanceof _postProcessEffect.default) {
         if (effect === this.lastPostProcessEffect) {
           Object.assign(params, {
-            target: _core.Framebuffer.getDefaultFramebuffer(this.gl)
+            target: _keplerOutdatedLuma.Framebuffer.getDefaultFramebuffer(this.gl)
           });
           params = effect.render(params);
           break;

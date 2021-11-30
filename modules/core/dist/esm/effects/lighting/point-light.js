@@ -1,4 +1,4 @@
-import { PointLight as BasePointLight } from '@luma.gl/core';
+import { PointLight as BasePointLight } from 'kepler-outdated-luma.gl-core';
 import { projectPosition } from '../../shaderlib/project/project-functions';
 import { COORDINATE_SYSTEM } from '../../lib';
 export default class PointLight extends BasePointLight {

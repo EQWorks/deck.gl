@@ -1,4 +1,4 @@
-import { Buffer, Transform } from '@luma.gl/core';
+import { Buffer, Transform } from 'kepler-outdated-luma.gl-core';
 import { getShaders, getBuffers, padBuffer } from './attribute-transition-utils';
 import Attribute from './attribute';
 import BaseAttribute from './base-attribute';

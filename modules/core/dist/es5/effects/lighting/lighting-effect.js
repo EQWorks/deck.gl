@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _directionalLight = _interopRequireDefault(require("./directional-light"));
 
@@ -80,7 +80,7 @@ class LightingEffect extends _effect.default {
     } = this;
 
     if (!ambientLight && pointLights.length === 0 && directionalLights.length === 0) {
-      this.ambientLight = new _core.AmbientLight(DefaultAmbientLightProps);
+      this.ambientLight = new _keplerOutdatedLuma.AmbientLight(DefaultAmbientLightProps);
       this.directionalLights.push(new _directionalLight.default(DefaultDirectionalLightProps[0]));
       this.directionalLights.push(new _directionalLight.default(DefaultDirectionalLightProps[1]));
     }

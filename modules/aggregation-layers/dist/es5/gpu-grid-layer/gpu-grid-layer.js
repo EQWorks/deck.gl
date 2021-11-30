@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
@@ -23,7 +23,7 @@ var _gpuGridCellLayer = _interopRequireDefault(require("./gpu-grid-cell-layer"))
 
 var _gridAggregator = require("./../cpu-grid-layer/grid-aggregator");
 
-const defaultMaterial = new _core.PhongMaterial();
+const defaultMaterial = new _keplerOutdatedLuma.PhongMaterial();
 const defaultProps = {
   colorDomain: null,
   colorRange: _colorUtils.defaultColorRange,

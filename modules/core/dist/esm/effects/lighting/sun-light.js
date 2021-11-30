@@ -1,4 +1,4 @@
-import { DirectionalLight } from '@luma.gl/core';
+import { DirectionalLight } from 'kepler-outdated-luma.gl-core';
 import { getSunlightDirection } from './suncalc';
 export default class SunLight extends DirectionalLight {
   constructor(_ref) {

@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
@@ -23,7 +23,7 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 const defaultLineColor = [0, 0, 0, 255];
 const defaultFillColor = [0, 0, 0, 255];
-const defaultMaterial = new _core.PhongMaterial();
+const defaultMaterial = new _keplerOutdatedLuma.PhongMaterial();
 const defaultProps = {
   stroked: true,
   filled: true,

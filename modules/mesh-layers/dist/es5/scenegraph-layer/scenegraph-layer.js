@@ -9,9 +9,9 @@ exports.default = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
-var _core2 = require("@loaders.gl/core");
+var _core = require("@loaders.gl/core");
 
 var _matrix = require("../utils/matrix");
 
@@ -21,7 +21,7 @@ var _scenegraphLayerFragment = _interopRequireDefault(require("./scenegraph-laye
 
 const {
   fp64LowPart
-} = _core.fp64;
+} = _keplerOutdatedLuma.fp64;
 const DEFAULT_COLOR = [255, 255, 255, 255];
 const defaultProps = {
   scenegraph: {
@@ -36,7 +36,7 @@ const defaultProps = {
     } = _ref;
 
     if (propName === 'scenegraph') {
-      return (0, _core2.load)(url, layer.getLoadOptions());
+      return (0, _core.load)(url, layer.getLoadOptions());
     }
 
     return fetch(url).then(response => response.json());
@@ -146,7 +146,7 @@ class ScenegraphLayer extends _keplerOutdatedDeck.Layer {
       const scenegraph = props.getScene(props.scenegraph);
       const animator = props.getAnimator(props.scenegraph);
 
-      if (scenegraph instanceof _core.ScenegraphNode) {
+      if (scenegraph instanceof _keplerOutdatedLuma.ScenegraphNode) {
         this._deleteScenegraph();
 
         this._applyAllAttributes(scenegraph);
@@ -158,7 +158,7 @@ class ScenegraphLayer extends _keplerOutdatedDeck.Layer {
           animator
         });
       } else if (scenegraph !== null) {
-        _core.log.warn('invalid scenegraph:', scenegraph)();
+        _keplerOutdatedLuma.log.warn('invalid scenegraph:', scenegraph)();
       }
     } else if (props._animations !== oldProps._animations) {
       this._applyAnimationsProp(this.state.scenegraph, this.state.animator, props._animations);
@@ -197,7 +197,7 @@ class ScenegraphLayer extends _keplerOutdatedDeck.Layer {
         if (number >= 0 && number < animations.length) {
           Object.assign(animations[number], value);
         } else {
-          _core.log.warn("animation ".concat(key, " not found"))();
+          _keplerOutdatedLuma.log.warn("animation ".concat(key, " not found"))();
         }
       } else {
         const findResult = animations.find(_ref3 => {
@@ -210,7 +210,7 @@ class ScenegraphLayer extends _keplerOutdatedDeck.Layer {
         if (findResult) {
           Object.assign(findResult, value);
         } else {
-          _core.log.warn("animation ".concat(key, " not found"))();
+          _keplerOutdatedLuma.log.warn("animation ".concat(key, " not found"))();
         }
       }
     });
@@ -221,13 +221,13 @@ class ScenegraphLayer extends _keplerOutdatedDeck.Layer {
       scenegraph
     } = this.state;
 
-    if (scenegraph instanceof _core.ScenegraphNode) {
+    if (scenegraph instanceof _keplerOutdatedLuma.ScenegraphNode) {
       scenegraph.delete();
     }
   }
 
   addVersionToShader(source) {
-    if ((0, _core.isWebGL2)(this.context.gl)) {
+    if ((0, _keplerOutdatedLuma.isWebGL2)(this.context.gl)) {
       return "#version 300 es\n".concat(source);
     }
 
@@ -242,7 +242,7 @@ class ScenegraphLayer extends _keplerOutdatedDeck.Layer {
     } = this.props;
 
     if (_lighting === 'pbr') {
-      modules.push(_core.pbr);
+      modules.push(_keplerOutdatedLuma.pbr);
     }
 
     let env = null;

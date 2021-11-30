@@ -8,7 +8,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 exports.glArrayFromType = glArrayFromType;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _assert = _interopRequireDefault(require("../utils/assert"));
 
@@ -325,7 +325,7 @@ class Attribute extends _baseAttribute.default {
       state.isExternalBuffer = true;
       this.clearNeedsUpdate();
 
-      if (buffer instanceof _core.Buffer) {
+      if (buffer instanceof _keplerOutdatedLuma.Buffer) {
         if (this.externalBuffer !== buffer) {
           this.update({
             constant: false,

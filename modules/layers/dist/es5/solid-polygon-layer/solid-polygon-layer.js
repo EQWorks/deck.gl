@@ -9,7 +9,7 @@ exports.default = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _polygonTesselator = _interopRequireDefault(require("./polygon-tesselator"));
 
@@ -20,7 +20,7 @@ var _solidPolygonLayerVertexSide = _interopRequireDefault(require("./solid-polyg
 var _solidPolygonLayerFragment = _interopRequireDefault(require("./solid-polygon-layer-fragment.glsl"));
 
 const DEFAULT_COLOR = [0, 0, 0, 255];
-const defaultMaterial = new _core.PhongMaterial();
+const defaultMaterial = new _keplerOutdatedLuma.PhongMaterial();
 const defaultProps = {
   filled: true,
   extruded: false,
@@ -72,7 +72,7 @@ class SolidPolygonLayer extends _keplerOutdatedDeck.Layer {
     this.setState({
       numInstances: 0,
       polygonTesselator: new _polygonTesselator.default({
-        IndexType: !gl || (0, _core.hasFeature)(gl, _core.FEATURES.ELEMENT_INDEX_UINT32) ? Uint32Array : Uint16Array
+        IndexType: !gl || (0, _keplerOutdatedLuma.hasFeature)(gl, _keplerOutdatedLuma.FEATURES.ELEMENT_INDEX_UINT32) ? Uint32Array : Uint16Array
       })
     });
     const attributeManager = this.getAttributeManager();
@@ -300,7 +300,7 @@ class SolidPolygonLayer extends _keplerOutdatedDeck.Layer {
     let sideModel;
 
     if (filled) {
-      topModel = new _core.Model(gl, Object.assign({}, this.getShaders(_solidPolygonLayerVertexTop.default), {
+      topModel = new _keplerOutdatedLuma.Model(gl, Object.assign({}, this.getShaders(_solidPolygonLayerVertexTop.default), {
         id: "".concat(id, "-top"),
         drawMode: 4,
         attributes: {
@@ -317,9 +317,9 @@ class SolidPolygonLayer extends _keplerOutdatedDeck.Layer {
     }
 
     if (extruded) {
-      sideModel = new _core.Model(gl, Object.assign({}, this.getShaders(_solidPolygonLayerVertexSide.default), {
+      sideModel = new _keplerOutdatedLuma.Model(gl, Object.assign({}, this.getShaders(_solidPolygonLayerVertexSide.default), {
         id: "".concat(id, "-side"),
-        geometry: new _core.Geometry({
+        geometry: new _keplerOutdatedLuma.Geometry({
           drawMode: 1,
           vertexCount: 4,
           attributes: {

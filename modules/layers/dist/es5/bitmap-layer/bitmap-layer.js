@@ -9,7 +9,7 @@ exports.default = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _images = require("@loaders.gl/images");
 
@@ -19,7 +19,7 @@ var _bitmapLayerFragment = _interopRequireDefault(require("./bitmap-layer-fragme
 
 const {
   fp64LowPart
-} = _core.fp64;
+} = _keplerOutdatedLuma.fp64;
 const DEFAULT_TEXTURE_PARAMETERS = {
   [10241]: 9987,
   [10240]: 9729,
@@ -156,10 +156,10 @@ class BitmapLayer extends _keplerOutdatedDeck.Layer {
       return null;
     }
 
-    return new _core.Model(gl, Object.assign({}, this.getShaders(), {
+    return new _keplerOutdatedLuma.Model(gl, Object.assign({}, this.getShaders(), {
       id: this.props.id,
       shaderCache: this.context.shaderCache,
-      geometry: new _core.Geometry({
+      geometry: new _keplerOutdatedLuma.Geometry({
         drawMode: 6,
         vertexCount: 4,
         attributes: {
@@ -212,13 +212,13 @@ class BitmapLayer extends _keplerOutdatedDeck.Layer {
       this.state.bitmapTexture.delete();
     }
 
-    if (image instanceof _core.Texture2D) {
+    if (image instanceof _keplerOutdatedLuma.Texture2D) {
       this.setState({
         bitmapTexture: image
       });
     } else if (image instanceof Image || image instanceof HTMLCanvasElement) {
       this.setState({
-        bitmapTexture: new _core.Texture2D(gl, {
+        bitmapTexture: new _keplerOutdatedLuma.Texture2D(gl, {
           data: image,
           parameters: DEFAULT_TEXTURE_PARAMETERS
         })

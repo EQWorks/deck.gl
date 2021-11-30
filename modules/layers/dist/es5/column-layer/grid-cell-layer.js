@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _columnLayer = _interopRequireDefault(require("./column-layer"));
 
@@ -26,7 +26,7 @@ const defaultProps = {
 
 class GridCellLayer extends _columnLayer.default {
   getGeometry(diskResolution) {
-    return new _core.CubeGeometry();
+    return new _keplerOutdatedLuma.CubeGeometry();
   }
 
   draw(_ref) {

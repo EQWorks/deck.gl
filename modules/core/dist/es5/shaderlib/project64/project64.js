@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _project = _interopRequireDefault(require("../project/project"));
 
@@ -18,10 +18,10 @@ var _project2 = _interopRequireDefault(require("./project64.glsl"));
 const {
   fp64ify,
   fp64ifyMatrix4
-} = _core.fp64;
+} = _keplerOutdatedLuma.fp64;
 var _default = {
   name: 'project64',
-  dependencies: [_project.default, _core.fp64],
+  dependencies: [_project.default, _keplerOutdatedLuma.fp64],
   vs: _project2.default,
   getUniforms,
   deprecations: [{

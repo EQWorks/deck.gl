@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _effect = _interopRequireDefault(require("../../lib/effect"));
 
@@ -42,14 +42,14 @@ class ReflectionEffect extends _effect.default {
       gl,
       layerManager
     } = _ref;
-    this.unitQuad = new _core.Model(gl, Object.assign({}, this.getShaders(), {
+    this.unitQuad = new _keplerOutdatedLuma.Model(gl, Object.assign({}, this.getShaders(), {
       id: 'reflection-effect',
-      geometry: new _core.Geometry({
+      geometry: new _keplerOutdatedLuma.Geometry({
         drawMode: 6,
         vertices: new Float32Array([0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0])
       })
     }));
-    this.framebuffer = new _core.Framebuffer(gl, {
+    this.framebuffer = new _keplerOutdatedLuma.Framebuffer(gl, {
       depth: true
     });
   }

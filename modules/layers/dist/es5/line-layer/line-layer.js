@@ -9,7 +9,7 @@ exports.default = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _lineLayerVertex = _interopRequireDefault(require("./line-layer-vertex.glsl"));
 
@@ -17,7 +17,7 @@ var _lineLayerFragment = _interopRequireDefault(require("./line-layer-fragment.g
 
 const {
   fp64LowPart
-} = _core.fp64;
+} = _keplerOutdatedLuma.fp64;
 const DEFAULT_COLOR = [0, 0, 0, 255];
 const defaultProps = {
   fp64: false,
@@ -153,9 +153,9 @@ class LineLayer extends _keplerOutdatedDeck.Layer {
 
   _getModel(gl) {
     const positions = [0, -1, 0, 0, 1, 0, 1, -1, 0, 1, 1, 0];
-    return new _core.Model(gl, Object.assign({}, this.getShaders(), {
+    return new _keplerOutdatedLuma.Model(gl, Object.assign({}, this.getShaders(), {
       id: this.props.id,
-      geometry: new _core.Geometry({
+      geometry: new _keplerOutdatedLuma.Geometry({
         drawMode: 5,
         attributes: {
           positions: new Float32Array(positions)

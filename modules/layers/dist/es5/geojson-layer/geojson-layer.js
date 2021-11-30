@@ -13,7 +13,7 @@ var _scatterplotLayer = _interopRequireDefault(require("../scatterplot-layer/sca
 
 var _pathLayer = _interopRequireDefault(require("../path-layer/path-layer"));
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _solidPolygonLayer = _interopRequireDefault(require("../solid-polygon-layer/solid-polygon-layer"));
 
@@ -21,7 +21,7 @@ var _geojson = require("./geojson");
 
 const defaultLineColor = [0, 0, 0, 255];
 const defaultFillColor = [0, 0, 0, 255];
-const defaultMaterial = new _core.PhongMaterial();
+const defaultMaterial = new _keplerOutdatedLuma.PhongMaterial();
 const defaultProps = {
   stroked: true,
   filled: true,

@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _attributeTransitionUtils = require("./attribute-transition-utils");
 
@@ -43,7 +43,7 @@ class AttributeTransitionManager {
     this.transform = null;
     this.numInstances = 0;
 
-    if (_core.Transform.isSupported(gl)) {
+    if (_keplerOutdatedLuma.Transform.isSupported(gl)) {
       this.isSupported = true;
     } else if (gl) {
       _log.default.warn('WebGL2 not supported by this browser. Transition animation is disabled.')();
@@ -229,7 +229,7 @@ class AttributeTransitionManager {
       return;
     }
 
-    this.transform = new _core.Transform(this.gl, Object.assign({
+    this.transform = new _keplerOutdatedLuma.Transform(this.gl, Object.assign({
       elementCount: this.numInstances
     }, (0, _attributeTransitionUtils.getBuffers)(this.attributeTransitions), (0, _attributeTransitionUtils.getShaders)(this.attributeTransitions)));
   }
@@ -261,12 +261,12 @@ class AttributeTransitionManager {
 
     const fromState = transition.buffer || toState;
     const toLength = this.numInstances * size;
-    const fromLength = fromState instanceof _core.Buffer && fromState.getElementCount() || toLength;
+    const fromLength = fromState instanceof _keplerOutdatedLuma.Buffer && fromState.getElementCount() || toLength;
     let buffer = transition._swapBuffer;
     transition._swapBuffer = transition.buffer;
 
     if (!buffer) {
-      buffer = new _core.Buffer(this.gl, {
+      buffer = new _keplerOutdatedLuma.Buffer(this.gl, {
         data: new Float32Array(toLength),
         usage: 35050
       });

@@ -9,7 +9,7 @@ var Polygon = _interopRequireWildcard(require("./polygon"));
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -20,7 +20,7 @@ const {
 } = _keplerOutdatedDeck.experimental;
 const {
   fp64LowPart
-} = _core.fp64;
+} = _keplerOutdatedLuma.fp64;
 
 class PolygonTesselator extends Tesselator {
   constructor(_ref) {

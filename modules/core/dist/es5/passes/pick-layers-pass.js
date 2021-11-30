@@ -9,7 +9,7 @@ exports.default = void 0;
 
 var _layersPass = _interopRequireDefault(require("./layers-pass"));
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 class PickLayersPass extends _layersPass.default {
   render(props) {
@@ -36,7 +36,7 @@ class PickLayersPass extends _layersPass.default {
       redrawReason = ''
     } = _ref;
     const gl = this.gl;
-    return (0, _core.withParameters)(gl, {
+    return (0, _keplerOutdatedLuma.withParameters)(gl, {
       framebuffer: pickingFBO,
       scissorTest: true,
       scissor: [x, y, width, height],

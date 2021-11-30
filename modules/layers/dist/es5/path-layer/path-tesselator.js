@@ -7,14 +7,14 @@ exports.default = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 const {
   Tesselator
 } = _keplerOutdatedDeck.experimental;
 const {
   fp64LowPart
-} = _core.fp64;
+} = _keplerOutdatedLuma.fp64;
 
 class PathTesselator extends Tesselator {
   constructor(_ref) {

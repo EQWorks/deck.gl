@@ -1,4 +1,4 @@
-import { createGLContext, setContextDefaults } from '@luma.gl/core';
+import { createGLContext, setContextDefaults } from 'kepler-outdated-luma.gl-core';
 
 const _global = typeof global !== 'undefined' ? global : window;
 

@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = exports.DEFAULT_RADIUS = exports.DEFAULT_FONT_WEIGHT = exports.DEFAULT_FONT_SIZE = exports.DEFAULT_FONT_FAMILY = exports.DEFAULT_CUTOFF = exports.DEFAULT_CHAR_SET = exports.DEFAULT_BUFFER = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _tinySdf = _interopRequireDefault(require("@mapbox/tiny-sdf"));
 
@@ -101,7 +101,7 @@ class FontAtlasManager {
       radius: DEFAULT_RADIUS
     };
     this._key = null;
-    this._texture = new _core.Texture2D(this.gl);
+    this._texture = new _keplerOutdatedLuma.Texture2D(this.gl);
   }
 
   finalize() {

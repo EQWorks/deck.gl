@@ -1,5 +1,5 @@
-import { Buffer, hasFeature, FEATURES } from '@luma.gl/core';
-import { log, uid } from '@luma.gl/core';
+import { Buffer, hasFeature, FEATURES } from 'kepler-outdated-luma.gl-core';
+import { log, uid } from 'kepler-outdated-luma.gl-core';
 export default class BaseAttribute {
   constructor(gl) {
     let opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};

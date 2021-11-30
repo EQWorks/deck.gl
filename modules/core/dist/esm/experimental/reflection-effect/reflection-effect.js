@@ -1,4 +1,4 @@
-import { Framebuffer, Model, Geometry } from '@luma.gl/core';
+import { Framebuffer, Model, Geometry } from 'kepler-outdated-luma.gl-core';
 import Effect from '../../lib/effect';
 import WebMercatorViewport from '../../viewports/web-mercator-viewport';
 import reflectionVertex from './reflection-effect-vertex.glsl';

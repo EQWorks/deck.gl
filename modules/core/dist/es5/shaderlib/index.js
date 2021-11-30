@@ -8,32 +8,32 @@ Object.defineProperty(exports, "__esModule", {
 Object.defineProperty(exports, "fp32", {
   enumerable: true,
   get: function () {
-    return _core.fp32;
+    return _keplerOutdatedLuma.fp32;
   }
 });
 Object.defineProperty(exports, "fp64", {
   enumerable: true,
   get: function () {
-    return _core.fp64;
+    return _keplerOutdatedLuma.fp64;
   }
 });
 Object.defineProperty(exports, "gouraudlighting", {
   enumerable: true,
   get: function () {
-    return _core.gouraudlighting;
+    return _keplerOutdatedLuma.gouraudlighting;
   }
 });
 exports.initializeShaderModules = initializeShaderModules;
 Object.defineProperty(exports, "phonglighting", {
   enumerable: true,
   get: function () {
-    return _core.phonglighting;
+    return _keplerOutdatedLuma.phonglighting;
   }
 });
 Object.defineProperty(exports, "picking", {
   enumerable: true,
   get: function () {
-    return _core.picking;
+    return _keplerOutdatedLuma.picking;
   }
 });
 Object.defineProperty(exports, "project", {
@@ -49,7 +49,7 @@ Object.defineProperty(exports, "project64", {
   }
 });
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _project = _interopRequireDefault(require("../shaderlib/project/project"));
 
@@ -58,7 +58,7 @@ var _project2 = _interopRequireDefault(require("../shaderlib/project32/project32
 var _project3 = _interopRequireDefault(require("../shaderlib/project64/project64"));
 
 function initializeShaderModules() {
-  (0, _core.registerShaderModules)([_core.fp32, _core.fp64, _project.default, _project2.default, _project3.default, _core.gouraudlighting, _core.phonglighting, _core.picking]);
-  (0, _core.setDefaultShaderModules)([_project.default]);
+  (0, _keplerOutdatedLuma.registerShaderModules)([_keplerOutdatedLuma.fp32, _keplerOutdatedLuma.fp64, _project.default, _project2.default, _project3.default, _keplerOutdatedLuma.gouraudlighting, _keplerOutdatedLuma.phonglighting, _keplerOutdatedLuma.picking]);
+  (0, _keplerOutdatedLuma.setDefaultShaderModules)([_project.default]);
 }
 //# sourceMappingURL=index.js.map

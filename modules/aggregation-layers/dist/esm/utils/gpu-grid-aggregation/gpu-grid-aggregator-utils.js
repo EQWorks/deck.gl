@@ -1,4 +1,4 @@
-import { Framebuffer, Texture2D } from '@luma.gl/core';
+import { Framebuffer, Texture2D } from 'kepler-outdated-luma.gl-core';
 export function getFloatTexture(gl, opts) {
   const {
     width = 1,

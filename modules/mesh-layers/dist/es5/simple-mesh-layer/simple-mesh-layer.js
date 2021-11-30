@@ -9,9 +9,9 @@ exports.default = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
-var _core2 = require("@loaders.gl/core");
+var _core = require("@loaders.gl/core");
 
 var _images = require("@loaders.gl/images");
 
@@ -27,7 +27,7 @@ var _simpleMeshLayerFragment2 = _interopRequireDefault(require("./simple-mesh-la
 
 const {
   fp64LowPart
-} = _core.fp64;
+} = _keplerOutdatedLuma.fp64;
 
 function assert(condition, message) {
   if (!condition) {
@@ -46,11 +46,11 @@ function getTexture(gl, src, opts) {
 }
 
 function getTextureFromData(gl, data, opts) {
-  if (data instanceof _core.Texture2D) {
+  if (data instanceof _keplerOutdatedLuma.Texture2D) {
     return data;
   }
 
-  return new _core.Texture2D(gl, Object.assign({
+  return new _keplerOutdatedLuma.Texture2D(gl, Object.assign({
     data
   }, opts));
 }
@@ -63,14 +63,14 @@ function getGeometry(data) {
   if (data.attributes) {
     validateGeometryAttributes(data.attributes);
 
-    if (data instanceof _core.Geometry) {
+    if (data instanceof _keplerOutdatedLuma.Geometry) {
       return data;
     } else {
-      return new _core.Geometry(data);
+      return new _keplerOutdatedLuma.Geometry(data);
     }
   } else if (data.positions || data.POSITION) {
     validateGeometryAttributes(data);
-    return new _core.Geometry({
+    return new _keplerOutdatedLuma.Geometry({
       attributes: data
     });
   }
@@ -79,7 +79,7 @@ function getGeometry(data) {
 }
 
 const DEFAULT_COLOR = [0, 0, 0, 255];
-const defaultMaterial = new _core.PhongMaterial();
+const defaultMaterial = new _keplerOutdatedLuma.PhongMaterial();
 const defaultProps = {
   fetch: (url, _ref) => {
     let {
@@ -87,7 +87,7 @@ const defaultProps = {
     } = _ref;
 
     if (propName === 'mesh') {
-      return (0, _core2.load)(url);
+      return (0, _core.load)(url);
     }
 
     return fetch(url).then(response => response.json());
@@ -139,7 +139,7 @@ const defaultProps = {
 class SimpleMeshLayer extends _keplerOutdatedDeck.Layer {
   getShaders() {
     const projectModule = this.use64bitProjection() ? 'project64' : 'project32';
-    const gl2 = (0, _core.isWebGL2)(this.context.gl);
+    const gl2 = (0, _keplerOutdatedLuma.isWebGL2)(this.context.gl);
     const vs = gl2 ? _simpleMeshLayerVertex2.default : _simpleMeshLayerVertex.default;
     const fs = gl2 ? _simpleMeshLayerFragment2.default : _simpleMeshLayerFragment.default;
     return {
@@ -171,7 +171,7 @@ class SimpleMeshLayer extends _keplerOutdatedDeck.Layer {
       instanceModelMatrix: _matrix.MATRIX_ATTRIBUTES
     });
     this.setState({
-      emptyTexture: new _core.Texture2D(this.context.gl, {
+      emptyTexture: new _keplerOutdatedLuma.Texture2D(this.context.gl, {
         data: new Uint8Array(4),
         width: 1,
         height: 1
@@ -248,7 +248,7 @@ class SimpleMeshLayer extends _keplerOutdatedDeck.Layer {
   }
 
   getModel(mesh) {
-    const model = new _core.Model(this.context.gl, Object.assign({}, this.getShaders(), {
+    const model = new _keplerOutdatedLuma.Model(this.context.gl, Object.assign({}, this.getShaders(), {
       id: this.props.id,
       geometry: getGeometry(mesh),
       isInstanced: true,

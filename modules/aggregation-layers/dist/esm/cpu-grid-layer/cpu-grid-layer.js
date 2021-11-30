@@ -1,4 +1,4 @@
-import { PhongMaterial } from '@luma.gl/core';
+import { PhongMaterial } from 'kepler-outdated-luma.gl-core';
 import { CompositeLayer } from 'kepler-outdated-deck.gl-core';
 import { GridCellLayer } from 'kepler-outdated-deck.gl-layers';
 import BinSorter from '../utils/bin-sorter';

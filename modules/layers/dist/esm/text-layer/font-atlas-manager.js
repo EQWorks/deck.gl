@@ -1,4 +1,4 @@
-import { Texture2D } from '@luma.gl/core';
+import { Texture2D } from 'kepler-outdated-luma.gl-core';
 import TinySDF from '@mapbox/tiny-sdf';
 import { buildMapping } from './font-atlas-utils';
 import LRUCache from './lru-cache';

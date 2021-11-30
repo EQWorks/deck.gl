@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _project = _interopRequireDefault(require("./project.glsl"));
 
@@ -27,7 +27,7 @@ function getUniforms() {
 
 var _default = {
   name: 'project',
-  dependencies: [_core.fp32],
+  dependencies: [_keplerOutdatedLuma.fp32],
   vs: _project.default,
   getUniforms,
   deprecations: [{

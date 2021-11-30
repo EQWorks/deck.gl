@@ -7,7 +7,7 @@ exports.getBuffers = getBuffers;
 exports.getShaders = getShaders;
 exports.padBuffer = padBuffer;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _arrayUtils = require("../utils/array-utils");
 
@@ -59,7 +59,7 @@ function getBuffers(transitions) {
       toState,
       buffer
     } = transitions[attributeName];
-    sourceBuffers["".concat(attributeName, "From")] = fromState instanceof _core.Buffer ? [fromState, {
+    sourceBuffers["".concat(attributeName, "From")] = fromState instanceof _keplerOutdatedLuma.Buffer ? [fromState, {
       divisor: 0
     }] : fromState;
     sourceBuffers["".concat(attributeName, "To")] = toState;
@@ -84,7 +84,7 @@ function padBuffer(_ref) {
   } = _ref;
   const hasBufferLayout = fromBufferLayout && toBufferLayout;
 
-  if (!hasBufferLayout && fromLength >= toLength || !(fromState instanceof _core.Buffer)) {
+  if (!hasBufferLayout && fromLength >= toLength || !(fromState instanceof _keplerOutdatedLuma.Buffer)) {
     return;
   }
 

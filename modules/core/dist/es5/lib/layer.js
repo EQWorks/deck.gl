@@ -19,7 +19,7 @@ var _count = require("../utils/count");
 
 var _log = _interopRequireDefault(require("../utils/log"));
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _assert = _interopRequireDefault(require("../utils/assert"));
 
@@ -666,7 +666,7 @@ class Layer extends _component.default {
     } = this.props;
     const offsets = getPolygonOffset && getPolygonOffset(uniforms) || [0, 0];
     parameters.polygonOffset = offsets;
-    (0, _core.withParameters)(this.context.gl, parameters, () => {
+    (0, _keplerOutdatedLuma.withParameters)(this.context.gl, parameters, () => {
       this.draw({
         moduleParameters,
         uniforms,

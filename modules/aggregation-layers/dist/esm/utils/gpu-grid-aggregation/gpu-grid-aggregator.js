@@ -1,4 +1,4 @@
-import { Buffer, Model, Transform, FEATURES, hasFeatures, isWebGL2, readPixelsToBuffer, fp64 as fp64Utils, withParameters } from '@luma.gl/core';
+import { Buffer, Model, Transform, FEATURES, hasFeatures, isWebGL2, readPixelsToBuffer, fp64 as fp64Utils, withParameters } from 'kepler-outdated-luma.gl-core';
 import { log } from 'kepler-outdated-deck.gl-core';
 import { worldToPixels } from 'viewport-mercator-project';
 const {

@@ -8,7 +8,7 @@ exports.pointToDensityGridData = pointToDensityGridData;
 
 var _math = require("math.gl");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
@@ -17,7 +17,7 @@ const {
 } = _keplerOutdatedDeck.experimental;
 const {
   fp64LowPart
-} = _core.fp64;
+} = _keplerOutdatedLuma.fp64;
 const R_EARTH = 6378000;
 
 function toFinite(n) {

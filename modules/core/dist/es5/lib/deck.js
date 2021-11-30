@@ -23,7 +23,7 @@ var _deckPicker = _interopRequireDefault(require("./deck-picker"));
 
 var _log = _interopRequireDefault(require("../utils/log"));
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _probe = require("probe.gl");
 
@@ -483,13 +483,13 @@ class Deck {
       useDevicePixels,
       autoResizeDrawingBuffer
     } = props;
-    return new _core.AnimationLoop({
+    return new _keplerOutdatedLuma.AnimationLoop({
       width,
       height,
       useDevicePixels,
       autoResizeDrawingBuffer,
       gl,
-      onCreateContext: opts => (0, _core.createGLContext)(Object.assign({}, glOptions, opts, {
+      onCreateContext: opts => (0, _keplerOutdatedLuma.createGLContext)(Object.assign({}, glOptions, opts, {
         canvas: this.canvas,
         debug
       })),
@@ -591,13 +591,13 @@ class Deck {
 
     if (!this.canvas) {
       this.canvas = gl.canvas;
-      (0, _core.trackContextState)(gl, {
+      (0, _keplerOutdatedLuma.trackContextState)(gl, {
         enable: true,
         copyState: true
       });
     }
 
-    (0, _core.setParameters)(gl, {
+    (0, _keplerOutdatedLuma.setParameters)(gl, {
       blend: true,
       blendFunc: [770, 771, 1, 771],
       polygonOffsetFill: true,
@@ -647,7 +647,7 @@ class Deck {
     const {
       gl
     } = this.layerManager.context;
-    (0, _core.setParameters)(gl, this.props.parameters);
+    (0, _keplerOutdatedLuma.setParameters)(gl, this.props.parameters);
     this.props.onBeforeRender({
       gl
     });
@@ -807,7 +807,7 @@ class Deck {
     this.metrics.gpuTimePerFrame = this.stats.get('GPU Time').getAverageTime();
     this.metrics.cpuTimePerFrame = this.stats.get('CPU Time').getAverageTime();
 
-    const memoryStats = _core.lumaStats.get('Memory Usage');
+    const memoryStats = _keplerOutdatedLuma.lumaStats.get('Memory Usage');
 
     this.metrics.bufferMemory = memoryStats.get('Buffer Memory').count;
     this.metrics.textureMemory = memoryStats.get('Texture Memory').count;

@@ -1,4 +1,4 @@
-import { CubeGeometry } from '@luma.gl/core';
+import { CubeGeometry } from 'kepler-outdated-luma.gl-core';
 import ColumnLayer from './column-layer';
 const defaultProps = {
   cellSize: {

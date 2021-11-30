@@ -7,13 +7,13 @@ exports.default = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
-class ColumnGeometry extends _core.Geometry {
+class ColumnGeometry extends _keplerOutdatedLuma.Geometry {
   constructor() {
     let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     const {
-      id = (0, _core.uid)('column-geometry')
+      id = (0, _keplerOutdatedLuma.uid)('column-geometry')
     } = props;
     const {
       indices,

@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
@@ -33,7 +33,7 @@ var _gpuGridAggregatorUtils = require("./gpu-grid-aggregator-utils.js");
 
 const {
   fp64ifyMatrix4
-} = _core.fp64;
+} = _keplerOutdatedLuma.fp64;
 const BUFFER_NAMES = ['aggregationBuffer', 'maxMinBuffer', 'minBuffer', 'maxBuffer'];
 const ARRAY_BUFFER_MAP = {
   maxData: 'maxBuffer',
@@ -100,7 +100,7 @@ class GPUGridAggregator {
   }
 
   static isSupported(gl) {
-    return (0, _core.isWebGL2)(gl) && (0, _core.hasFeatures)(gl, _core.FEATURES.BLEND_EQUATION_MINMAX, _core.FEATURES.COLOR_ATTACHMENT_RGBA32F, _core.FEATURES.TEXTURE_FLOAT);
+    return (0, _keplerOutdatedLuma.isWebGL2)(gl) && (0, _keplerOutdatedLuma.hasFeatures)(gl, _keplerOutdatedLuma.FEATURES.BLEND_EQUATION_MINMAX, _keplerOutdatedLuma.FEATURES.COLOR_ATTACHMENT_RGBA32F, _keplerOutdatedLuma.FEATURES.TEXTURE_FLOAT);
   }
 
   constructor(gl) {
@@ -132,7 +132,7 @@ class GPUGridAggregator {
       resources: {},
       results: {}
     };
-    this._hasGPUSupport = (0, _core.isWebGL2)(gl) && (0, _core.hasFeatures)(this.gl, _core.FEATURES.BLEND_EQUATION_MINMAX, _core.FEATURES.COLOR_ATTACHMENT_RGBA32F, _core.FEATURES.TEXTURE_FLOAT);
+    this._hasGPUSupport = (0, _keplerOutdatedLuma.isWebGL2)(gl) && (0, _keplerOutdatedLuma.hasFeatures)(this.gl, _keplerOutdatedLuma.FEATURES.BLEND_EQUATION_MINMAX, _keplerOutdatedLuma.FEATURES.COLOR_ATTACHMENT_RGBA32F, _keplerOutdatedLuma.FEATURES.TEXTURE_FLOAT);
   }
 
   delete() {
@@ -582,7 +582,7 @@ class GPUGridAggregator {
         data
       });
     } else {
-      resources[resourceName] = new _core.Buffer(gl, data);
+      resources[resourceName] = new _keplerOutdatedLuma.Buffer(gl, data);
       result[bufferName] = resources[resourceName];
     }
   }
@@ -665,26 +665,26 @@ class GPUGridAggregator {
         combineMaxMin
       } = weights[id];
       results[id].aggregationTexture = textures[id];
-      results[id].aggregationBuffer = (0, _core.readPixelsToBuffer)(framebuffers[id], {
+      results[id].aggregationBuffer = (0, _keplerOutdatedLuma.readPixelsToBuffer)(framebuffers[id], {
         target: weights[id].aggregationBuffer,
         sourceType: 5126
       });
 
       if (needMin && needMax && combineMaxMin) {
-        results[id].maxMinBuffer = (0, _core.readPixelsToBuffer)(maxMinFramebuffers[id], {
+        results[id].maxMinBuffer = (0, _keplerOutdatedLuma.readPixelsToBuffer)(maxMinFramebuffers[id], {
           target: weights[id].maxMinBuffer,
           sourceType: 5126
         });
       } else {
         if (needMin) {
-          results[id].minBuffer = (0, _core.readPixelsToBuffer)(minFramebuffers[id], {
+          results[id].minBuffer = (0, _keplerOutdatedLuma.readPixelsToBuffer)(minFramebuffers[id], {
             target: weights[id].minBuffer,
             sourceType: 5126
           });
         }
 
         if (needMax) {
-          results[id].maxBuffer = (0, _core.readPixelsToBuffer)(maxFramebuffers[id], {
+          results[id].maxBuffer = (0, _keplerOutdatedLuma.readPixelsToBuffer)(maxFramebuffers[id], {
             target: weights[id].maxBuffer,
             sourceType: 5126
           });
@@ -702,7 +702,7 @@ class GPUGridAggregator {
       gl,
       shaderCache
     } = this;
-    return new _core.Model(gl, {
+    return new _keplerOutdatedLuma.Model(gl, {
       id: 'Gird-Aggregation-Model',
       vs: fp64 ? _aggregateToGridVs2.default : _aggregateToGridVs.default,
       fs: _aggregateToGridFs.default,
@@ -722,7 +722,7 @@ class GPUGridAggregator {
       numCol,
       numRow
     } = this.state;
-    return new _core.Model(gl, {
+    return new _keplerOutdatedLuma.Model(gl, {
       id: 'All-Aggregation-Model',
       vs: _aggregateAllVs.default,
       fs: _aggregateAllFs.default,
@@ -742,7 +742,7 @@ class GPUGridAggregator {
     if (this.meanTransform) {
       this.meanTransform.update(opts);
     } else {
-      this.meanTransform = new _core.Transform(this.gl, Object.assign({}, {
+      this.meanTransform = new _keplerOutdatedLuma.Transform(this.gl, Object.assign({}, {
         vs: _transformMeanVs.default,
         _targetTextureVarying: 'meanValues'
       }, opts));
@@ -862,7 +862,7 @@ class GPUGridAggregator {
     } = this;
     minOrMaxFb.bind();
     gl.viewport(0, 0, gridSize[0], gridSize[1]);
-    (0, _core.withParameters)(gl, clearParams, () => {
+    (0, _keplerOutdatedLuma.withParameters)(gl, clearParams, () => {
       gl.clear(16384);
     });
     allAggregationModel.draw({
@@ -900,7 +900,7 @@ class GPUGridAggregator {
     framebuffers[id].bind();
     gl.viewport(0, 0, gridSize[0], gridSize[1]);
     const clearColor = operation === _aggregationOperationUtils.AGGREGATION_OPERATION.MIN ? [_gpuGridAggregatorConstants.MAX_32_BIT_FLOAT, _gpuGridAggregatorConstants.MAX_32_BIT_FLOAT, _gpuGridAggregatorConstants.MAX_32_BIT_FLOAT, 0] : [0, 0, 0, 0];
-    (0, _core.withParameters)(gl, {
+    (0, _keplerOutdatedLuma.withParameters)(gl, {
       clearColor
     }, () => {
       gl.clear(16384);
@@ -1086,14 +1086,14 @@ class GPUGridAggregator {
 
         const typedArray = Array.isArray(values) ? new Float32Array(values) : values;
 
-        if (weightAttributes[id] instanceof _core.Buffer) {
+        if (weightAttributes[id] instanceof _keplerOutdatedLuma.Buffer) {
           weightAttributes[id].setData(typedArray);
         } else {
-          resources["".concat(id, "-buffer")] = new _core.Buffer(this.gl, typedArray);
+          resources["".concat(id, "-buffer")] = new _keplerOutdatedLuma.Buffer(this.gl, typedArray);
           weightAttributes[id] = resources["".concat(id, "-buffer")];
         }
       } else {
-        _keplerOutdatedDeck.log.assert(values instanceof _core.Buffer);
+        _keplerOutdatedDeck.log.assert(values instanceof _keplerOutdatedLuma.Buffer);
 
         weightAttributes[id] = values;
       }
@@ -1161,8 +1161,8 @@ class GPUGridAggregator {
       }
 
       const vertexCount = positions.length / 2;
-      positionsBuffer = new _core.Buffer(gl, new Float32Array(positions));
-      positions64xyLowBuffer = new _core.Buffer(gl, {
+      positionsBuffer = new _keplerOutdatedLuma.Buffer(gl, new Float32Array(positions));
+      positions64xyLowBuffer = new _keplerOutdatedLuma.Buffer(gl, {
         data: new Float32Array(positions64xyLow),
         accessor: {
           size: 2

@@ -1,4 +1,4 @@
-import { Framebuffer, readPixelsToArray } from '@luma.gl/core';
+import { Framebuffer, readPixelsToArray } from 'kepler-outdated-luma.gl-core';
 import getPixelRatio from '../utils/get-pixel-ratio';
 import assert from '../utils/assert';
 import PickLayersPass from '../passes/pick-layers-pass';

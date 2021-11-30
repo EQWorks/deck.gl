@@ -9,12 +9,12 @@ exports.default = void 0;
 
 var _pass = _interopRequireDefault(require("./pass"));
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 class LayersPass extends _pass.default {
   render(params) {
     const gl = this.gl;
-    return (0, _core.withParameters)(gl, {
+    return (0, _keplerOutdatedLuma.withParameters)(gl, {
       framebuffer: params.outputBuffer
     }, () => this.drawLayers(params));
   }
@@ -81,10 +81,10 @@ class LayersPass extends _pass.default {
         color: true,
         depth: true
       } : view.props.clear;
-      (0, _core.withParameters)(gl, {
+      (0, _keplerOutdatedLuma.withParameters)(gl, {
         scissorTest: true,
         scissor: glViewport
-      }, () => (0, _core.clear)(gl, clearOpts));
+      }, () => (0, _keplerOutdatedLuma.clear)(gl, clearOpts));
     }
 
     const renderStatus = {
@@ -93,7 +93,7 @@ class LayersPass extends _pass.default {
       compositeCount: 0,
       pickableCount: 0
     };
-    (0, _core.setParameters)(gl, parameters || {});
+    (0, _keplerOutdatedLuma.setParameters)(gl, parameters || {});
     layers.forEach((layer, layerIndex) => {
       const shouldDrawLayer = this.shouldDrawLayer(layer, viewport);
 
@@ -192,7 +192,7 @@ class LayersPass extends _pass.default {
   clearCanvas(gl) {
     const width = gl.drawingBufferWidth;
     const height = gl.drawingBufferHeight;
-    (0, _core.withParameters)(gl, {
+    (0, _keplerOutdatedLuma.withParameters)(gl, {
       viewport: [0, 0, width, height]
     }, () => {
       gl.clear(16384 | 256);

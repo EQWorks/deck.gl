@@ -5,11 +5,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _suncalc = require("./suncalc");
 
-class SunLight extends _core.DirectionalLight {
+class SunLight extends _keplerOutdatedLuma.DirectionalLight {
   constructor(_ref) {
     let {
       timestamp,

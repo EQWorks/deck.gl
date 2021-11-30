@@ -9,7 +9,7 @@ exports.default = void 0;
 
 var _keplerOutdatedDeck = require("kepler-outdated-deck.gl-core");
 
-var _core = require("@luma.gl/core");
+var _keplerOutdatedLuma = require("kepler-outdated-luma.gl-core");
 
 var _colorUtils = require("../utils/color-utils");
 
@@ -19,8 +19,8 @@ var _gpuGridCellLayerFragment = _interopRequireDefault(require("./gpu-grid-cell-
 
 const {
   fp64LowPart
-} = _core.fp64;
-const defaultMaterial = new _core.PhongMaterial();
+} = _keplerOutdatedLuma.fp64;
+const defaultMaterial = new _keplerOutdatedLuma.PhongMaterial();
 const COLOR_DATA_UBO_INDEX = 0;
 const ELEVATION_DATA_UBO_INDEX = 1;
 const defaultProps = {
@@ -107,9 +107,9 @@ class GPUGridCellLayer extends _keplerOutdatedDeck.Layer {
   }
 
   _getModel(gl) {
-    return new _core.Model(gl, Object.assign({}, this.getShaders(), {
+    return new _keplerOutdatedLuma.Model(gl, Object.assign({}, this.getShaders(), {
       id: this.props.id,
-      geometry: new _core.CubeGeometry(),
+      geometry: new _keplerOutdatedLuma.CubeGeometry(),
       isInstanced: true,
       shaderCache: this.context.shaderCache
     }));

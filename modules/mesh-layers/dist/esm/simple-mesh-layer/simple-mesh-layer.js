@@ -1,5 +1,5 @@
 import { Layer, createIterable } from 'kepler-outdated-deck.gl-core';
-import { Model, Geometry, Texture2D, fp64, PhongMaterial, isWebGL2 } from '@luma.gl/core';
+import { Model, Geometry, Texture2D, fp64, PhongMaterial, isWebGL2 } from 'kepler-outdated-luma.gl-core';
 import { load } from '@loaders.gl/core';
 import { loadImage } from '@loaders.gl/images';
 const {

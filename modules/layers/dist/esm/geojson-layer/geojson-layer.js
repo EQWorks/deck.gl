@@ -1,7 +1,7 @@
 import { CompositeLayer } from 'kepler-outdated-deck.gl-core';
 import ScatterplotLayer from '../scatterplot-layer/scatterplot-layer';
 import PathLayer from '../path-layer/path-layer';
-import { PhongMaterial } from '@luma.gl/core';
+import { PhongMaterial } from 'kepler-outdated-luma.gl-core';
 import SolidPolygonLayer from '../solid-polygon-layer/solid-polygon-layer';
 import { getGeojsonFeatures, separateGeojsonFeatures, unwrapSourceFeature, unwrapSourceFeatureIndex } from './geojson';
 const defaultLineColor = [0, 0, 0, 255];

@@ -1,5 +1,5 @@
 import { log } from 'kepler-outdated-deck.gl-core';
-import { Geometry, uid } from '@luma.gl/core';
+import { Geometry, uid } from 'kepler-outdated-luma.gl-core';
 export default class ColumnGeometry extends Geometry {
   constructor() {
     let props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};

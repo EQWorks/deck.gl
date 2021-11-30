@@ -1,5 +1,5 @@
 import { Layer } from 'kepler-outdated-deck.gl-core';
-import { Model, CubeGeometry, fp64, PhongMaterial } from '@luma.gl/core';
+import { Model, CubeGeometry, fp64, PhongMaterial } from 'kepler-outdated-luma.gl-core';
 const {
   fp64LowPart
 } = fp64;

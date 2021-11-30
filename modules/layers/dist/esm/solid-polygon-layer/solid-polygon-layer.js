@@ -1,5 +1,5 @@
 import { Layer } from 'kepler-outdated-deck.gl-core';
-import { Model, Geometry, hasFeature, FEATURES, PhongMaterial } from '@luma.gl/core';
+import { Model, Geometry, hasFeature, FEATURES, PhongMaterial } from 'kepler-outdated-luma.gl-core';
 import PolygonTesselator from './polygon-tesselator';
 import vsTop from './solid-polygon-layer-vertex-top.glsl';
 import vsSide from './solid-polygon-layer-vertex-side.glsl';
