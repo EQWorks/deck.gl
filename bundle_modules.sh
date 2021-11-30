@@ -1,4 +1,5 @@
 #!/bin/bash
+yarn build
 find . -name dist -not -path "./node_modules/*" \
 | xargs -i sh -c  '\
     cd {}/..;\
