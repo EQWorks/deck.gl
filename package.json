@@ -55,8 +55,6 @@
     "glsl-transpiler": "^1.8.3",
     "ocular-dev-tools": "0.0.18",
     "png.js": "^0.1.1",
-    "pre-commit": "^1.2.2",
-    "pre-push": "^0.1.1",
     "raw-loader": "^0.5.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
