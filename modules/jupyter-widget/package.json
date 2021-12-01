@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/uber/deck.gl.git"
+    "url": "https://github.com/EQWorks/deck.gl.git"
   },
   "main": "dist/pydeck_embeddable/index.js",
   "files": [
@@ -37,9 +37,9 @@
     "kepler-outdated-deck.gl-layers": "file:../layers"
   },
   "peerDependencies": {
-    "kepler-outdated-deck.gl-aggregation-layers": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/aggregation-layers/dist.tgz",
-    "kepler-outdated-deck.gl-core": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/core/dist.tgz",
-    "kepler-outdated-deck.gl-json": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/json/dist.tgz",
-    "kepler-outdated-deck.gl-layers": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/layers/dist.tgz"
+    "kepler-outdated-deck.gl-aggregation-layers": "EQWorks/deck.gl#build/custom-auto-pack",
+    "kepler-outdated-deck.gl-core": "EQWorks/deck.gl#build/custom-auto-pack",
+    "kepler-outdated-deck.gl-json": "EQWorks/deck.gl#build/custom-auto-pack",
+    "kepler-outdated-deck.gl-layers": "EQWorks/deck.gl#build/custom-auto-pack"
   }
 }
