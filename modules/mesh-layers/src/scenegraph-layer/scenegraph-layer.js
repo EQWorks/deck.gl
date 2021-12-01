@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 /* global fetch */
-import {Layer, createIterable} from '@deck.gl/core';
-import {fp64, ScenegraphNode, isWebGL2, pbr, log} from '@luma.gl/core';
+import { Layer, createIterable } from 'kepler-outdated-deck.gl-core';
+import { fp64, ScenegraphNode, isWebGL2, pbr, log } from 'kepler-outdated-luma.gl-core';
 import {load} from '@loaders.gl/core';
 
 import {MATRIX_ATTRIBUTES} from '../utils/matrix';

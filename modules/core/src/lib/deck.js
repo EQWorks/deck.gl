@@ -27,14 +27,14 @@ import DeckRenderer from './deck-renderer';
 import DeckPicker from './deck-picker';
 import log from '../utils/log';
 
-import GL from '@luma.gl/constants';
+import GL from 'kepler-outdated-luma.gl-constants';
 import {
   AnimationLoop,
   createGLContext,
   trackContextState,
   setParameters,
   lumaStats
-} from '@luma.gl/core';
+} from 'kepler-outdated-luma.gl-core';
 import {Stats} from 'probe.gl';
 import {EventManager} from 'mjolnir.js';
 

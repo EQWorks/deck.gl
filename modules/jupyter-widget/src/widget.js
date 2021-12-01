@@ -11,10 +11,10 @@ import {
 } from './utils';
 
 const mapboxgl = require('mapbox-gl');
-const deckgl = require('@deck.gl/core');
-const deckglLayers = require('@deck.gl/layers');
-const deckAggregationLayers = require('@deck.gl/aggregation-layers');
-const deckJson = require('@deck.gl/json');
+const deckgl = require('kepler-outdated-deck.gl-core');
+const deckglLayers = require('kepler-outdated-deck.gl-layers');
+const deckAggregationLayers = require('kepler-outdated-deck.gl-aggregation-layers');
+const deckJson = require('kepler-outdated-deck.gl-json');
 
 const MAPBOX_CSS_URL = 'https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css';
 

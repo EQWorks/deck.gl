@@ -23,13 +23,13 @@ function getExternals(packageInfo) {
   const {peerDependencies = {}} = packageInfo;
 
   for (const depName in peerDependencies) {
-    if (depName.startsWith('@deck.gl')) {
+    if (depName.startsWith('kepler-outdated-deck.gl')) {
       // Instead of bundling the dependency, import from the global `deck` object
       externals[depName] = 'deck';
     }
   }
 
-  if (externals['@deck.gl/core']) {
+  if (externals['kepler-outdated-deck.gl-core']) {
     // Do not bundle luma.gl if `core` is peer dependency
     externals = [
       externals,

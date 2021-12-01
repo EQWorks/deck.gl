@@ -8,8 +8,8 @@ import {
   edgeLength,
   UNITS
 } from 'h3-js';
-import {CompositeLayer, createIterable} from '@deck.gl/core';
-import {ColumnLayer, PolygonLayer} from '@deck.gl/layers';
+import { CompositeLayer, createIterable } from 'kepler-outdated-deck.gl-core';
+import { ColumnLayer, PolygonLayer } from 'kepler-outdated-deck.gl-layers';
 
 // There is a cost to updating the instanced geometries when using highPrecision: false
 // This constant defines the distance between two hexagons that leads to "significant

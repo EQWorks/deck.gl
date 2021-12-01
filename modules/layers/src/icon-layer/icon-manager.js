@@ -1,8 +1,8 @@
 /* global document */
-import GL from '@luma.gl/constants';
-import {Texture2D, readPixelsToBuffer} from '@luma.gl/core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Texture2D, readPixelsToBuffer } from 'kepler-outdated-luma.gl-core';
 import {loadImage} from '@loaders.gl/images';
-import {createIterable} from '@deck.gl/core';
+import { createIterable } from 'kepler-outdated-deck.gl-core';
 
 const DEFAULT_CANVAS_WIDTH = 1024;
 const DEFAULT_BUFFER = 4;

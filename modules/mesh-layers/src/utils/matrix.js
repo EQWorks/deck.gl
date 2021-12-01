@@ -1,4 +1,4 @@
-import {createIterable} from '@deck.gl/core';
+import { createIterable } from 'kepler-outdated-deck.gl-core';
 
 /* eslint-disable max-statements, complexity */
 const RADIAN_PER_DEGREE = Math.PI / 180;

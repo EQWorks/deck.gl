@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
-import GL from '@luma.gl/constants';
-import {Buffer, hasFeature, FEATURES} from '@luma.gl/core';
-import {log, uid} from '@luma.gl/core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Buffer, hasFeature, FEATURES } from 'kepler-outdated-luma.gl-core';
+import { log, uid } from 'kepler-outdated-luma.gl-core';
 
 export default class BaseAttribute {
   constructor(gl, opts = {}) {

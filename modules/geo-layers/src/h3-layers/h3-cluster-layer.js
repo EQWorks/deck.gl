@@ -1,7 +1,7 @@
 import {h3SetToMultiPolygon} from 'h3-js';
 
-import {CompositeLayer, createIterable} from '@deck.gl/core';
-import {PolygonLayer} from '@deck.gl/layers';
+import { CompositeLayer, createIterable } from 'kepler-outdated-deck.gl-core';
+import { PolygonLayer } from 'kepler-outdated-deck.gl-layers';
 
 const defaultProps = Object.assign(
   {

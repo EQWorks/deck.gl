@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {PhongMaterial} from '@luma.gl/core';
-import {CompositeLayer} from '@deck.gl/core';
-import {GridCellLayer} from '@deck.gl/layers';
+import { PhongMaterial } from 'kepler-outdated-luma.gl-core';
+import { CompositeLayer } from 'kepler-outdated-deck.gl-core';
+import { GridCellLayer } from 'kepler-outdated-deck.gl-layers';
 
 import BinSorter from '../utils/bin-sorter';
 import {defaultColorRange} from '../utils/color-utils';

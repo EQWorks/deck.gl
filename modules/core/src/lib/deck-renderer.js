@@ -3,7 +3,7 @@ import DrawLayersPass from '../passes/draw-layers-pass';
 import PickLayersPass from '../passes/pick-layers-pass';
 import getPixelRatio from '../utils/get-pixel-ratio';
 import PostProcessEffect from '../effects/post-process-effect';
-import {Framebuffer} from '@luma.gl/core';
+import { Framebuffer } from 'kepler-outdated-luma.gl-core';
 
 const LOG_PRIORITY_DRAW = 2;
 

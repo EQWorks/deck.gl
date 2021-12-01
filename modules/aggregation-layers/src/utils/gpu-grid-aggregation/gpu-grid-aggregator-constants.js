@@ -1,4 +1,4 @@
-import GL from '@luma.gl/constants';
+import GL from 'kepler-outdated-luma.gl-constants';
 import {AGGREGATION_OPERATION} from '../aggregation-operation-utils';
 export const DEFAULT_CHANGE_FLAGS = {
   dataChanged: true,

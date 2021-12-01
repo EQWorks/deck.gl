@@ -4,7 +4,7 @@
 // Attribution: This class and the multipass system were inspired by
 // the THREE.js EffectComposer and *Pass classes
 
-import {ClipSpace, withParameters, clear} from '@luma.gl/core';
+import { ClipSpace, withParameters, clear } from 'kepler-outdated-luma.gl-core';
 import Pass from './pass';
 
 export default class ScreenPass extends Pass {
