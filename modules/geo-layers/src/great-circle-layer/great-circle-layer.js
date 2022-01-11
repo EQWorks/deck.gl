@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {ArcLayer} from '@deck.gl/layers';
+import { ArcLayer } from 'kepler-outdated-deck.gl-layers';
 import vs from './great-circle-vertex.glsl';
 
 export default class GreatCircleLayer extends ArcLayer {

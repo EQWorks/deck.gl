@@ -5,7 +5,7 @@ export {default as gl} from './utils/setup-gl';
 export {testLayer, testInitializeLayer, testUpdateLayer, testDrawLayer} from './lifecycle-test';
 export {generateLayerTests} from './generate-layer-tests';
 
-// Basic utility for rendering multiple scenes (could go into "deck.gl/core")
+// Basic utility for rendering multiple scenes (could go into "kepler-outdated-deck.gl-core")
 export {default as TestRunner} from './test-runner';
 
 // A utility that renders a list of scenes and compares against golden images

@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 
 import {equals} from 'math.gl';
-import {CompositeLayer} from '@deck.gl/core';
-import {LineLayer, SolidPolygonLayer} from '@deck.gl/layers';
+import { CompositeLayer } from 'kepler-outdated-deck.gl-core';
+import { LineLayer, SolidPolygonLayer } from 'kepler-outdated-deck.gl-layers';
 import {generateContours} from './contour-utils';
 
 import GPUGridAggregator from '../utils/gpu-grid-aggregation/gpu-grid-aggregator';

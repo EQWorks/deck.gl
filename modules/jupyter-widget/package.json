@@ -1,5 +1,5 @@
 {
-  "name": "@deck.gl/jupyter-widget",
+  "name": "kepler-outdated-deck.gl-jupyter-widget",
   "description": "Jupyter widget for rendering deck.gl in a Jupyter notebook",
   "license": "MIT",
   "version": "7.1.1",
@@ -26,12 +26,20 @@
     "notebook-bundle": "npm install --save-dev && npm run webpack-bundle"
   },
   "dependencies": {
-    "@deck.gl/aggregation-layers": "7.1.1",
-    "@deck.gl/core": "7.1.1",
-    "@deck.gl/json": "7.1.1",
-    "@deck.gl/layers": "7.1.1",
     "@jupyter-widgets/base": "^1.1.10",
     "@types/mapbox-gl": "^0.51.4",
     "mapbox-gl": "^0.53.1"
+  },
+  "devDependencies": {
+    "kepler-outdated-deck.gl-aggregation-layers": "file:../aggregation-layers",
+    "kepler-outdated-deck.gl-core": "file:../core",
+    "kepler-outdated-deck.gl-json": "file:../json",
+    "kepler-outdated-deck.gl-layers": "file:../layers"
+  },
+  "peerDependencies": {
+    "kepler-outdated-deck.gl-aggregation-layers": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/aggregation-layers/dist.tgz",
+    "kepler-outdated-deck.gl-core": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/core/dist.tgz",
+    "kepler-outdated-deck.gl-json": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/json/dist.tgz",
+    "kepler-outdated-deck.gl-layers": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/layers/dist.tgz"
   }
 }

@@ -1,4 +1,4 @@
-import {CompositeLayer} from '@deck.gl/core';
+import { CompositeLayer } from 'kepler-outdated-deck.gl-core';
 import GPUGridAggregator from '../utils/gpu-grid-aggregation/gpu-grid-aggregator';
 import GPUGridLayer from '../gpu-grid-layer/gpu-grid-layer';
 import CPUGridLayer from '../cpu-grid-layer/cpu-grid-layer';

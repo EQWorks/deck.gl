@@ -18,14 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {Layer, WebMercatorViewport, createIterable, log, experimental} from '@deck.gl/core';
+import { Layer, WebMercatorViewport, createIterable, log, experimental } from 'kepler-outdated-deck.gl-core';
 const {count} = experimental;
 import {defaultColorRange, colorRangeToFlatArray} from '../utils/color-utils';
 import GPUGridAggregator from '../utils/gpu-grid-aggregation/gpu-grid-aggregator';
 import {AGGREGATION_OPERATION} from '../utils/aggregation-operation-utils';
 
-import GL from '@luma.gl/constants';
-import {Model, Geometry, Buffer, isWebGL2} from '@luma.gl/core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Model, Geometry, Buffer, isWebGL2 } from 'kepler-outdated-luma.gl-core';
 
 import vs from './screen-grid-layer-vertex.glsl';
 import vs_WebGL1 from './screen-grid-layer-vertex-webgl1.glsl';

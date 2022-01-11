@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {createIterable} from '@deck.gl/core';
+import { createIterable } from 'kepler-outdated-deck.gl-core';
 
 const R_EARTH = 6378000;
 

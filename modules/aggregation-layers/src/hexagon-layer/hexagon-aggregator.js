@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 import {hexbin} from 'd3-hexbin';
-import {createIterable} from '@deck.gl/core';
+import { createIterable } from 'kepler-outdated-deck.gl-core';
 
 /**
  * Use d3-hexbin to performs hexagonal binning from geo points to hexagons

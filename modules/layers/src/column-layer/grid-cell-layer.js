@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {CubeGeometry} from '@luma.gl/core';
+import { CubeGeometry } from 'kepler-outdated-luma.gl-core';
 import ColumnLayer from './column-layer';
 
 const defaultProps = {

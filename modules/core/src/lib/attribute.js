@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
-import GL from '@luma.gl/constants';
-import {Buffer} from '@luma.gl/core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Buffer } from 'kepler-outdated-luma.gl-core';
 import assert from '../utils/assert';
 import {createIterable} from '../utils/iterable-utils';
 import {fillArray} from '../utils/flatten';

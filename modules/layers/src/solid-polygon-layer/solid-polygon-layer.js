@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {Layer} from '@deck.gl/core';
-import GL from '@luma.gl/constants';
-import {Model, Geometry, hasFeature, FEATURES, PhongMaterial} from '@luma.gl/core';
+import { Layer } from 'kepler-outdated-deck.gl-core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Model, Geometry, hasFeature, FEATURES, PhongMaterial } from 'kepler-outdated-luma.gl-core';
 
 // Polygon geometry generation is managed by the polygon tesselator
 import PolygonTesselator from './polygon-tesselator';

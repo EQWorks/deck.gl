@@ -1,5 +1,5 @@
 {
-  "name": "deck.gl",
+  "name": "kepler-outdated-deck.gl",
   "description": "A suite of 3D-enabled data visualization overlays, suitable for react-map-gl",
   "license": "MIT",
   "version": "7.1.1",
@@ -27,14 +27,27 @@
     "prepublishOnly": "npm run build-bundle && npm run build-bundle -- --env.dev"
   },
   "dependencies": {
-    "@deck.gl/aggregation-layers": "7.1.1",
-    "@deck.gl/core": "7.1.1",
-    "@deck.gl/geo-layers": "7.1.1",
-    "@deck.gl/google-maps": "7.1.1",
-    "@deck.gl/json": "7.1.1",
-    "@deck.gl/layers": "7.1.1",
-    "@deck.gl/mapbox": "7.1.1",
-    "@deck.gl/mesh-layers": "7.1.1",
-    "@deck.gl/react": "7.1.1"
+  },
+  "devDependencies": {
+    "kepler-outdated-deck.gl-aggregation-layers": "file:../aggregation-layers",
+    "kepler-outdated-deck.gl-core": "file:../core",
+    "kepler-outdated-deck.gl-geo-layers": "file:../geo-layers",
+    "kepler-outdated-deck.gl-google-maps": "file:../google-maps",
+    "kepler-outdated-deck.gl-json": "file:../json",
+    "kepler-outdated-deck.gl-layers": "file:../layers",
+    "kepler-outdated-deck.gl-mapbox": "file:../mapbox",
+    "kepler-outdated-deck.gl-mesh-layers": "file:../mesh-layers",
+    "kepler-outdated-deck.gl-react": "file:../react"
+  },
+  "peerDependencies": {
+    "kepler-outdated-deck.gl-aggregation-layers": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/aggregation-layers/dist.tgz",
+    "kepler-outdated-deck.gl-core": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/core/dist.tgz",
+    "kepler-outdated-deck.gl-geo-layers": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/geo-layers/dist.tgz",
+    "kepler-outdated-deck.gl-google-maps": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/google-maps/dist.tgz",
+    "kepler-outdated-deck.gl-json": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/json/dist.tgz",
+    "kepler-outdated-deck.gl-layers": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/layers/dist.tgz",
+    "kepler-outdated-deck.gl-mapbox": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/mapbox/dist.tgz",
+    "kepler-outdated-deck.gl-mesh-layers": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/mesh-layers/dist.tgz",
+    "kepler-outdated-deck.gl-react": "https://github.com/EQWorks/deck.gl/raw/build/custom/modules/react/dist.tgz"
   }
 }

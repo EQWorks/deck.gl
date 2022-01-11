@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {Layer} from '@deck.gl/core';
-import GL from '@luma.gl/constants';
-import {Model, CubeGeometry, fp64, PhongMaterial} from '@luma.gl/core';
+import { Layer } from 'kepler-outdated-deck.gl-core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Model, CubeGeometry, fp64, PhongMaterial } from 'kepler-outdated-luma.gl-core';
 const {fp64LowPart} = fp64;
 const defaultMaterial = new PhongMaterial();
 import {defaultColorRange} from '../utils/color-utils';

@@ -72,11 +72,11 @@ export {
   AmbientLight,
   PointLight,
   DirectionalLight
-} from '@deck.gl/core';
+} from 'kepler-outdated-deck.gl-core';
 
 // EXPERIMENTAL CORE LIB CLASSES (May change in minor version bumps, use at your own risk)
-import {experimental as CoreExperimental} from '@deck.gl/core';
-import {experimental as AggregationExperimental} from '@deck.gl/aggregation-layers';
+import { experimental as CoreExperimental } from 'kepler-outdated-deck.gl-core';
+import { experimental as AggregationExperimental } from 'kepler-outdated-deck.gl-aggregation-layers';
 
 // Experimental Data Accessor Helpers
 // INTERNAL - TODO remove from experimental exports
@@ -127,7 +127,7 @@ export {
   SolidPolygonLayer,
   GeoJsonLayer,
   TextLayer
-} from '@deck.gl/layers';
+} from 'kepler-outdated-deck.gl-layers';
 
 export {
   ScreenGridLayer,
@@ -136,7 +136,7 @@ export {
   ContourLayer,
   GridLayer,
   GPUGridLayer
-} from '@deck.gl/aggregation-layers';
+} from 'kepler-outdated-deck.gl-aggregation-layers';
 
 export {
   GreatCircleLayer,
@@ -145,15 +145,15 @@ export {
   H3HexagonLayer,
   TileLayer,
   TripsLayer
-} from '@deck.gl/geo-layers';
+} from 'kepler-outdated-deck.gl-geo-layers';
 
-export {SimpleMeshLayer, ScenegraphLayer} from '@deck.gl/mesh-layers';
+export { SimpleMeshLayer, ScenegraphLayer } from 'kepler-outdated-deck.gl-mesh-layers';
 
 //
 // REACT BINDINGS PACKAGE
 //
 
-export {default, DeckGL} from '@deck.gl/react';
+export { default, DeckGL } from 'kepler-outdated-deck.gl-react';
 
 //
 // EXPERIMENTAL EXPORTS

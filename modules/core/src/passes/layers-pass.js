@@ -1,6 +1,6 @@
-import GL from '@luma.gl/constants';
+import GL from 'kepler-outdated-luma.gl-constants';
 import Pass from './pass';
-import {clear, setParameters, withParameters} from '@luma.gl/core';
+import { clear, setParameters, withParameters } from 'kepler-outdated-luma.gl-core';
 
 export default class LayersPass extends Pass {
   render(params) {

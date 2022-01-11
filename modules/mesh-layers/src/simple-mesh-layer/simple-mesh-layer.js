@@ -22,9 +22,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import {Layer, createIterable} from '@deck.gl/core';
-import GL from '@luma.gl/constants';
-import {Model, Geometry, Texture2D, fp64, PhongMaterial, isWebGL2} from '@luma.gl/core';
+import { Layer, createIterable } from 'kepler-outdated-deck.gl-core';
+import GL from 'kepler-outdated-luma.gl-constants';
+import { Model, Geometry, Texture2D, fp64, PhongMaterial, isWebGL2 } from 'kepler-outdated-luma.gl-core';
 import {load} from '@loaders.gl/core';
 import {loadImage} from '@loaders.gl/images';
 const {fp64LowPart} = fp64;

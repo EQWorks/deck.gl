@@ -1,5 +1,5 @@
 /* global document, google */
-import {Deck} from '@deck.gl/core';
+import { Deck } from 'kepler-outdated-deck.gl-core';
 
 /**
  * Get a new deck instance
